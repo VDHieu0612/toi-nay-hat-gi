@@ -51,6 +51,8 @@
     data/
       songs.json          # danh sách bài hát
       banners.json        # cấu hình banner
+      artists.json        # danh sách ca sĩ/rapper (dùng cho banner theo ca sĩ)
+      rarity.json         # SINH TỰ ĐỘNG bởi assign-rarity: seasonId, seed, độ hiếm từng bài (không sửa tay)
     lib/
       gacha.ts            # LOGIC RÚT, thuần, không import React hay DOM
       gacha.test.ts       # test cho logic
@@ -75,6 +77,9 @@
   scripts/
     simulate.ts           # mô phỏng 100.000 lần rút kiểm tra tỉ lệ
     validate-songs.ts     # kiểm tra tính hợp lệ của songs.json
+    import-csv.ts         # CSV (từ Google Sheet) -> songs.json + artists.json
+    assign-rarity.ts      # gán độ hiếm theo mục 4.3, ghi src/data/rarity.json
+    sync-sheet.ts         # tải CSV từ Google Sheet đã publish, rồi chạy 3 script trên
 ```
 
 ### Quy tắc kiến trúc bắt buộc
@@ -92,26 +97,38 @@
 ```ts
 export type Rarity = 3 | 4 | 5;
 export type Voice = "nam" | "nu" | "song-ca" | "tat-ca";
+export type Genre = "ballad" | "pop" | "rap" | "bolero" | "rock";  // RnB gộp vào "pop"
+
+export interface Artist {
+  id: string;            // kebab-case, ví dụ "ten-ca-si"
+  name: string;
+  kind: "singer" | "rapper" | "group";
+  theme?: string;        // màu chủ đạo cho banner của ca sĩ (không dùng ảnh ca sĩ)
+}
 
 export interface Song {
   id: string;            // duy nhất, kebab-case, ví dụ "ten-bai-ca-si"
   title: string;
   artist: string;
-  year: number;
-  genre: string[];       // ví dụ ["ballad"], ["rap"], ["bolero"], ["vpop"], ["rock"]
+  year?: number;         // KHÔNG bắt buộc, không hiển thị, không dùng để xếp hạng hay lọc
+  artistId: string;      // trỏ tới artists.json
+  genre: Genre[];        // chỉ dùng 5 nhóm dưới đây. KHÔNG đưa "song-ca" vào genre (song ca là `voice`)
   voice: Voice;
-  difficulty: 1 | 2 | 3 | 4 | 5;  // chủ quan, 1 = rất dễ hát
-  rarity: Rarity;
+  rarity: Rarity;        // KHÔNG nhập tay. Do `assign-rarity` sinh ra (mục 4.3) và đọc từ `rarity.json`; không phản ánh bài hay hay dở
+  difficulty?: number;   // DEPRECATED: không dùng trong UI, giữ để không vỡ code cũ
   tags: string[];        // ví dụ ["cao-trao", "de-hat-dong-ca", "de-hat-khi-say"]
-  challenge?: string;    // thử thách vui kèm theo (chỉ dùng cho bài 5★, tùy chọn)
+  challenge?: string;    // thử thách vui kèm theo khi hát (tùy chọn, không gắn với độ hiếm)
 }
 
 export interface Banner {
   id: string;
+  type: "general" | "genre" | "artist";
+  artistId?: string;     // bắt buộc khi type = "artist": pool = mọi bài có artistId này
+  extraSongIds?: string[]; // bài của ca sĩ khác thêm vào pool (feat., song ca), tùy chọn
   name: string;
   description: string;
   filter?: {             // lọc cố định của banner (tùy chọn)
-    genre?: string[];
+    genre?: Genre[];
     voice?: Voice[];
     yearFrom?: number;
     yearTo?: number;
@@ -133,15 +150,29 @@ export interface PullResult {
 
 ### 4.2. Quy ước nội dung dữ liệu (quan trọng về bản quyền)
 - **Chỉ lưu metadata** (tên bài, ca sĩ, năm, thể loại). **Tuyệt đối không lưu lời bài hát.**
-- **Không dùng ảnh bìa album** hay ảnh ca sĩ. Thẻ bài được vẽ bằng CSS/SVG.
+- **Không dùng ảnh bìa album** hay ảnh/hình ảnh của ca sĩ (kể cả ở banner theo ca sĩ). Thẻ bài và banner được vẽ bằng CSS/SVG, ca sĩ chỉ xuất hiện bằng **tên** (thông tin sự kiện) và màu `theme`.
+- **Phạm vi nội dung: chỉ bài khá nổi, ca sĩ/rapper nổi trội của thị trường Việt Nam.** Không cần phủ rộng mọi thể loại và mọi thập niên. Tiêu chí vào danh sách: nhiều người biết, có bản karaoke phổ biến trên YouTube.
 - **Không lưu link karaoke.** Nút "Tìm karaoke" tự sinh URL tìm kiếm YouTube từ `title + artist + "karaoke"`.
 
-### 4.3. Định nghĩa độ hiếm (dùng để gán dữ liệu và hiển thị)
-- **3★**: bài phổ biến, đa số người hát được, ít rủi ro.
-- **4★**: bài cần giọng tốt hoặc cảm xúc cao trào (ballad kinh điển, rap nhanh...).
-- **5★**: bài "thử thách": nốt rất cao, hoặc bài làm cả phòng hát theo, có thể kèm `challenge`.
+### 4.3. Định nghĩa độ hiếm: trung lập, kiểm soát tỉ lệ theo từng ca sĩ, xáo lại mỗi phiên bản
 
-Độ hiếm đo **độ khó/độ "chất" của bài**, không phải độ nổi tiếng.
+**Số sao KHÔNG phải đánh giá.** Không xếp hạng bài hay hơn dở, ca sĩ này hơn ca sĩ kia, cũng không dựa trên lượt xem hay độ nổi (xếp theo các tiêu chí đó dễ gây tranh cãi giữa fan các nghệ sĩ). Số sao chỉ là **độ hiếm khi rút** để tạo cảm giác gacha.
+
+- **Gán ngẫu nhiên có kiểm soát, theo từng ca sĩ.** Mỗi ca sĩ có `n` bài được chia theo tỉ lệ cố định: **5★ ≈ 15%, 4★ ≈ 30%, 3★ phần còn lại**. Như vậy ca sĩ nào cũng có đủ bài ở mọi bậc, không ai bị "toàn 3★".
+- **Xáo lại mỗi phiên bản (season).** Mỗi phiên bản có một `seed`; đổi phiên bản thì độ hiếm của các bài được xáo lại. Nhờ vậy không bài nào "mãi mãi 3★", và không ai gán được ý nghĩa xếp hạng cho số sao.
+- **Bài tâm điểm (`featured`) của banner luôn là 5★** trong phiên bản đó, được chọn xoay vòng mỗi phiên bản bởi chủ dự án (có thể tham khảo từ form đề xuất). Đây là bài được "chiếu sáng", không phải bài hay nhất.
+
+**Thuật toán (`scripts/assign-rarity.ts`):**
+1. Đọc `songs.json`, `banners.json`, và `src/data/rarity.json` (có `seasonId`, `seed`, và `rarity: { songId: 3|4|5 }`).
+2. Chạy `assign-rarity --new-season <id>`: sinh `seed` mới, rồi với mỗi ca sĩ: tính điểm xáo `hash(seed + songId)` (hàm băm cố định, ví dụ cyrb53 hoặc mulberry32), sắp xếp theo điểm. Nếu ca sĩ có từ 4 bài trở lên: `n5 = max(1, round(0.15 × n))`, `n4 = round(0.30 × n)`, còn lại 3★. Dưới 4 bài thì toàn bộ 3★ (trừ bài `featured`).
+3. Bài `featured` được ép 5★ và **tính vào** `n5` (nếu số `featured` vượt `n5` thì `n5` tăng theo).
+4. Ghi kết quả vào `rarity.json`. Nguồn sự thật về độ hiếm là `rarity.json`; bộ nạp dữ liệu ghép `rarity` vào từng `Song` lúc chạy. (Dữ liệu giả ở M1-M4 có thể giữ `rarity` trong `songs.json` làm dự phòng; khi có `rarity.json` thì ưu tiên giá trị trong đó.)
+5. **Thêm bài giữa phiên bản:** bài mới chưa có trong `rarity.json` được gán bằng quy tắc băm độc lập (`u = hash(seed + songId)` chuẩn hóa về [0,1): `u < 0.15` → 5★, `u < 0.45` → 4★, ngược lại 3★), **không đổi độ hiếm của bài cũ**. Cuối phiên bản chạy lại `--new-season` để cân bằng tỉ lệ từ đầu.
+6. Lịch sử rút lưu **độ hiếm tại thời điểm rút**; bộ sưu tập theo `songId` nên không bị ảnh hưởng khi đổi phiên bản.
+
+**Hiển thị:**
+- Không đặt nhãn mang tính đánh giá cho từng bậc sao (không dùng các từ như "siêu hit", "bài ngon"). Chỉ hiển thị số sao.
+- Có chú giải ngắn ở trang "Chi tiết" và dưới màn kết quả: *"Số sao chỉ là độ hiếm khi rút, được xáo lại mỗi phiên bản. Đây không phải đánh giá bài hay hay dở, hay ca sĩ này hơn ca sĩ khác."*
 
 ---
 
@@ -213,6 +244,7 @@ pullTen(pool: Song[], banner: Banner, state: PullState, rng?: () => number): Pul
 - Banner đang chọn: **nổi bật** (viền sáng theo `theme` của banner, hơi phóng to hoặc sáng hơn, có thanh đánh dấu bên cạnh).
 - Click/tap để đổi banner; chuyển banner có hiệu ứng mượt (fade/slide ngắn), không tải lại trang.
 - Nếu danh sách dài hơn chiều cao, cột trái tự cuộn dọc **riêng** (cột phải đứng yên).
+- Khi có nhiều banner, **nhóm theo loại** (`type`): Tổng hợp, Thể loại, Ca sĩ, mỗi nhóm có tiêu đề nhỏ, có thể thu gọn.
 - Hỗ trợ phím mũi tên lên/xuống để đổi banner trên desktop.
 
 #### 2.3. Cột phải (70%): nội dung banner + nút gacha
@@ -435,7 +467,9 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 ### M4: Bộ lọc + nút "Tìm karaoke"
 
 **Việc cần làm**
-- `FilterPanel` đặt trước khi rút: giọng (nam/nữ/song ca/tất cả), thể loại (chọn nhiều), thập niên, độ khó tối đa.
+- `FilterPanel` đặt trước khi rút, **chỉ còn hai nhóm lọc**: **giọng** (tất cả / nam / nữ / song ca) và **thể loại** (chọn nhiều trong 5 nhóm: ballad, pop, rap, bolero, rock). **Bỏ lọc thập niên và lọc độ khó** (độ khó trùng với độ hiếm và dùng cùng biểu tượng sao nên gây nhầm lẫn; kho bài nhỏ nên thêm nhiều chiều lọc chỉ làm pool cạn).
+- Mỗi nút lọc hiển thị **số bài còn lại** nếu chọn nó (ví dụ "Rap (14)"); nút nào cho kết quả **0 bài** thì làm mờ và vô hiệu hóa, để người dùng không rơi vào ngõ cụt.
+- Cập nhật `songs.json` hiện có cho khớp 5 nhóm thể loại mới (gộp RnB vào pop, **bỏ "song-ca" khỏi `genre`**: song ca chỉ là `voice`). Thêm `artistId` theo schema mới (dữ liệu giả cũng phải hợp lệ; `year` giờ là tùy chọn; `rarity` của dữ liệu giả được gán sẵn nên chưa cần `assign-rarity`).
 - Bộ lọc áp dụng lên pool của banner trước khi rút (`filters.ts`).
 - Nếu pool sau lọc **dưới 10 bài**: hiện cảnh báo nhẹ, vẫn cho rút, cho phép trùng bài. Nếu **bằng 0**: chặn nút rút và hiện thông báo gợi ý nới bộ lọc.
 - Mỗi thẻ có nút **Tìm karaoke**, mở tab mới:
@@ -443,6 +477,7 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 
 **Tiêu chí hoàn thành**
 - Lọc đúng với từng tổ hợp điều kiện (có test cho `filters.ts`).
+- Bộ lọc chỉ còn giọng và thể loại; số bài hiển thị đúng trên từng nút; nút cho 0 bài bị vô hiệu hóa; "song-ca" không còn xuất hiện ở danh sách thể loại.
 - Nút Tìm karaoke mở đúng từ khóa, xử lý đúng ký tự tiếng Việt có dấu.
 
 ### M5: Chế độ nhóm + chia sẻ + lịch sử
@@ -463,13 +498,31 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 ### M6: Dữ liệu thật + validate + deploy
 
 **Việc cần làm**
-- Thay `songs.json` bằng **100-150 bài thật** (do chủ dự án cung cấp, agent **không tự bịa** dữ liệu bài hát thật nếu không được cung cấp). Agent chỉ viết công cụ nhập/kiểm tra.
+- Thêm `scripts/assign-rarity.ts` theo mục 4.3.
+- Thêm `scripts/import-csv.ts`: chuyển file CSV xuất từ Google Sheet thành `songs.json` và `artists.json`, để chủ dự án nhập liệu bằng bảng tính thay vì sửa JSON. Cột của CSV:
+
+  | Cột | Bắt buộc | Ghi chú |
+  |---|---|---|
+  | `title` | Có | Tên bài |
+  | `artist` | Có | Tên ca sĩ/rapper (script tự tạo `artists.json` và `artistId` từ cột này, bỏ dấu tiếng Việt, `đ` thành `d`, kebab-case) |
+  | `genre` | Có | Một hoặc nhiều giá trị trong 5 nhóm, ngăn cách bằng `\|` (ví dụ `pop\|rap`) |
+  | `voice` | Có | `nam`, `nu`, `song-ca` hoặc `tat-ca` |
+  | cột khác (ví dụ `note`, `year`, `rarity`, `views`, `mvUrl`, `check`) | Không | **Bỏ qua mọi cột không có trong bảng này.** Chủ dự án dùng cột `note` riêng trong Sheet để ghi chú (ví dụ ft. ai); script không đọc |
+
+  `id` bài hát tự sinh từ `title` + `artist`; báo lỗi rõ theo số dòng nếu thiếu cột bắt buộc, sai `genre`/`voice`, hoặc trùng id. Chạy theo thứ tự: `import-csv` → `assign-rarity` → `validate-songs`.
+- **Đồng bộ từ Google Sheet** (`scripts/sync-sheet.ts`): đọc biến môi trường `SHEET_CSV_URL` (đường dẫn CSV của tab "Master" sau khi dùng *Publish to web*), tải về `data/songs.csv`, rồi chạy `import-csv` → `assign-rarity` (chỉ gán bài mới, không đổi bài cũ, theo mục 4.3 bước 5) → `validate-songs`. Dữ liệu chỉ được vào web qua bước build có validate, **không tải trực tiếp từ Sheet lúc người dùng mở web** (tránh dữ liệu chưa duyệt lên thẳng web, và tránh lỗi khi Google không phản hồi).
+- Thay `songs.json` bằng **120-200 bài thật, chỉ bài khá nổi** (tiêu chí ở mục 4.2) (do chủ dự án cung cấp, agent **không tự bịa** dữ liệu bài hát thật nếu không được cung cấp). Agent chỉ viết công cụ nhập/kiểm tra.
 - `scripts/validate-songs.ts`, chạy trước `build`, kiểm tra:
   - id không trùng, đúng kebab-case.
-  - Đủ các trường bắt buộc, `rarity` thuộc {3,4,5}, `difficulty` 1-5, `year` hợp lý.
+  - Đủ các trường bắt buộc (`title`, `artistId`, `genre`, `voice`), `genre` chỉ thuộc 5 nhóm cho phép, `voice` hợp lệ.
+  - Mọi bài đều có độ hiếm trong `rarity.json`, thuộc {3,4,5}. **Mỗi ca sĩ từ 4 bài trở lên có ít nhất 1 bài 5★**; số bài mỗi bậc không lệch quá 1 so với tỉ lệ 15/30/55 của ca sĩ đó (trừ khi vừa thêm bài giữa phiên bản, khi đó chỉ cảnh báo). Mọi bài `featured` đều là 5★.
+  - Mọi `artistId` trong `songs.json` tồn tại trong `artists.json`.
   - Mỗi độ hiếm có tối thiểu số bài (ví dụ ≥ 10 bài 3★, ≥ 5 bài 4★, ≥ 2 bài 5★).
   - `featured` trong banner trỏ tới id tồn tại.
-- Thêm chân trang: dòng mô tả "Dự án fan, không liên kết với hãng đĩa/ca sĩ nào", link góp ý/đề xuất bài.
+  - Banner `type: "artist"`: `artistId` tồn tại; pool có **ít nhất 8 bài** (với tỉ lệ ở mục 4.3, 8 bài trở lên luôn có ít nhất 1 bài 5★ và 2 bài 4★); nếu không đủ thì báo lỗi rõ ràng để chủ dự án bổ sung bài, dùng `extraSongIds`, hoặc bỏ banner đó.
+- **Đề xuất từ cộng đồng (không cần code thêm, chỉ cấu hình):** một Google Form "Đề xuất bài / ca sĩ" gồm các câu: *Loại* (Bài hát / Ca sĩ mới), *Tên bài hát*, *Ca sĩ*, *Ghi chú (tùy chọn)*; lời nhắc "không dán lời bài hát"; không thu thập email. Câu trả lời đổ vào **một Sheet riêng ("Requests")**, **tách hẳn khỏi Sheet "Master"** (chỉ chủ dự án có quyền sửa). Chủ dự án duyệt rồi chép các dòng được chọn sang "Master". **Chỉ publish tab Master, tuyệt đối không publish Requests.**
+- Chân trang web có hai liên kết: **"Đề xuất bài / ca sĩ"** (mở Form) và **"Xem kho bài hiện có"** (Sheet Master ở chế độ chỉ xem, để người dùng kiểm tra trước khi đề xuất, giảm đề xuất trùng).
+- Thêm chân trang: dòng mô tả "Dự án fan, không liên kết với hãng đĩa/ca sĩ nào".
 - Meta tag Open Graph (title, description, ảnh preview) để link share đẹp trên Zalo/Messenger.
 - Deploy Vercel, kiểm tra tải nhanh trên mạng di động.
 
@@ -477,6 +530,23 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 - `npm run build` chạy `validate-songs` và chỉ thành công khi dữ liệu hợp lệ.
 - Có URL công khai, preview link hiển thị đúng khi dán vào chat.
 - Lighthouse mobile: Performance ≥ 85 (mục tiêu, không bắt buộc cứng).
+
+### M7: Banner theo ca sĩ (mở rộng đầu tiên sau MVP)
+
+> Chỉ làm sau khi M6 xong (cần dữ liệu thật). Schema (`Artist`, `Banner.type`, `artistId`) đã có sẵn từ mục 4.1.
+
+**Việc cần làm**
+- Tạo `artists.json` và thêm banner `type: "artist"` cho **3-5 ca sĩ/rapper có đủ bài** (đủ điều kiện ở M6). Chọn theo gu nhóm bạn của chủ dự án, không tự chọn thay.
+- **Pool** của banner ca sĩ = mọi bài có `artistId` đó (cộng `extraSongIds` nếu có). `featured` = 2-3 bài đại diện nhất của ca sĩ (rate-up 50% như banner thường).
+- **Giao diện:** tên ca sĩ lớn trên tranh banner, màu theo `theme`, thẻ preview bài rate-up. **Không dùng ảnh ca sĩ**, chỉ dùng hình SVG minh họa chung (micro, đĩa than) và màu chủ đạo. Banner nhóm trong sidebar theo mục "Ca sĩ" (M2).
+- Pity 5★ **dùng chung toàn bộ banner** (đơn giản hơn, tránh người dùng phải theo dõi nhiều bộ đếm).
+- Nếu pool nhỏ (dưới 10 bài): vẫn cho rút, cảnh báo có thể trùng bài như M4; quy tắc fallback độ hiếm ở mục 5 vẫn áp dụng.
+- Chân trang giữ nguyên tuyên bố: dự án fan, không liên kết hay được bảo trợ bởi ca sĩ nào.
+
+**Tiêu chí hoàn thành**
+- Mỗi banner ca sĩ chỉ rút ra bài của ca sĩ đó (và `extraSongIds`); `featured` ra khoảng 50% khi trúng 4★/5★.
+- Thêm ca sĩ mới chỉ cần sửa `artists.json`, `songs.json`, `banners.json`, không sửa code.
+- `validate-songs` bắt được banner ca sĩ thiếu bài theo điều kiện ở M6.
 
 ---
 
@@ -496,7 +566,7 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 
 ## 8. Ngoài phạm vi MVP (KHÔNG làm trừ khi được yêu cầu)
 
-- Banner theo thể loại/sự kiện theo mùa.
+- Banner sự kiện theo mùa.
 - Vote "bài này sai độ khó" và bất kỳ tính năng cần backend.
 - Điểm danh, mini game dân gian để nhận lượt.
 - Tài khoản, bảng xếp hạng toàn cầu.
@@ -516,6 +586,7 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 - [ ] Nút Tìm karaoke đúng từ khóa.
 - [ ] Chế độ nhóm + setlist + tải ảnh + copy text.
 - [ ] Lịch sử và bộ sưu tập lưu localStorage.
-- [ ] Dữ liệu thật đã qua `validate-songs`.
+- [ ] Dữ liệu thật (chỉ bài nổi) đã qua `validate-songs`, độ hiếm do `assign-rarity` sinh ra và có chú giải trung lập (số sao không phải đánh giá).
+- [ ] Bộ lọc gọn (giọng + thể loại), nút 0 bài bị vô hiệu hóa.
 - [ ] Deploy xong, preview link đẹp, dùng tốt trên điện thoại.
 - [ ] Chân trang có tuyên bố dự án fan, không lưu lời bài hát hay ảnh bìa.

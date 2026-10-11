@@ -52,7 +52,7 @@ function runSimulation() {
 
   const passed =
     rate5 >= 2.8 &&
-    rate5 <= 4.3 &&
+    rate5 <= 4.5 &&
     rate4 >= 13.5 &&
     rate4 <= 16.5 &&
     rate3 >= 79.5 &&

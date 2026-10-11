@@ -213,7 +213,46 @@ html, body {
 .banner-sidebar-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+}
+
+.banner-category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.banner-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.banner-category-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.banner-category-badge {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--genshin-gold);
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  padding: 1px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+.banner-category-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .banner-thumb-item {
@@ -230,6 +269,11 @@ html, body {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+}
+
+.banner-thumb-item.rotation-spotlight {
+  border-color: rgba(234, 179, 8, 0.4);
+  background: linear-gradient(135deg, rgba(30, 41, 65, 0.85), rgba(234, 179, 8, 0.06));
 }
 
 .banner-thumb-item:hover {
@@ -289,6 +333,22 @@ html, body {
 
 .banner-thumb-badge.std {
   background-color: #6366f1;
+}
+
+.banner-thumb-badge.artist {
+  background-color: #8b5cf6;
+}
+
+.banner-thumb-badge.live {
+  background-color: #eab308;
+  color: #000000;
+  font-weight: 900;
+  box-shadow: 0 0 8px rgba(234, 179, 8, 0.7);
+}
+
+.banner-rotation-status-line {
+  color: var(--genshin-gold) !important;
+  font-size: 0.75rem !important;
 }
 
 .banner-thumb-info {

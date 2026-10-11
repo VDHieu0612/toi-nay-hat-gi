@@ -5,13 +5,19 @@
     "artist": "Ca sĩ thử A",
     "artistId": "ca-si-thu-a",
     "year": 2018,
-    "genre": ["ballad", "pop"],
+    "genre": [
+      "ballad",
+      "pop"
+    ],
     "voice": "nam",
     "views": 22,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["de-hat", "de-ngam"]
+    "tags": [
+      "de-hat",
+      "de-ngam"
+    ]
   },
   {
     "id": "bai-thu-02",
@@ -19,13 +25,18 @@
     "artist": "Ca sĩ thử B",
     "artistId": "ca-si-thu-b",
     "year": 2020,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "nu",
     "views": 15,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["vui-tuoi", "de-hat"]
+    "tags": [
+      "vui-tuoi",
+      "de-hat"
+    ]
   },
   {
     "id": "bai-thu-03",
@@ -33,13 +44,18 @@
     "artist": "Ca sĩ thử C",
     "artistId": "ca-si-thu-c",
     "year": 2015,
-    "genre": ["bolero"],
+    "genre": [
+      "bolero"
+    ],
     "voice": "nam",
     "views": 18,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["sau-lang", "hoai-niem"]
+    "tags": [
+      "sau-lang",
+      "hoai-niem"
+    ]
   },
   {
     "id": "bai-thu-04",
@@ -47,13 +63,18 @@
     "artist": "Ca sĩ thử D",
     "artistId": "ca-si-thu-d",
     "year": 2012,
-    "genre": ["ballad"],
+    "genre": [
+      "ballad"
+    ],
     "voice": "song-ca",
     "views": 28,
     "viewsAsOf": "2026-10",
     "difficulty": 3,
     "rarity": 3,
-    "tags": ["song-ca", "lang-man"]
+    "tags": [
+      "song-ca",
+      "lang-man"
+    ]
   },
   {
     "id": "bai-thu-05",
@@ -61,13 +82,19 @@
     "artist": "Ca sĩ thử E",
     "artistId": "ca-si-thu-e",
     "year": 2022,
-    "genre": ["rap", "pop"],
+    "genre": [
+      "rap",
+      "pop"
+    ],
     "voice": "nam",
     "views": 35,
     "viewsAsOf": "2026-10",
     "difficulty": 3,
     "rarity": 3,
-    "tags": ["soi-dong", "gioi-tre"]
+    "tags": [
+      "soi-dong",
+      "gioi-tre"
+    ]
   },
   {
     "id": "bai-thu-06",
@@ -75,13 +102,18 @@
     "artist": "Ca sĩ thử F",
     "artistId": "ca-si-thu-f",
     "year": 2008,
-    "genre": ["rock"],
+    "genre": [
+      "rock"
+    ],
     "voice": "tat-ca",
     "views": 40,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
-    "rarity": 3,
-    "tags": ["de-hat-dong-ca", "quoc-dan"]
+    "rarity": 4,
+    "tags": [
+      "de-hat-dong-ca",
+      "quoc-dan"
+    ]
   },
   {
     "id": "bai-thu-07",
@@ -89,13 +121,18 @@
     "artist": "Ca sĩ thử G",
     "artistId": "ca-si-thu-g",
     "year": 2016,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "nu",
     "views": 12,
     "viewsAsOf": "2026-10",
     "difficulty": 1,
     "rarity": 3,
-    "tags": ["de-hat", "de-thuong"]
+    "tags": [
+      "de-hat",
+      "de-thuong"
+    ]
   },
   {
     "id": "bai-thu-08",
@@ -103,13 +140,18 @@
     "artist": "Ca sĩ thử H",
     "artistId": "ca-si-thu-h",
     "year": 2019,
-    "genre": ["ballad"],
+    "genre": [
+      "ballad"
+    ],
     "voice": "nam",
     "views": 25,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["de-hat-khi-say", "sau-lang"]
+    "tags": [
+      "de-hat-khi-say",
+      "sau-lang"
+    ]
   },
   {
     "id": "bai-thu-09",
@@ -117,13 +159,18 @@
     "artist": "Ca sĩ thử I",
     "artistId": "ca-si-thu-i",
     "year": 2014,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "tat-ca",
     "views": 30,
     "viewsAsOf": "2026-10",
     "difficulty": 1,
     "rarity": 3,
-    "tags": ["de-hat-dong-ca", "vui-ve"]
+    "tags": [
+      "de-hat-dong-ca",
+      "vui-ve"
+    ]
   },
   {
     "id": "bai-thu-10",
@@ -131,13 +178,18 @@
     "artist": "Ca sĩ thử J",
     "artistId": "ca-si-thu-j",
     "year": 2017,
-    "genre": ["bolero"],
+    "genre": [
+      "bolero"
+    ],
     "voice": "nu",
     "views": 14,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["que-huong", "de-hat"]
+    "tags": [
+      "que-huong",
+      "de-hat"
+    ]
   },
   {
     "id": "bai-thu-11",
@@ -145,13 +197,18 @@
     "artist": "Ca sĩ thử K",
     "artistId": "ca-si-thu-k",
     "year": 2021,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "nam",
     "views": 38,
     "viewsAsOf": "2026-10",
     "difficulty": 3,
-    "rarity": 3,
-    "tags": ["chill", "nhe-nhang"]
+    "rarity": 4,
+    "tags": [
+      "chill",
+      "nhe-nhang"
+    ]
   },
   {
     "id": "bai-thu-12",
@@ -159,13 +216,18 @@
     "artist": "Ca sĩ thử L",
     "artistId": "ca-si-thu-l",
     "year": 2010,
-    "genre": ["ballad"],
+    "genre": [
+      "ballad"
+    ],
     "voice": "nu",
     "views": 20,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["tam-trang", "de-hat"]
+    "tags": [
+      "tam-trang",
+      "de-hat"
+    ]
   },
   {
     "id": "bai-thu-13",
@@ -173,13 +235,18 @@
     "artist": "Ca sĩ thử M",
     "artistId": "ca-si-thu-m",
     "year": 2005,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "song-ca",
     "views": 32,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["hoai-niem", "song-ca"]
+    "tags": [
+      "hoai-niem",
+      "song-ca"
+    ]
   },
   {
     "id": "bai-thu-14",
@@ -187,13 +254,18 @@
     "artist": "Ca sĩ thử N",
     "artistId": "ca-si-thu-n",
     "year": 2023,
-    "genre": ["rap"],
+    "genre": [
+      "rap"
+    ],
     "voice": "nam",
     "views": 26,
     "viewsAsOf": "2026-10",
     "difficulty": 3,
     "rarity": 3,
-    "tags": ["flow-em", "hien-dai"]
+    "tags": [
+      "flow-em",
+      "hien-dai"
+    ]
   },
   {
     "id": "bai-thu-15",
@@ -201,13 +273,18 @@
     "artist": "Ca sĩ thử O",
     "artistId": "ca-si-thu-o",
     "year": 2013,
-    "genre": ["rock"],
+    "genre": [
+      "rock"
+    ],
     "voice": "nam",
     "views": 16,
     "viewsAsOf": "2026-10",
     "difficulty": 3,
     "rarity": 3,
-    "tags": ["manh-me", "nhiet-huyet"]
+    "tags": [
+      "manh-me",
+      "nhiet-huyet"
+    ]
   },
   {
     "id": "bai-thu-16",
@@ -215,13 +292,18 @@
     "artist": "Ca sĩ thử P",
     "artistId": "ca-si-thu-p",
     "year": 2018,
-    "genre": ["ballad"],
+    "genre": [
+      "ballad"
+    ],
     "voice": "nu",
     "views": 19,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["buon", "de-hat"]
+    "tags": [
+      "buon",
+      "de-hat"
+    ]
   },
   {
     "id": "bai-thu-17",
@@ -229,13 +311,18 @@
     "artist": "Ca sĩ thử Q",
     "artistId": "ca-si-thu-q",
     "year": 2011,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "nam",
     "views": 24,
     "viewsAsOf": "2026-10",
     "difficulty": 2,
     "rarity": 3,
-    "tags": ["quen-thuoc", "de-hat"]
+    "tags": [
+      "quen-thuoc",
+      "de-hat"
+    ]
   },
   {
     "id": "bai-thu-18",
@@ -243,13 +330,18 @@
     "artist": "Ca sĩ thử R",
     "artistId": "ca-si-thu-r",
     "year": 2021,
-    "genre": ["bolero"],
+    "genre": [
+      "bolero"
+    ],
     "voice": "song-ca",
     "views": 15,
     "viewsAsOf": "2026-10",
     "difficulty": 3,
     "rarity": 3,
-    "tags": ["song-ca", "tru-tinh"]
+    "tags": [
+      "song-ca",
+      "tru-tinh"
+    ]
   },
   {
     "id": "bai-thu-19",
@@ -257,13 +349,18 @@
     "artist": "Ca sĩ thử S",
     "artistId": "ca-si-thu-s",
     "year": 2019,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "nu",
     "views": 27,
     "viewsAsOf": "2026-10",
     "difficulty": 3,
     "rarity": 3,
-    "tags": ["groove", "tre-trung"]
+    "tags": [
+      "groove",
+      "tre-trung"
+    ]
   },
   {
     "id": "bai-thu-20",
@@ -271,13 +368,18 @@
     "artist": "Ca sĩ thử T",
     "artistId": "ca-si-thu-t",
     "year": 2000,
-    "genre": ["ballad"],
+    "genre": [
+      "ballad"
+    ],
     "voice": "tat-ca",
     "views": 42,
     "viewsAsOf": "2026-10",
     "difficulty": 1,
-    "rarity": 3,
-    "tags": ["de-hat-dong-ca", "kinh-dien"]
+    "rarity": 4,
+    "tags": [
+      "de-hat-dong-ca",
+      "kinh-dien"
+    ]
   },
   {
     "id": "bai-thu-21",
@@ -285,13 +387,19 @@
     "artist": "Ca sĩ thử U",
     "artistId": "ca-si-thu-u",
     "year": 2017,
-    "genre": ["ballad"],
+    "genre": [
+      "ballad"
+    ],
     "voice": "nam",
     "views": 65,
     "viewsAsOf": "2026-10",
     "difficulty": 4,
     "rarity": 4,
-    "tags": ["cao-trao", "not-cao", "cam-xuc"]
+    "tags": [
+      "cao-trao",
+      "not-cao",
+      "cam-xuc"
+    ]
   },
   {
     "id": "bai-thu-22",
@@ -299,13 +407,19 @@
     "artist": "Ca sĩ thử V",
     "artistId": "ca-si-thu-v",
     "year": 2019,
-    "genre": ["ballad", "pop"],
+    "genre": [
+      "ballad",
+      "pop"
+    ],
     "voice": "nu",
     "views": 78,
     "viewsAsOf": "2026-10",
     "difficulty": 4,
     "rarity": 4,
-    "tags": ["cao-trao", "giong-khoe"]
+    "tags": [
+      "cao-trao",
+      "giong-khoe"
+    ]
   },
   {
     "id": "bai-thu-23",
@@ -313,13 +427,18 @@
     "artist": "Ca sĩ thử W",
     "artistId": "ca-si-thu-w",
     "year": 2021,
-    "genre": ["rap"],
+    "genre": [
+      "rap"
+    ],
     "voice": "nam",
     "views": 55,
     "viewsAsOf": "2026-10",
     "difficulty": 4,
     "rarity": 4,
-    "tags": ["rap-nhanh", "ky-thuat"]
+    "tags": [
+      "rap-nhanh",
+      "ky-thuat"
+    ]
   },
   {
     "id": "bai-thu-24",
@@ -327,13 +446,18 @@
     "artist": "Ca sĩ thử X",
     "artistId": "ca-si-thu-x",
     "year": 2015,
-    "genre": ["rock"],
+    "genre": [
+      "rock"
+    ],
     "voice": "nam",
     "views": 60,
     "viewsAsOf": "2026-10",
     "difficulty": 4,
     "rarity": 4,
-    "tags": ["ghet-gao", "chay-het-minh"]
+    "tags": [
+      "ghet-gao",
+      "chay-het-minh"
+    ]
   },
   {
     "id": "bai-thu-25",
@@ -341,13 +465,18 @@
     "artist": "Ca sĩ thử Y",
     "artistId": "ca-si-thu-y",
     "year": 2016,
-    "genre": ["ballad"],
+    "genre": [
+      "ballad"
+    ],
     "voice": "song-ca",
     "views": 72,
     "viewsAsOf": "2026-10",
     "difficulty": 4,
     "rarity": 4,
-    "tags": ["hoa-giong", "cao-trao"]
+    "tags": [
+      "hoa-giong",
+      "cao-trao"
+    ]
   },
   {
     "id": "bai-thu-26",
@@ -355,13 +484,18 @@
     "artist": "Ca sĩ thử Z",
     "artistId": "ca-si-thu-z",
     "year": 2022,
-    "genre": ["pop"],
+    "genre": [
+      "pop"
+    ],
     "voice": "nu",
     "views": 88,
     "viewsAsOf": "2026-10",
     "difficulty": 4,
-    "rarity": 4,
-    "tags": ["luyen-lay", "ky-thuat"]
+    "rarity": 5,
+    "tags": [
+      "luyen-lay",
+      "ky-thuat"
+    ]
   },
   {
     "id": "bai-thu-27",
@@ -369,13 +503,18 @@
     "artist": "Ca sĩ thử Alpha",
     "artistId": "ca-si-thu-alpha",
     "year": 2020,
-    "genre": ["bolero"],
+    "genre": [
+      "bolero"
+    ],
     "voice": "nam",
     "views": 52,
     "viewsAsOf": "2026-10",
     "difficulty": 4,
     "rarity": 4,
-    "tags": ["rung-giong", "chuyen-nghiep"]
+    "tags": [
+      "rung-giong",
+      "chuyen-nghiep"
+    ]
   },
   {
     "id": "bai-thu-28",
@@ -383,13 +522,20 @@
     "artist": "Ca sĩ thử Beta",
     "artistId": "ca-si-thu-beta",
     "year": 2018,
-    "genre": ["ballad", "pop"],
+    "genre": [
+      "ballad",
+      "pop"
+    ],
     "voice": "nam",
     "views": 185,
     "viewsAsOf": "2026-10",
     "difficulty": 5,
     "rarity": 5,
-    "tags": ["sieu-cao-trao", "pha-giong", "de-hat-khi-say"],
+    "tags": [
+      "sieu-cao-trao",
+      "pha-giong",
+      "de-hat-khi-say"
+    ],
     "challenge": "Hát đoạn điệp khúc bằng giọng gió hoặc đứng một chân suốt bài!"
   },
   {
@@ -398,13 +544,19 @@
     "artist": "Ca sĩ thử Gamma",
     "artistId": "ca-si-thu-gamma",
     "year": 2022,
-    "genre": ["rock", "pop"],
+    "genre": [
+      "rock",
+      "pop"
+    ],
     "voice": "nu",
     "views": 140,
     "viewsAsOf": "2026-10",
     "difficulty": 5,
     "rarity": 5,
-    "tags": ["quai-vat", "chay-het-minh"],
+    "tags": [
+      "quai-vat",
+      "chay-het-minh"
+    ],
     "challenge": "Lên nốt cao nhất không được nhắm mắt, mời cả phòng đồng ca!"
   },
   {
@@ -413,13 +565,19 @@
     "artist": "Ca sĩ thử Delta",
     "artistId": "ca-si-thu-delta",
     "year": 2023,
-    "genre": ["rap", "pop"],
+    "genre": [
+      "rap",
+      "pop"
+    ],
     "voice": "nam",
     "views": 230,
     "viewsAsOf": "2026-10",
     "difficulty": 5,
     "rarity": 5,
-    "tags": ["fast-flow", "khong-tho"],
+    "tags": [
+      "fast-flow",
+      "khong-tho"
+    ],
     "challenge": "Bắn rap không vấp chữ nào, nếu vấp phải uống 1 ngụm nước!"
   }
 ]

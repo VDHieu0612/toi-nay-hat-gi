@@ -118,6 +118,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         <BannerDetail
           banner={selectedBanner}
+          allBanners={banners}
           allSongs={allSongs}
           poolCount={poolCount}
           onPullOne={onPullOne}

@@ -5,10 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "vite-node scripts/validate-songs.ts",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "validate": "vite-node scripts/validate-songs.ts",
+    "compute-rarity": "vite-node scripts/compute-rarity.ts",
+    "compute-rarity:check": "vite-node scripts/compute-rarity.ts --check",
+    "import-csv": "vite-node scripts/import-csv.ts",
     "simulate": "vite-node scripts/simulate.ts"
   },
   "dependencies": {

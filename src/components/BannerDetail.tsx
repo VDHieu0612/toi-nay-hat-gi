@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Banner, Song } from '../lib/types';
 import { SongCard } from './SongCard';
+import { getArtistRotationInfo } from '../lib/rotation';
 
 interface BannerDetailProps {
   banner: Banner;
+  allBanners?: Banner[];
   allSongs: Song[];
   poolCount: number;
   onPullOne: () => void;
@@ -15,6 +17,7 @@ interface BannerDetailProps {
 
 export const BannerDetail: React.FC<BannerDetailProps> = ({
   banner,
+  allBanners = [],
   allSongs,
   poolCount,
   onPullOne,
@@ -24,6 +27,14 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
   activeFilterCount = 0,
 }) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  // Tính thông tin xoay tua 2 ngày nếu là banner ca sĩ
+  const rotationInfo = useMemo(() => {
+    return getArtistRotationInfo(allBanners.length > 0 ? allBanners : [banner]);
+  }, [allBanners, banner]);
+
+  const isArtist = banner.type === 'artist';
+  const isActiveArtist = isArtist && rotationInfo?.activeBannerId === banner.id;
 
   // Tìm các bài hát rate-up nếu có
   const featuredSongs = (banner.featured || [])
@@ -45,7 +56,11 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
         {/* Cột trái nội dung thông tin */}
         <div className="banner-poster-info">
           <div className="banner-tag-pill">
-            {hasFeatured ? '✦ SỰ KIỆN RATE-UP ✦' : '✦ BANNER TIÊU CHUẨN ✦'}
+            {isArtist
+              ? '✦ TIÊU ĐIỂM NGHỆ SĨ · XOAY TUA 2 NGÀY ✦'
+              : hasFeatured
+                ? '✦ SỰ KIỆN RATE-UP ✦'
+                : '✦ BANNER TIÊU CHUẨN ✦'}
           </div>
 
           <h2 className="banner-main-title">
@@ -61,6 +76,20 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
               <p className="banner-rateup-line">
                 <span className="guarantee-icon">★</span>
                 Tăng 50% tỉ lệ rơi vào các bài hát Rate-Up!
+              </p>
+            )}
+            {isArtist && rotationInfo && (
+              <p className="banner-rateup-line banner-rotation-status-line">
+                <span className="guarantee-icon">⏰</span>
+                {isActiveArtist ? (
+                  <span>
+                    <strong>Đang mở đợt này:</strong> {rotationInfo.timeRemainingFormatted} (Kỳ sau: {rotationInfo.nextBanner.name.split('·')[0].trim()})
+                  </span>
+                ) : (
+                  <span>
+                    <strong>Xoay tua 2 ngày:</strong> Sẽ mở trong chu kỳ tiếp theo
+                  </span>
+                )}
               </p>
             )}
           </div>
