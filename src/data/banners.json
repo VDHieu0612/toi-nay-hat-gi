@@ -1,0 +1,16 @@
+[
+  {
+    "id": "tong-hop",
+    "name": "Tổng Hợp Quán Hát",
+    "description": "Kho bài hát phong phú đủ mọi thể loại, thập niên và giọng hát.",
+    "featured": [],
+    "theme": "#6366f1"
+  },
+  {
+    "id": "thu-rate-up",
+    "name": "Cao Trào & Thách Thức (Rate Up)",
+    "description": "Tăng 50% tỉ lệ xuất hiện các bài cao trào Bài thử 21 (4★) và Bài thử 28 (5★).",
+    "featured": ["bai-thu-21", "bai-thu-28"],
+    "theme": "#e11d48"
+  }
+]
