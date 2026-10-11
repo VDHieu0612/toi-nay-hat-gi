@@ -20,7 +20,6 @@ function runSimulation() {
   const startTime = Date.now();
 
   for (let i = 0; i < TOTAL_PULLS; i++) {
-    const prevPullsSince5 = state.pullsSinceFiveStar;
     const result = pull(songs, banner, state);
     state = result.state;
 

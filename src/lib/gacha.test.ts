@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { pull, pullTen, resolveAvailableRarity, CONFIG } from './gacha';
-import { filterByBanner, filterByUser, getFilteredPool } from './filters';
+import { pull, pullTen, resolveAvailableRarity } from './gacha';
+import { filterByUser, getFilteredPool } from './filters';
 import { Song, Banner, PullState } from './types';
 import songsData from '../data/songs.json';
 import bannersData from '../data/banners.json';
