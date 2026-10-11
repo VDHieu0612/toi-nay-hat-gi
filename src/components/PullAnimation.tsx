@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Song, Rarity } from '../lib/types';
-import { SongCard } from './SongCard';
 
 interface PullAnimationProps {
   isOpen: boolean;
@@ -13,173 +12,121 @@ export const PullAnimation: React.FC<PullAnimationProps> = ({
   songs,
   onComplete,
 }) => {
-  const [phase, setPhase] = useState<'meteor' | 'reveal'>('meteor');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [phase, setPhase] = useState<'meteor' | 'burst' | 'done'>('meteor');
   const [soundEnabled, setSoundEnabled] = useState(false);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  // Tính độ hiếm cao nhất của lượt rút để báo trước màu sao băng
+  // Tính độ hiếm cao nhất để báo trước màu sao băng
   const maxRarity: Rarity = useMemo(() => {
     if (!songs || songs.length === 0) return 3;
     const max = Math.max(...songs.map((s) => s.rarity));
     return (max as Rarity) || 3;
   }, [songs]);
 
-  // Tạo âm thanh nhẹ bằng Web Audio API (chỉ khi người dùng bật âm thanh)
-  const playSoundEffect = (rarity: number) => {
+  // Âm thanh Web Audio nhỏ khi bùng nổ (tùy chọn)
+  const playGachaSound = () => {
     if (!soundEnabled) return;
     try {
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
       const ctx = audioCtxRef.current;
-      if (ctx.state === 'suspended') {
-        ctx.resume();
-      }
+      if (ctx.state === 'suspended') ctx.resume();
+
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
 
-      if (rarity === 5) {
-        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
-        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3); // A5
-      } else if (rarity === 4) {
+      if (maxRarity === 5) {
+        // Hợp âm vang sáng cho 5★
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(1174.66, ctx.currentTime + 0.4); // D6
+      } else if (maxRarity === 4) {
         osc.frequency.setValueAtTime(440, ctx.currentTime); // A4
-        osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.25); // E5
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3); // A5
       } else {
         osc.frequency.setValueAtTime(329.63, ctx.currentTime); // E4
-        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.2); // A4
+        osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.25); // E5
       }
 
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
 
       osc.start();
-      osc.stop(ctx.currentTime + 0.35);
+      osc.stop(ctx.currentTime + 0.45);
     } catch {
-      // Bỏ qua lỗi audio nếu trình duyệt chặn
+      // Bỏ qua lỗi audio
     }
   };
 
-  // Reset state khi mở modal mới
   useEffect(() => {
-    if (isOpen) {
-      setPhase('meteor');
-      setCurrentIndex(0);
+    if (!isOpen) return;
 
-      // Chuyển từ meteor sang reveal sau 1.3 giây
-      const timer = setTimeout(() => {
-        setPhase('reveal');
-        if (songs[0]) {
-          playSoundEffect(songs[0].rarity);
-        }
-      }, 1300);
+    setPhase('meteor');
 
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, songs]);
+    // Giai đoạn 1: Chờ đợi sao băng lao vào (1.2s)
+    const meteorTimer = setTimeout(() => {
+      setPhase('burst');
+      playGachaSound();
 
-  if (!isOpen || songs.length === 0) {
-    return null;
-  }
+      // Giai đoạn 2: Bùng nổ chớp sáng (0.3s)
+      const burstTimer = setTimeout(() => {
+        setPhase('done');
+        onComplete();
+      }, 350);
 
-  const handleNext = () => {
-    if (currentIndex < songs.length - 1) {
-      const nextIndex = currentIndex + 1;
-      setCurrentIndex(nextIndex);
-      playSoundEffect(songs[nextIndex].rarity);
-    } else {
-      onComplete();
-    }
-  };
+      return () => clearTimeout(burstTimer);
+    }, 1200);
+
+    return () => clearTimeout(meteorTimer);
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   const handleSkip = () => {
     onComplete();
   };
 
-  const currentSong = songs[currentIndex];
-  const isLast = currentIndex === songs.length - 1;
-
   return (
-    <div className="pull-overlay">
-      {/* Nút Skip luôn hiển thị ở mọi thời điểm */}
+    <div className={`genshin-pull-overlay phase-${phase} max-rarity-${maxRarity}`}>
+      {/* Nút Skip luôn hiển thị ở góc trên */}
       <button
         type="button"
-        className="pull-skip-btn"
+        className="pull-skip-top-btn"
         onClick={handleSkip}
-        title="Bỏ qua hiệu ứng và xem toàn bộ kết quả"
+        title="Bỏ qua hiệu ứng và xem ngay kết quả"
       >
         Skip ⏭
       </button>
 
-      {/* Nút bật/tắt âm thanh (tùy chọn, mặc định tắt) */}
+      {/* Nút bật/tắt âm thanh */}
       <button
         type="button"
-        style={{
-          position: 'absolute',
-          top: 16,
-          left: 16,
-          background: 'rgba(255, 255, 255, 0.1)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          color: '#fff',
-          padding: '8px 12px',
-          borderRadius: 20,
-          fontSize: '0.8125rem',
-          cursor: 'pointer',
-          zIndex: 10001,
-        }}
+        className="pull-sound-toggle-btn"
         onClick={() => setSoundEnabled((prev) => !prev)}
         title={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
       >
         {soundEnabled ? '🔊 Bật' : '🔇 Tắt'}
       </button>
 
-      {/* Giai đoạn 1: Sao băng báo trước độ hiếm cao nhất */}
+      {/* Giai đoạn 1: Sao băng / Quả cầu sáng bay vào trung tâm */}
       {phase === 'meteor' && (
-        <div className={`meteor-stage rarity-${maxRarity}`}>
-          <div className="meteor-track">
-            <div className="meteor-head" />
+        <div className={`genshin-meteor-container rarity-${maxRarity} ${maxRarity === 5 ? 'shake-5star' : ''}`}>
+          <div className="meteor-trail" />
+          <div className="meteor-orb">
+            <div className="meteor-core" />
+            <div className="meteor-halo" />
           </div>
-          <div className="meteor-flash" />
-          <div className="meteor-text">
-            {maxRarity === 5 ? '★ ★ ★ HUYỀN THOẠI 5★ ★ ★' : maxRarity === 4 ? '★ ★ CAO TRÀO 4★ ★' : 'QUÁN HÁT ĐANG CHỌN BÀI...'}
+          <div className="meteor-title-preview">
+            {maxRarity === 5 ? '✦ HUYỀN THOẠI 5★ ✦' : maxRarity === 4 ? '✦ CAO TRÀO 4★ ✦' : '✦ BÀI HÁT PHỔ BIẾN ✦'}
           </div>
         </div>
       )}
 
-      {/* Giai đoạn 2: Lật thẻ từng bài */}
-      {phase === 'reveal' && currentSong && (
-        <div className="reveal-stage">
-          {songs.length > 1 && (
-            <div className="reveal-progress">
-              Bài {currentIndex + 1} / {songs.length}
-            </div>
-          )}
-
-          <div
-            className="reveal-card-wrapper"
-            onClick={handleNext}
-            title="Bấm để tiếp tục"
-          >
-            <div
-              key={currentSong.id + currentIndex}
-              className={`reveal-card-inner ${currentSong.rarity === 5 ? 'celebrate-5star' : ''}`}
-            >
-              <SongCard song={currentSong} />
-            </div>
-          </div>
-
-          <div className="reveal-controls">
-            <button
-              type="button"
-              className="reveal-next-btn"
-              onClick={handleNext}
-            >
-              {isLast ? 'Xem toàn bộ Setlist 🎉' : 'Bài tiếp theo →'}
-            </button>
-          </div>
-        </div>
+      {/* Giai đoạn 2: Bùng nổ chớp sáng toàn màn hình */}
+      {phase === 'burst' && (
+        <div className={`genshin-burst-flash rarity-${maxRarity}`} />
       )}
     </div>
   );
