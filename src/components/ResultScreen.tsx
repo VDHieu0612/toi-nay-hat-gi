@@ -553,13 +553,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
                 Lật tất cả ⚡
               </button>
             )}
-            <button
-              type="button"
-              className="genshin-again-top-btn"
-              onClick={() => onPullAgain(lastPullType)}
-            >
-              Rút tiếp ×{lastPullType} ↻
-            </button>
           </div>
         </header>
       )}
