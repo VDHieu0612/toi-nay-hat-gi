@@ -633,407 +633,119 @@ html, body {
 }
 
 /* =========================================
-   M3: GENSHIN POINTED ARCH SONG CARD
+   M3: SIZING VARIABLES & 1-ROW TRACK
    ========================================= */
-.genshin-card-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 2 / 3;
-  perspective: 1000px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.genshin-card-flipper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.genshin-card-container.unflipped .genshin-card-flipper {
-  transform: rotateY(180deg);
-}
-
-.genshin-card-container.flipped .genshin-card-flipper {
-  transform: rotateY(0deg);
-}
-
-.card-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: 14px;
-  clip-path: polygon(
-    50% 0%,
-    84% 4.5%,
-    100% 11%,
-    100% 95%,
-    85% 99%,
-    50% 100%,
-    15% 99%,
-    0% 95%,
-    0% 11%,
-    16% 4.5%
-  );
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+:root {
+  --gap: clamp(6px, 1vw, 14px);
+  --pad: clamp(12px, 2.5vw, 36px);
+  --w-by-width: calc((100vw - 2 * var(--pad) - 9 * var(--gap)) / 10);
+  --w-by-height: calc(62dvh / 2.5);
+  --min-card-w: 104px;
+  --card-w: max(var(--min-card-w), min(var(--w-by-width), var(--w-by-height)));
 }
 
 /* =========================================
-   MẶT SAU (Card Back)
+   GACHA RESULT VIEWPORT & 5 PHASES
    ========================================= */
-.card-back {
-  background: radial-gradient(circle at 50% 40%, #1e293b 0%, #090e17 100%);
-  border: 2px solid rgba(229, 195, 120, 0.4);
-  transform: rotateY(180deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-}
-
-.card-back-ornament {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  color: var(--genshin-gold);
-}
-
-.card-back-symbol {
-  width: 65%;
-  height: 65%;
-  opacity: 0.8;
-  filter: drop-shadow(0 0 8px var(--genshin-gold-glow));
-}
-
-.card-back-hint {
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(229, 195, 120, 0.8);
-  font-weight: 700;
-  animation: pulseHint 1.8s infinite alternate;
-}
-
-@keyframes pulseHint {
-  from { opacity: 0.5; }
-  to { opacity: 1; }
-}
-
-/* =========================================
-   MẶT TRƯỚC (Card Front)
-   ========================================= */
-.card-front {
-  background: #0f172a;
-  padding: 14px 10px 10px;
-  justify-content: space-between;
-  border: 2px solid;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-/* Rarity Colors & Borders */
-.rarity-3 .card-front {
-  border-color: #38bdf8;
-  background: linear-gradient(160deg, #0c2134 0%, #070d18 100%);
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25), inset 0 0 12px rgba(56, 189, 248, 0.1);
-}
-
-.rarity-4 .card-front {
-  border-color: #c084fc;
-  background: linear-gradient(160deg, #27143e 0%, #0c0818 100%);
-  box-shadow: 0 0 22px rgba(192, 132, 252, 0.4), inset 0 0 16px rgba(192, 132, 252, 0.15);
-}
-
-.rarity-5 .card-front {
-  border-color: #fbbf24;
-  background: linear-gradient(160deg, #382506 0%, #150d02 100%);
-  box-shadow: 0 0 30px rgba(251, 191, 36, 0.6), inset 0 0 20px rgba(251, 191, 36, 0.25);
-  animation: goldPulseBorder 2.5s infinite alternate ease-in-out;
-}
-
-@keyframes goldPulseBorder {
-  0% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), inset 0 0 12px rgba(251, 191, 36, 0.2); }
-  100% { box-shadow: 0 0 38px rgba(251, 191, 36, 0.8), inset 0 0 24px rgba(251, 191, 36, 0.4); }
-}
-
-/* Holographic sheen for 5-star */
-.card-holographic-sheen {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    transparent 35%,
-    rgba(255, 255, 255, 0.25) 45%,
-    rgba(251, 191, 36, 0.35) 50%,
-    rgba(255, 255, 255, 0.25) 55%,
-    transparent 65%,
-    transparent 100%
-  );
-  background-size: 200% 200%;
-  animation: shimmerSweep 3.5s infinite linear;
-  pointer-events: none;
-  z-index: 4;
-}
-
-@keyframes shimmerSweep {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* New Badge ("Mới") */
-.card-new-badge {
-  position: absolute;
-  top: 14px;
-  right: 8px;
-  background: linear-gradient(135deg, #e11d48, #f43f5e);
-  color: #ffffff;
-  font-size: 0.625rem;
-  font-weight: 800;
-  padding: 1px 6px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-  z-index: 10;
-  letter-spacing: 0.05em;
-}
-
-/* Card Three Zones */
-.card-zone-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 6px 0;
-  z-index: 2;
-}
-
-.card-stars-display {
-  font-size: 0.8125rem;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-}
-.card-stars-display.rarity-3 { color: var(--color-3star); text-shadow: 0 0 8px var(--color-3star); }
-.card-stars-display.rarity-4 { color: var(--color-4star); text-shadow: 0 0 10px var(--color-4star); }
-.card-stars-display.rarity-5 { color: var(--color-5star); text-shadow: 0 0 12px var(--color-5star); }
-
-.card-voice-tag {
-  font-size: 0.625rem;
-  font-weight: 700;
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.12);
-  padding: 1px 5px;
-  border-radius: 999px;
-  backdrop-filter: blur(4px);
-}
-
-.card-zone-middle {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  z-index: 2;
-}
-
-.card-artwork-frame {
-  width: 100%;
-  max-width: 82px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-illustration-svg {
-  width: 100%;
-  height: 100%;
-  color: var(--color-3star);
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
-  transition: transform 0.3s ease;
-}
-
-.rarity-4 .card-illustration-svg { color: var(--color-4star); }
-.rarity-5 .card-illustration-svg { color: var(--color-5star); }
-
-.genshin-card-container:hover .card-illustration-svg {
-  transform: scale(1.05);
-}
-
-.card-zone-bottom {
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 0 4px 4px;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 8px;
-  backdrop-filter: blur(4px);
-}
-
-.card-song-title {
-  font-size: 0.8125rem;
-  font-weight: 800;
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.25;
-}
-
-.card-song-artist {
-  font-size: 0.6875rem;
-  color: #94a3b8;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-difficulty-tag {
-  font-size: 0.5625rem;
-  font-weight: 600;
-  color: #cbd5e1;
-  margin-top: 1px;
-}
-
-.card-challenge-snippet {
-  font-size: 0.5625rem;
-  color: #fef08a;
-  background: rgba(251, 191, 36, 0.2);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  padding: 2px 4px;
-  border-radius: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
-}
-
-.card-footer-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.5625rem;
-  color: #64748b;
-  margin-top: 2px;
-  padding-top: 2px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* =========================================
-   LIGHT BEAMS (Chùm sáng thẳng đứng vươn lên)
-   ========================================= */
-.card-light-beam {
-  position: absolute;
-  top: -85px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 24px;
-  height: 90px;
-  pointer-events: none;
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: beamRise 0.6s ease-out forwards;
-}
-
-@keyframes beamRise {
-  from { opacity: 0; transform: translateX(-50%) scaleY(0.2); }
-  to { opacity: 1; transform: translateX(-50%) scaleY(1); }
-}
-
-.beam-core {
-  width: 4px;
-  height: 100%;
-  border-radius: 999px;
-  filter: blur(1px);
-}
-
-.beam-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  filter: blur(8px);
-  opacity: 0.8;
-}
-
-.beam-rarity-3 .beam-core { background: #e0f2fe; box-shadow: 0 0 10px #38bdf8; }
-.beam-rarity-3 .beam-glow { background: radial-gradient(circle, rgba(56, 189, 248, 0.6) 0%, transparent 70%); }
-
-.beam-rarity-4 .beam-core { background: #f3e8ff; box-shadow: 0 0 14px #c084fc; }
-.beam-rarity-4 .beam-glow { background: radial-gradient(circle, rgba(192, 132, 252, 0.75) 0%, transparent 70%); }
-
-.beam-rarity-5 .beam-core { background: #fffbeb; box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b; }
-.beam-rarity-5 .beam-glow { background: radial-gradient(circle, rgba(251, 191, 36, 0.9) 0%, transparent 70%); }
-
-.beam-sparkles {
-  position: absolute;
-  inset: 0;
-}
-.beam-sparkles .sparkle {
-  position: absolute;
-  font-size: 0.6875rem;
-  color: #ffffff;
-  animation: floatSparkle 1.6s infinite ease-in-out;
-}
-.beam-rarity-5 .sparkle { color: #fef08a; text-shadow: 0 0 6px #f59e0b; }
-.beam-rarity-4 .sparkle { color: #e9d5ff; text-shadow: 0 0 6px #c084fc; }
-.beam-rarity-3 .sparkle { color: #bae6fd; text-shadow: 0 0 6px #38bdf8; }
-
-.sparkle.s1 { top: 15%; left: -6px; animation-delay: 0.1s; }
-.sparkle.s2 { top: 50%; right: -8px; animation-delay: 0.4s; }
-.sparkle.s3 { top: 80%; left: -4px; animation-delay: 0.7s; }
-
-@keyframes floatSparkle {
-  0%, 100% { transform: translateY(0) scale(0.8); opacity: 0.4; }
-  50% { transform: translateY(-8px) scale(1.2); opacity: 1; }
-}
-
-/* =========================================
-   GENSHIN RESULT SCREEN (1 Hàng Ngang Duy Nhất)
-   ========================================= */
-.genshin-result-screen {
+.gacha-result-viewport {
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 30%, #172138 0%, #070a13 100%);
+  width: 100vw;
+  height: 100dvh;
+  background: radial-gradient(ellipse at 50% 25%, #131b31 0%, #060912 100%);
   z-index: 9999;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  height: 100dvh;
-  width: 100vw;
+  transition: background 0.8s ease;
 }
 
-.result-top-bar {
-  height: 54px;
+.gacha-result-viewport.camera-shake-active {
+  animation: cameraJitter 0.15s infinite;
+}
+
+@keyframes cameraJitter {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3px, 2px); }
+  50% { transform: translate(2px, -3px); }
+  75% { transform: translate(-2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Nhịp 2: Flash chớp trắng va chạm */
+.fullscreen-impact-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  animation: whiteImpactBurst 0.45s ease-out forwards;
+}
+
+.fullscreen-impact-flash.rarity-3 {
+  background: radial-gradient(circle, #ffffff 10%, #38bdf8 60%, transparent 100%);
+}
+.fullscreen-impact-flash.rarity-4 {
+  background: radial-gradient(circle, #ffffff 15%, #c084fc 65%, transparent 100%);
+}
+.fullscreen-impact-flash.rarity-5 {
+  background: radial-gradient(circle, #ffffff 20%, #fbbf24 60%, transparent 100%);
+}
+
+@keyframes whiteImpactBurst {
+  0% { opacity: 0; transform: scale(0.6); }
+  25% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+
+/* Nút Skip & Sound trên cùng */
+.genshin-global-skip-btn {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 10005;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.genshin-global-skip-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(1.04);
+}
+
+.genshin-sound-btn {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  z-index: 10005;
+}
+
+/* Header bar cho Nhịp 3, 4, 5 */
+.result-header-bar {
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   z-index: 20;
+  animation: fadeInDown 0.4s ease forwards;
 }
 
-.result-nav-back-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #e2e8f0;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.result-nav-back-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-}
-
-.result-title-badge {
+.result-header-title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1043,21 +755,20 @@ html, body {
   letter-spacing: 0.05em;
 }
 
-.result-progress-counter {
+.result-header-counter {
   font-size: 0.8125rem;
   color: var(--text-muted);
-  font-weight: 600;
 }
 
-.result-top-actions {
+.result-header-right {
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
 }
 
-.result-flip-all-btn {
+.genshin-flip-all-btn {
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  border: 1px solid #a5b4fc;
+  border: 1px solid #c4b5fd;
   color: #ffffff;
   padding: 6px 14px;
   border-radius: 20px;
@@ -1067,11 +778,11 @@ html, body {
   box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
   transition: all 0.2s;
 }
-.result-flip-all-btn:hover {
+.genshin-flip-all-btn:hover {
   transform: scale(1.04);
 }
 
-.result-again-btn {
+.genshin-again-top-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: #ffffff;
@@ -1082,263 +793,456 @@ html, body {
   cursor: pointer;
   transition: all 0.2s;
 }
-.result-again-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
 
-/* Stage Area: Single Horizontal Row for 10 cards */
-.result-stage-area {
+/* =========================================
+   STAGE AREA & 1-ROW HORIZONTAL TRACK
+   ========================================= */
+.result-cards-main-stage {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 0;
-  padding: 10px 16px 20px;
+  padding: 10px var(--pad) 16px;
   overflow: hidden;
+  position: relative;
+  z-index: 10;
 }
 
-.result-cards-horizontal-row {
+.cards-horizontal-track {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--gap);
   width: 100%;
-  height: 100%;
-  max-height: 520px;
+  max-width: 100%;
 }
 
-.result-card-column {
-  height: 68dvh;
-  max-height: 440px;
-  aspect-ratio: 2 / 3;
+.card-track-slot {
+  width: var(--card-w);
+  height: calc(var(--card-w) * 2.5);
+  max-height: 60dvh;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  position: relative;
+  /* Nhịp 3: Thẻ rơi vào hàng với animation rơi so le */
+  animation: cardFlyIntoPlace 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.result-cards-horizontal-row.single-card-mode .result-card-column {
-  height: 72dvh;
-  max-height: 480px;
+.cards-horizontal-track.track-single-card .card-track-slot {
+  width: min(220px, 60vw);
+  height: min(520px, 68dvh);
 }
 
-/* Result Bottom Bar */
-.result-bottom-bar {
-  height: 58px;
+@keyframes cardFlyIntoPlace {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.65);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Khi màn hình hẹp (mobile / tablet đứng), cuộn ngang có snap */
+@media (max-width: 1024px) {
+  .result-cards-main-stage {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-left: var(--pad);
+    padding-right: var(--pad);
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(229, 195, 120, 0.3) transparent;
+  }
+
+  .cards-horizontal-track.track-ten-cards {
+    justify-content: flex-start;
+    width: max-content;
+  }
+
+  .card-track-slot {
+    scroll-snap-align: center;
+  }
+}
+
+/* =========================================
+   M3: COMPACT SONG CARD (Rounded Arch, No clip-path)
+   ========================================= */
+.card-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  cursor: pointer;
+  user-select: none;
+  overflow: visible; /* Để chùm beam vươn lên không bị che */
+}
+
+/* 3D Flipper */
+.card-flipper-3d {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-wrapper.is-back .card-flipper-3d {
+  transform: rotateY(180deg);
+}
+
+.card-wrapper.is-flipped .card-flipper-3d {
+  transform: rotateY(0deg);
+}
+
+/* Card Side Common Styles */
+.card-side {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  /* ĐỈNH VÒM TRÒN tạo bằng BORDER-RADIUS (không dùng clip-path) */
+  border-radius: 999px 999px 12px 12px / 20% 20% 12px 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================
+   MẶT SAU (Card Back Face)
+   ========================================= */
+.card-back-face {
+  background: radial-gradient(circle at 50% 38%, #1e293b 0%, #090e17 100%);
+  border: 1.5px solid rgba(229, 195, 120, 0.35);
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back-pattern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--genshin-gold);
+}
+
+.card-back-svg {
+  width: 60%;
+  height: auto;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 8px var(--genshin-gold-glow));
+}
+
+.card-back-prompt {
+  font-size: clamp(0.55rem, 1vw, 0.65rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(229, 195, 120, 0.85);
+  font-weight: 700;
+}
+
+/* =========================================
+   MẶT TRƯỚC (Card Front Face)
+   ========================================= */
+.card-front-face {
+  border: 2px solid;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Phân cấp độ hiếm */
+.rarity-3-bg {
+  border-color: #38bdf8;
+  background: linear-gradient(165deg, #0c2035 0%, #060e19 100%);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.25), inset 0 0 10px rgba(56, 189, 248, 0.1);
+}
+
+.rarity-4-bg {
+  border-color: #c084fc;
+  background: linear-gradient(165deg, #25123d 0%, #0a0616 100%);
+  box-shadow: 0 0 20px rgba(192, 132, 252, 0.4), inset 0 0 14px rgba(192, 132, 252, 0.15);
+}
+
+.rarity-5-bg {
+  border-color: #fbbf24;
+  background: linear-gradient(165deg, #362205 0%, #120b02 100%);
+  box-shadow: 0 0 28px rgba(251, 191, 36, 0.65), inset 0 0 18px rgba(251, 191, 36, 0.25);
+  animation: goldPulseBorder 2.5s infinite alternate ease-in-out;
+}
+
+/* Shimmer ánh kim chạy ngang cho 5★ */
+.card-5star-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.2) 45%,
+    rgba(251, 191, 36, 0.4) 50%,
+    rgba(255, 255, 255, 0.2) 55%,
+    transparent 65%,
+    transparent 100%
+  );
+  background-size: 200% 200%;
+  animation: shimmerSweep 3.2s infinite linear;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* VÙNG AN TOÀN (Safe Content Zone):
+   Cách đỉnh vòm 20% chiều cao thẻ, cách 2 bên 8% */
+.card-safe-content {
+  position: absolute;
+  top: 18%;
+  bottom: 6%;
+  left: 7%;
+  right: 7%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 4;
+}
+
+/* 1. SỐ SAO (Rõ ràng ở trên) */
+.card-stars-zone {
+  font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+.star-rarity-3 { color: var(--color-3star); text-shadow: 0 0 8px var(--color-3star); }
+.star-rarity-4 { color: var(--color-4star); text-shadow: 0 0 10px var(--color-4star); }
+.star-rarity-5 { color: var(--color-5star); text-shadow: 0 0 12px var(--color-5star); }
+
+/* 2. HÌNH MINH HỌA SVG ĐƠN GIẢN Ở GIỮA */
+.card-art-zone {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  padding: 2px 0;
+}
+
+.card-art-icon-container {
+  width: 60%;
+  max-width: 58px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-mini-svg {
+  width: 100%;
+  height: 100%;
+}
+.rarity-3-bg .card-mini-svg { color: var(--color-3star); filter: drop-shadow(0 0 6px var(--color-3star)); }
+.rarity-4-bg .card-mini-svg { color: var(--color-4star); filter: drop-shadow(0 0 8px var(--color-4star)); }
+.rarity-5-bg .card-mini-svg { color: var(--color-5star); filter: drop-shadow(0 0 10px var(--color-5star)); }
+
+/* 3. TÊN BÀI & 4. TÊN CA SĨ */
+.card-info-zone {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-song-name {
+  font-size: clamp(0.68rem, 1.1vw, 0.85rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  /* Tối đa 3 dòng, quá dài cắt dấu … */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.card-artist-name {
+  font-size: clamp(0.56rem, 0.85vw, 0.72rem);
+  color: #94a3b8;
+  line-height: 1.2;
+  /* Tối đa 2 dòng, quá dài cắt dấu … */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+/* =========================================
+   CHÙM SÁNG (Top Beam)
+   ========================================= */
+.card-top-beam {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 85px;
+  pointer-events: none;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: beamRiseUp 0.5s ease-out forwards;
+}
+
+@keyframes beamRiseUp {
+  from { opacity: 0; transform: translateX(-50%) scaleY(0.2); }
+  to { opacity: 1; transform: translateX(-50%) scaleY(1); }
+}
+
+.beam-vertical-ray {
+  width: 3px;
+  height: 100%;
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.beam-glow-spread {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  filter: blur(8px);
+  opacity: 0.8;
+}
+
+/* 3★: Xanh dương - chùm sáng mảnh */
+.beam-3star .beam-vertical-ray { width: 2px; background: #e0f2fe; box-shadow: 0 0 8px #38bdf8; }
+.beam-3star .beam-glow-spread { background: radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, transparent 70%); }
+
+/* 4★: Tím - chùm sáng rõ, vài hạt */
+.beam-4star .beam-vertical-ray { width: 3.5px; background: #f3e8ff; box-shadow: 0 0 12px #c084fc; }
+.beam-4star .beam-glow-spread { background: radial-gradient(circle, rgba(192, 132, 252, 0.7) 0%, transparent 70%); }
+
+/* 5★: Vàng - chùm sáng dày, glow mạnh */
+.beam-5star .beam-vertical-ray { width: 5px; background: #fffbeb; box-shadow: 0 0 18px #fbbf24, 0 0 35px #f59e0b; }
+.beam-5star .beam-glow-spread { background: radial-gradient(circle, rgba(251, 191, 36, 0.85) 0%, transparent 70%); }
+
+.beam-particles .p1, .beam-particles .p2, .beam-particles .p3 {
+  position: absolute;
+  font-size: 0.625rem;
+  animation: floatSparkle 1.5s infinite ease-in-out;
+}
+.beam-4star .beam-particles { color: #d8b4fe; }
+.beam-5star .beam-particles { color: #fef08a; text-shadow: 0 0 6px #f59e0b; }
+
+.p1 { top: 20%; left: -6px; animation-delay: 0.1s; }
+.p2 { top: 60%; right: -6px; animation-delay: 0.4s; }
+.p3 { top: 85%; left: -3px; animation-delay: 0.8s; }
+
+/* =========================================
+   SPOTLIGHT 5-STAR (Nhịp 4: Zoom to giữa đếm sao)
+   ========================================= */
+.spotlight-5star-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 13, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10002;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: spotlightFadeIn 0.35s ease-out forwards;
+}
+
+@keyframes spotlightFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.spotlight-5star-aura {
+  position: absolute;
+  width: min(500px, 90vw);
+  height: min(500px, 90vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, transparent 70%);
+  animation: auraPulse 1.4s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes auraPulse {
+  from { transform: scale(0.9); opacity: 0.6; }
+  to { transform: scale(1.15); opacity: 0.95; }
+}
+
+.spotlight-5star-card-holder {
+  width: min(220px, 60vw);
+  height: min(500px, 68dvh);
+  z-index: 10;
+  animation: spotlightCardPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes spotlightCardPop {
+  0% { transform: scale(0.6) rotateY(90deg); opacity: 0; }
+  100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+}
+
+.spotlight-stars-text {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-5star);
+  letter-spacing: 4px;
+  text-shadow: 0 0 16px var(--color-5star);
+  margin-top: 18px;
+  z-index: 10;
+  animation: starTextBounce 0.2s ease;
+}
+
+@keyframes starTextBounce {
+  0% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+/* =========================================
+   FOOTER BAR CHO NHỊP 5 (TỔNG KẾT)
+   ========================================= */
+.result-footer-bar {
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  background: rgba(7, 10, 19, 0.7);
+  background: rgba(8, 11, 20, 0.75);
   backdrop-filter: blur(8px);
   border-top: 1px solid var(--border-color);
   z-index: 20;
+  animation: fadeInUp 0.4s ease forwards;
 }
 
-.result-hint-text {
+.result-footer-note {
   font-size: 0.75rem;
   color: var(--text-muted);
 }
 
-.result-bottom-right {
+.result-footer-right {
   display: flex;
   gap: 12px;
   align-items: center;
 }
 
-/* =========================================
-   GENSHIN PULL ANIMATION (3 Giai Đoạn)
-   ========================================= */
-.genshin-pull-overlay {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at center, #0e1628 0%, #03050a 100%);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.pull-skip-top-btn {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  cursor: pointer;
-  z-index: 10002;
-  backdrop-filter: blur(8px);
-  transition: all 0.2s;
-}
-.pull-skip-top-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-}
-
-.pull-sound-toggle-btn {
-  position: absolute;
-  top: 16px;
-  left: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  z-index: 10002;
-}
-
-/* Giai đoạn 1: Meteor */
-.genshin-meteor-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.meteor-trail {
-  position: absolute;
-  width: 5px;
-  height: 280px;
-  transform: rotate(45deg);
-  animation: meteorShoot 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-}
-
-.meteor-orb {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: orbAppear 1.2s forwards;
-}
-
-.meteor-core {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #ffffff;
-}
-
-.meteor-halo {
-  position: absolute;
-  inset: -20px;
-  border-radius: 50%;
-  filter: blur(12px);
-  opacity: 0.9;
-}
-
-/* Meteor Colors */
-.genshin-meteor-container.rarity-3 .meteor-trail {
-  background: linear-gradient(to top, #38bdf8, transparent);
-  box-shadow: 0 0 24px #38bdf8;
-}
-.genshin-meteor-container.rarity-3 .meteor-halo { background: #38bdf8; }
-
-.genshin-meteor-container.rarity-4 .meteor-trail {
-  background: linear-gradient(to top, #c084fc, transparent);
-  box-shadow: 0 0 32px #c084fc;
-}
-.genshin-meteor-container.rarity-4 .meteor-halo { background: #c084fc; }
-
-.genshin-meteor-container.rarity-5 .meteor-trail {
-  background: linear-gradient(to top, #fbbf24, transparent);
-  box-shadow: 0 0 45px #fbbf24;
-}
-.genshin-meteor-container.rarity-5 .meteor-halo { background: #f59e0b; }
-
-.genshin-meteor-container.shake-5star {
-  animation: cameraShake 1.2s infinite ease-in-out;
-}
-
-@keyframes cameraShake {
-  0%, 100% { transform: translateY(0); }
-  25% { transform: translate(-3px, 2px); }
-  75% { transform: translate(3px, -2px); }
-}
-
-@keyframes meteorShoot {
-  0% { top: -200px; left: 20%; opacity: 0; transform: rotate(45deg) scale(0.4); }
-  30% { opacity: 1; transform: rotate(45deg) scale(1.2); }
-  85% { opacity: 1; }
-  100% { top: 60%; left: 75%; opacity: 0; transform: rotate(45deg) scale(1); }
-}
-
-@keyframes orbAppear {
-  0% { top: -100px; left: 20%; opacity: 0; }
-  70% { top: 50%; left: 50%; opacity: 1; transform: translate(-50%, -50%) scale(1.4); }
-  100% { top: 50%; left: 50%; opacity: 1; transform: translate(-50%, -50%) scale(2.2); }
-}
-
-.meteor-title-preview {
-  position: absolute;
-  bottom: 22%;
-  font-size: 1.125rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: #ffffff;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-}
-
-/* Giai đoạn 2: Bùng nổ chớp sáng toàn màn hình */
-.genshin-burst-flash {
-  position: absolute;
-  inset: 0;
-  animation: burstFlashAnim 0.35s ease forwards;
-}
-
-.genshin-burst-flash.rarity-3 {
-  background: radial-gradient(circle, #bae6fd 0%, #38bdf8 60%, transparent 100%);
-}
-.genshin-burst-flash.rarity-4 {
-  background: radial-gradient(circle, #f3e8ff 0%, #c084fc 60%, transparent 100%);
-}
-.genshin-burst-flash.rarity-5 {
-  background: radial-gradient(circle, #fffbeb 0%, #fbbf24 55%, transparent 100%);
-}
-
-@keyframes burstFlashAnim {
-  0% { opacity: 0; transform: scale(0.6); }
-  30% { opacity: 1; transform: scale(1.1); }
-  100% { opacity: 0; transform: scale(1.4); }
-}
-
-/* =========================================
-   RESPONSIVE CHO KẾT QUẢ RÚT 10 TRÊN MOBILE
-   ========================================= */
-@media (max-width: 900px) {
-  .result-cards-horizontal-row.ten-cards-mode {
-    justify-content: flex-start;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 0 16px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(229, 195, 120, 0.4) transparent;
-  }
-
-  .result-cards-horizontal-row.ten-cards-mode .result-card-column {
-    scroll-snap-align: center;
-    height: 64dvh;
-    width: auto;
-  }
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -29,7 +29,8 @@
 | Build | Vite |
 | UI | React + TypeScript |
 | Style | Tailwind CSS (hoặc CSS thuần nếu không muốn Tailwind, chọn một và giữ nhất quán) |
-| Animation | CSS animation; Framer Motion là tùy chọn |
+| Animation | CSS animation cho hiệu ứng nhỏ; **GSAP (timeline) hoặc Framer Motion** cho chuỗi animation gacha ở M3 (chọn một, không dùng cả hai) |
+| Hạt / hiệu ứng ánh sáng | **Canvas 2D tự viết**, không dùng thư viện particle |
 | Xuất ảnh | `html-to-image` |
 | Lưu trữ | `localStorage` (qua `lib/storage.ts`) |
 | Test logic | Vitest (chỉ cho `lib/gacha.ts`) |
@@ -256,79 +257,113 @@ Một "tranh banner" lớn, nền và màu theo `theme` của banner đang chọ
 - Portrait: có gợi ý xoay ngang, tab banner ngang ở trên, nút rút cố định ở đáy, không tràn ngang trên màn 375px.
 - Trên điện thoại landscape (khoảng 640-900px rộng), mọi thành phần vừa một màn hình, không bị che bởi thanh địa chỉ hoặc tai thỏ.
 
-### M3: Thẻ bài dọc + hiệu ứng gacha nhiều giai đoạn
+### M3: Thẻ bài gọn + chuỗi hiệu ứng gacha kiểu "sao băng"
 
-> Phiên bản M3 đầu tiên (thẻ ngang, animation đơn giản) đã được làm và **bị loại bỏ**. Làm lại hoàn toàn theo spec dưới đây. Không động đến `lib/gacha.ts`.
+> Hai bản M3 trước **bị loại bỏ** (bản 1: thẻ ngang, animation đơn giản; bản 2: thẻ cắt bằng `clip-path` làm mất nội dung, thẻ quá to nên không hiện đủ 10 thẻ, quá nhiều thông tin, animation còn đơn điệu). Làm lại hoàn toàn theo spec dưới đây. Không động đến `lib/gacha.ts`.
 
-#### 3.1. `SongCard`: thẻ dọc, tỉ lệ 2:3, hình vòm nhọn
+#### 3.0. Ranh giới sao chép (BẮT BUỘC đọc)
 
-**Tham chiếu phong cách màn hình kết quả:** màn hình kết quả rút 10 của Genshin (mười thẻ dọc hình vòm nhọn xếp một hàng ngang, mỗi thẻ có chùm sáng theo độ hiếm bốc lên phía trên, dòng sao ở đáy thẻ, nhãn "New" cho món mới). Chỉ lấy ý tưởng bố cục và hiệu ứng, **không sao chép** hình ảnh hay biểu tượng của game.
+Mục tiêu là **cùng cảm giác và cùng cấu trúc nhịp điệu** với màn hình gacha của các game (sao băng báo màu độ hiếm, va chạm, lật từng thẻ, thẻ hiếm lật sau cùng), **không phải bản sao**.
 
-Hình dạng thẻ: **khung dọc, đỉnh vòm nhọn** (dùng `clip-path` hoặc SVG mask), không phải hình chữ nhật bo góc. Bên trên mỗi thẻ có **chùm sáng (light beam)** đứng, màu theo độ hiếm: vàng (5★), tím (4★), xanh dương (3★). Cường độ chùm sáng tăng theo độ hiếm.
+- **KHÔNG** dùng, trích xuất hay mô phỏng sát hình: video, sprite, nhân vật, khung thẻ, biểu tượng, font, âm thanh/nhạc của Genshin Impact hay game nào khác.
+- Mọi hình ảnh là **SVG/CSS/canvas tự vẽ**. Âm thanh (nếu có) là **tự tổng hợp bằng Web Audio** hoặc file **CC0/giấy phép cho phép dùng thương mại** (ghi nguồn và giấy phép vào `CREDITS.md`).
+- Ý tưởng chung (sao băng bay, đổi màu theo độ hiếm, tia sáng, rung màn hình, lật thẻ) là cơ chế phổ biến, được phép dùng; cách thể hiện phải là của riêng dự án.
 
-Nhãn **"Mới"** (góc trên phải thẻ) hiển thị khi bài chưa từng có trong bộ sưu tập của người dùng (dùng dữ liệu `storage.ts`).
+#### 3.1. `SongCard`: gọn, chỉ cần tên bài + ca sĩ
 
+**Nội dung hiển thị trên thẻ (và CHỈ những thứ này):**
+1. **Số sao** (3/4/5★), hiển thị rõ.
+2. **Hình minh họa SVG** đơn giản ở giữa (đĩa than / cassette / micro, tô màu theo độ hiếm). Chỉ là trang trí, giữ nhỏ gọn.
+3. **Tên bài** (chữ lớn, đậm, tối đa 3 dòng, quá dài thì cắt bằng dấu `…`).
+4. **Tên ca sĩ** (chữ nhỏ hơn, tối đa 2 dòng).
 
-Bố cục ba vùng, từ trên xuống:
-1. **Trên:** số sao (kích thước lớn, dễ nhìn) bên trái, nhãn giọng (Song ca / Nam / Nữ / Tất cả) bên phải.
-2. **Giữa (khoảng 50% chiều cao thẻ):** hình minh họa lớn bằng **SVG tự vẽ**, dạng đĩa than, cassette hoặc micro, **tô màu theo thể loại**. Đây là thay thế cho ảnh bìa album (không được dùng ảnh bìa). Hình phải nằm gọn trong thẻ, **không bị cắt ở góc**.
-3. **Dưới:** tên bài (chữ lớn, đậm), tên ca sĩ, rồi thể loại và năm ở hàng nhỏ cuối thẻ.
+**Không hiển thị trên thẻ:** thể loại, năm, giọng, độ khó, nhãn "Mới", bất kỳ nhãn phụ nào. (Các thông tin đó, nếu cần, xem ở màn Setlist/Chi tiết, không phải trên thẻ.)
 
-Độ khó: dùng icon (ví dụ micro) kèm nhãn rõ nghĩa, hoặc bỏ hẳn. **Không dùng dãy chấm không có nhãn.**
+**Hình dạng và lỗi cần tránh:**
+- Thẻ **dọc, hẹp**, đỉnh **vòm tròn** tạo bằng `border-radius` (ví dụ `border-radius: 999px 999px 14px 14px / 22% 22% 14px 14px`), **không dùng `clip-path` lên container chứa nội dung** (nó làm cắt mất chữ và sao).
+- Tách lớp: (a) lớp nền/viền/glow của thẻ; (b) lớp nội dung nằm trong **vùng an toàn**, cách đỉnh vòm tối thiểu 20% chiều cao thẻ và cách hai bên tối thiểu 8% chiều rộng. Không phần tử nội dung nào được tràn ra ngoài thẻ.
+- **Chùm sáng (beam)** bốc lên phía trên đỉnh thẻ là phần tử riêng, đặt `overflow: visible` ở thẻ cha, không bị thẻ lân cận che.
+- Các thẻ trong hàng **không được chồng lên nhau** (có `gap` rõ ràng).
 
-Phân cấp hiệu ứng theo độ hiếm (phải nhìn khác biệt rõ ràng):
+Phân cấp theo độ hiếm (phải nhìn khác biệt rõ ràng):
 
-| Độ hiếm | Viền | Hiệu ứng |
+| Độ hiếm | Viền / màu chủ đạo | Hiệu ứng |
 |---|---|---|
-| 3★ | Xanh dương | Nền tối, không hiệu ứng |
-| 4★ | Tím | Glow nhẹ, vài hạt lấp lánh |
-| 5★ | Vàng | Ánh kim (holographic) chạy ngang mặt thẻ, hạt sáng bay quanh thẻ |
+| 3★ | Xanh dương | Nền tối, chùm sáng mảnh, không hạt |
+| 4★ | Tím | Glow vừa, chùm sáng rõ, vài hạt lấp lánh |
+| 5★ | Vàng | Glow mạnh, chùm sáng dày, ánh kim chạy ngang, hạt sáng bay quanh |
 
-Thẻ có hai mặt: **mặt sau** (úp, dùng chung, họa tiết đơn giản, không tiết lộ độ hiếm) và **mặt trước** (nội dung bài hát). Chuyển giữa hai mặt bằng hiệu ứng lật 3D (`transform: rotateY`).
+Thẻ có **mặt sau** (úp, dùng chung, không tiết lộ độ hiếm) và **mặt trước**; lật bằng `rotateY` 3D.
 
-#### 3.2. `PullAnimation`: ba giai đoạn
+#### 3.2. Kích thước thẻ: 10 thẻ phải vừa một hàng
 
-1. **Chờ đợi (khoảng 1-1,5 giây):** nền tối, một sao băng hoặc quả cầu sáng bay vào giữa màn hình. **Màu của nó báo trước độ hiếm cao nhất của lượt rút:** xanh (3★), tím (4★), vàng (5★). Với 5★, thêm rung nhẹ và tăng dần độ sáng.
-2. **Bùng nổ (khoảng 0,3 giây):** chớp sáng toàn màn hình.
-3. **Hiện thẻ:** chuyển sang màn kết quả (mục 3.3).
+Dùng biến CSS tính kích thước thẻ, không đặt cỡ cố định:
 
-Ràng buộc kỹ thuật:
-- Chỉ animate bằng `transform` và `opacity` (cho phép `will-change` hợp lý) để mượt trên điện thoại tầm trung.
-- **Nút Skip luôn hiển thị**, bấm là đi thẳng tới màn kết quả.
-- Tôn trọng `prefers-reduced-motion`: giảm hoặc tắt animation, vẫn giữ luồng và kết quả như cũ.
-- Âm thanh là tùy chọn, **mặc định tắt**, có nút bật/tắt. Nếu chưa có file âm thanh thì bỏ qua.
+```css
+/* gợi ý, agent được phép điều chỉnh miễn đạt tiêu chí */
+--gap: clamp(6px, 1vw, 14px);
+--pad: clamp(12px, 3vw, 40px);
+--w-by-width: calc((100vw - 2 * var(--pad) - 9 * var(--gap)) / 10);
+--w-by-height: calc(65dvh / 2.6);          /* chiều cao thẻ tối đa 65% viewport, tỉ lệ ~1:2.6 */
+--card-w: max(var(--min-card-w), min(var(--w-by-width), var(--w-by-height)));
+--min-card-w: 104px;
+```
 
-#### 3.3. Hiển thị kết quả
+- **Desktop / màn hình rộng:** `--card-w` do công thức trên quyết định, **cả 10 thẻ vừa một hàng, không cuộn ngang**, không cuộn dọc.
+- **Khi `--card-w` bị chặn ở mức tối thiểu (điện thoại, màn hình hẹp):** hàng thẻ **cuộn ngang** (`overflow-x: auto`, `scroll-snap-type: x proximity`, thẻ `scroll-snap-align: center`). **Vẫn một hàng duy nhất.**
+- **Khuyến nghị landscape cho điện thoại:** ở portrait hiện gợi ý "Xoay ngang điện thoại để xem đẹp hơn" (không chặn, có nút đóng).
+- Khi thẻ đang lật nằm ngoài vùng nhìn, **tự cuộn** tới thẻ đó. Có chỉ báo vị trí (ví dụ "3/10").
+- Dùng `dvh` và `env(safe-area-inset-*)`.
+- Chữ trên thẻ dùng `clamp()` theo `--card-w` để luôn đọc được; **tên bài phải đọc rõ ở `--card-w` nhỏ nhất**.
 
-**Rút 1:** một thẻ ở giữa màn hình, lật từ mặt sau sang mặt trước kèm hiệu ứng theo độ hiếm.
+#### 3.3. `PullAnimation`: chuỗi 5 nhịp (cấu trúc kiểu "sao băng")
 
-**Rút 10:** **mười thẻ úp xếp thành MỘT HÀNG NGANG**, **sắp xếp theo độ hiếm giảm dần từ trái sang phải** (5★ ngoài cùng bên trái, 3★ bên phải, giống màn hình kết quả tham chiếu). Thứ tự **lật** để tăng hồi hộp: lật các thẻ độ hiếm thấp trước, thẻ độ hiếm cao lật sau cùng:
-- Mỗi thẻ cách nhau khoảng 0,2 giây.
-- Thẻ 4★/5★ lật chậm hơn và có hiệu ứng riêng; thẻ 5★ (nếu có) lật cuối cùng với hiệu ứng lớn nhất.
-- Click vào một thẻ úp để lật ngay thẻ đó. Nút **"Lật tất cả"** (hoặc Skip) lật hết cùng lúc.
-- Lật xong hiện nút **"Xem toàn bộ Setlist"**.
+Tổng thời lượng (không tính Skip): khoảng **4-6 giây** cho rút 10 thường, **6-8 giây** nếu có 5★. Mỗi nhịp là một bước trong một timeline (GSAP timeline hoặc tương đương) để dễ chỉnh tốc độ.
 
-**Bố cục theo thiết bị:**
-- **Desktop / màn hình rộng:** tính chiều rộng thẻ theo viewport để **cả 10 thẻ vừa trong một hàng**, không cuộn.
-- **Điện thoại:** **vẫn là một hàng ngang duy nhất, cuộn ngang** (`overflow-x: auto`, `scroll-snap-type: x mandatory`, mỗi thẻ `scroll-snap-align: center`). Không chia hai hàng.
-  - **Khuyến nghị xoay ngang (landscape):** thiết kế và tối ưu cho điện thoại ở landscape. Kích thước thẻ trên điện thoại tính theo **chiều cao viewport** (ví dụ chiều cao thẻ khoảng 70-75% `100dvh`, chiều rộng theo tỉ lệ 2:3), để thẻ to và rõ khi xoay ngang.
-  - Khi phát hiện điện thoại đang ở **portrait**, hiện một **gợi ý không chặn** ("Xoay ngang điện thoại để xem đẹp hơn") có nút đóng. Người dùng vẫn dùng được bình thường ở portrait (thẻ nhỏ hơn, vẫn cuộn ngang).
-  - Khi thẻ đầu tiên và thẻ cuối cùng được lật, tự cuộn tới thẻ đang lật để người dùng không bỏ lỡ.
-  - Có chỉ báo vị trí (ví dụ dấu chấm hoặc "3/10") để biết đang xem thẻ thứ mấy.
-- Dùng `dvh`/`env(safe-area-inset-*)` để tránh bị thanh địa chỉ và tai thỏ che khi xoay ngang.
+**Nhịp 0: Chuẩn bị (0,6 giây)**
+- Chuyển cảnh: màn hình tối dần thành bầu trời đêm có sao nhấp nháy (canvas hoặc CSS, có hiệu ứng parallax nhẹ).
 
-#### 3.4. Yêu cầu chung
-- Không để trang xuất hiện **thanh cuộn dọc thừa** ở màn kết quả.
-- Chạy mượt trên điện thoại tầm trung ở cả portrait lẫn landscape.
-- Không thêm thư viện ngoài danh sách ở mục 2 (CSS animation là chính, Framer Motion chỉ là tùy chọn).
+**Nhịp 1: Sao băng (1,6-2,2 giây), nhịp quan trọng nhất**
+- Một **sao băng** bay vòng cung từ góc trên trái qua giữa màn hình, đầu sáng có **đuôi mờ dần** (vẽ bằng canvas), kèm hạt bụi sáng rơi theo.
+- **Màu sao băng = độ hiếm cao nhất của lượt rút:** xanh (3★), tím (4★), vàng (5★).
+- Tốc độ tăng dần (ease-in); với 5★ thêm: nền ngả vàng dần, sao băng lớn hơn, rung nhẹ.
+- Có thể có **khoảnh khắc đổi màu** ngắn (ví dụ xanh → tím) trước khi chốt, như một "đánh lừa" tạo hồi hộp. Màu cuối **luôn đúng** độ hiếm thực.
+
+**Nhịp 2: Va chạm (0,6-0,8 giây)**
+- Chớp trắng toàn màn hình, **vòng sóng xung kích** lan ra, **tia sáng tỏa** (conic-gradient xoay) màu theo độ hiếm, **rung màn hình** ngắn (biên độ nhỏ), nổ hạt từ canvas.
+
+**Nhịp 3: Thẻ rơi vào hàng (0,8-1,2 giây)**
+- Rút 1: thẻ úp bay lên từ điểm va chạm, phóng to từ 0,6 lên 1, dừng giữa màn hình.
+- Rút 10: 10 thẻ úp **bay ra từ điểm va chạm rồi rơi vào đúng vị trí trong một hàng ngang** (so le nhau 40-60 ms).
+
+**Nhịp 4: Lật thẻ (tổng 2-4 giây)**
+- Lật **từng thẻ**, thứ tự: độ hiếm thấp trước, cao sau; mỗi thẻ cách nhau khoảng 0,2 giây.
+- 3★: lật nhanh, xung sáng xanh nhỏ.
+- 4★: lật chậm hơn, nổ tia sáng tím, hạt lấp lánh, dừng 0,3 giây.
+- **5★ (lật cuối cùng):** làm tối các thẻ còn lại, **phóng to thẻ 5★ ra giữa** (khoảng 1,2 giây) với tia sáng vàng toàn màn hình và hạt, đếm sao từng cái một, rồi thu về vị trí trong hàng.
+- Click vào thẻ úp để lật ngay thẻ đó. Nút **"Lật tất cả"** lật hết cùng lúc.
+
+**Nhịp 5: Tổng kết**
+- Cả hàng thẻ ngửa, có hiệu ứng sáng nhẹ lặp (idle shimmer cho 4★/5★). Hiện nút **"Xem toàn bộ Setlist"**, **"Rút tiếp"**, **"Trở về"**.
+
+**Nút Skip luôn hiển thị** ở mọi nhịp. Bấm Skip: bỏ qua thẳng tới nhịp 5 với tất cả thẻ đã ngửa (vẫn hiển thị đúng độ hiếm).
+
+**Âm thanh (tùy chọn, mặc định tắt, có nút bật/tắt):** gợi ý lớp âm theo nhịp: tiếng gió/rít khi sao băng, tiếng va chạm, tiếng "ting" khi lật thẻ (cao độ tăng theo độ hiếm), tiếng đếm sao khi 5★. Tự tổng hợp bằng Web Audio hoặc dùng file CC0; ghi `CREDITS.md`. Nếu chưa có âm thanh thì bỏ qua, không bắt buộc.
+
+#### 3.4. Hiệu năng và khả năng truy cập
+- Chỉ animate `transform` và `opacity` cho DOM; hạt và sao băng vẽ trên **một canvas duy nhất** phủ toàn màn hình, `requestAnimationFrame`, giới hạn số hạt (tối đa khoảng 150 trên điện thoại, 300 trên desktop), `devicePixelRatio` tối đa 2, dừng khi tab bị ẩn.
+- Tôn trọng `prefers-reduced-motion`: bỏ sao băng và rung màn hình, chỉ giữ chớp sáng nhẹ và lật thẻ nhanh, vẫn ra đủ kết quả.
+- Không để trang có thanh cuộn dọc thừa ở màn kết quả.
+- Giữ 60fps trên điện thoại tầm trung; nếu tụt FPS thì tự giảm số hạt.
+- Không thêm thư viện ngoài danh sách ở mục 2.
 
 **Tiêu chí hoàn thành**
-- Thẻ dọc 2:3 hiển thị đúng ba vùng; hình SVG không bị cắt; 3★/4★/5★ nhìn khác biệt rõ.
-- Animation có đủ 3 giai đoạn; màu sao báo trước đúng với độ hiếm cao nhất trong lượt rút; Skip hoạt động ở mọi thời điểm.
-- Rút 10: 10 thẻ trên **một hàng ngang**, xếp theo độ hiếm giảm dần, lật tuần tự từ thẻ độ hiếm thấp đến cao; click lật ngay; "Lật tất cả" hoạt động. Thẻ có hình vòm nhọn, chùm sáng đúng màu độ hiếm, nhãn "Mới" đúng với bộ sưu tập.
-- Desktop: cả 10 thẻ vừa một hàng, không cuộn ngang. Điện thoại landscape: cuộn ngang mượt có snap, thẻ to rõ. Điện thoại portrait: có gợi ý xoay ngang, vẫn dùng được.
-- Bật `prefers-reduced-motion` thì animation giảm hoặc tắt nhưng vẫn ra đủ kết quả.
-- Không có thanh cuộn dọc thừa; không giật rõ rệt trên điện thoại tầm trung.
+- **Thẻ:** chỉ có sao, hình minh họa nhỏ, tên bài và ca sĩ. Không có chữ hay icon nào bị cắt. Không dùng `clip-path` lên container nội dung.
+- **Kích thước:** desktop 1280-1920px, cả 10 thẻ vừa một hàng, không cuộn; tên bài đọc rõ. Điện thoại landscape: cuộn ngang mượt, thẻ đọc rõ.
+- **Animation:** có đủ 5 nhịp; màu sao băng báo đúng độ hiếm cao nhất; có va chạm (chớp, sóng, tia, rung); 10 thẻ rơi vào một hàng; lật theo thứ tự thấp đến cao; 5★ lật cuối với hiệu ứng riêng.
+- **Skip** hoạt động ở mọi thời điểm. Tắt hiệu ứng (`prefers-reduced-motion`) vẫn dùng được.
+- 60fps trên điện thoại tầm trung, không giật rõ rệt.
+- Không có tài sản của game khác trong repo; có `CREDITS.md` nếu dùng âm thanh bên ngoài.
 
 ### M4: Bộ lọc + nút "Tìm karaoke"
 
@@ -408,7 +443,7 @@ Ràng buộc kỹ thuật:
 - [ ] Màn hình chính dạng Wish screen: banner 30% trái / nội dung + nút rút 70% phải, không cuộn dọc ở landscape.
 - [ ] Rút 1 và Rút 10 hoạt động, tỉ lệ đúng đặc tả, có test.
 - [ ] Pity và đảm bảo 4★ khi rút 10 hoạt động.
-- [ ] Thẻ dọc 2:3 và hiệu ứng nhiều giai đoạn theo độ hiếm, có Skip.
+- [ ] Thẻ gọn (chỉ sao, tên bài, ca sĩ) và chuỗi hiệu ứng 5 nhịp (sao băng, va chạm, lật thẻ), có Skip.
 - [ ] Rút 10 hiển thị một hàng ngang (cuộn ngang + snap trên điện thoại, khuyến nghị landscape).
 - [ ] Bộ lọc giọng/thể loại/thập niên/độ khó.
 - [ ] Nút Tìm karaoke đúng từ khóa.

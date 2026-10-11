@@ -13,13 +13,12 @@ import {
 } from './lib/storage';
 import { HomeScreen } from './components/HomeScreen';
 import { ResultScreen } from './components/ResultScreen';
-import { PullAnimation } from './components/PullAnimation';
 
 const allSongs = songsData as Song[];
 const banners = bannersData as Banner[];
 
 export const App: React.FC = () => {
-  // Banner đã chọn
+  // Banner đang chọn
   const [selectedBanner, setSelectedBanner] = useState<Banner>(() => {
     const savedId = loadSelectedBannerId();
     if (savedId) {
@@ -31,15 +30,11 @@ export const App: React.FC = () => {
 
   const [pullState, setPullState] = useState<PullState>(() => loadPullState());
 
-  // Kết quả lượt rút hiện tại
+  // Kết quả lượt rút hiện tại (khi có giá trị sẽ mở ResultScreen với chuỗi 5 nhịp gacha)
   const [activeResult, setActiveResult] = useState<{
     songs: Song[];
     lastPullType: 1 | 10;
   } | null>(null);
-
-  // Trạng thái chạy animation gacha (sao băng)
-  const [isPullAnimating, setIsPullAnimating] = useState(false);
-  const [pendingPullSongs, setPendingPullSongs] = useState<Song[]>([]);
 
   // Lưu banner vào localStorage khi đổi
   const handleSelectBanner = (banner: Banner) => {
@@ -61,9 +56,7 @@ export const App: React.FC = () => {
     try {
       const result = pull(currentPool, selectedBanner, pullState);
       setPullState(result.state);
-      setPendingPullSongs(result.songs);
       setActiveResult({ songs: result.songs, lastPullType: 1 });
-      setIsPullAnimating(true);
     } catch (err: any) {
       alert(err.message || 'Lỗi khi rút thẻ');
     }
@@ -73,16 +66,10 @@ export const App: React.FC = () => {
     try {
       const result = pullTen(currentPool, selectedBanner, pullState);
       setPullState(result.state);
-      setPendingPullSongs(result.songs);
       setActiveResult({ songs: result.songs, lastPullType: 10 });
-      setIsPullAnimating(true);
     } catch (err: any) {
       alert(err.message || 'Lỗi khi rút thẻ');
     }
-  };
-
-  const handleAnimationComplete = () => {
-    setIsPullAnimating(false);
   };
 
   const handlePullAgain = (count: 1 | 10) => {
@@ -100,9 +87,9 @@ export const App: React.FC = () => {
 
   return (
     <div className="genshin-app-wrapper">
-      {/* Màn hình kết quả (khi có activeResult và không đang chạy sao băng) */}
-      {activeResult && !isPullAnimating ? (
+      {activeResult ? (
         <ResultScreen
+          key={JSON.stringify(activeResult.songs.map((s) => s.id)) + Date.now()}
           songs={activeResult.songs}
           lastPullType={activeResult.lastPullType}
           onBack={() => setActiveResult(null)}
@@ -121,13 +108,6 @@ export const App: React.FC = () => {
           onPullTen={handlePullTen}
         />
       )}
-
-      {/* Animation sao băng gacha toàn màn hình (M3) */}
-      <PullAnimation
-        isOpen={isPullAnimating}
-        songs={pendingPullSongs}
-        onComplete={handleAnimationComplete}
-      />
     </div>
   );
 };
