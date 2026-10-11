@@ -526,14 +526,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
       {/* Thanh trên cùng khi ở Nhịp 3, 4, 5 */}
       {phase >= 3 && (
         <header className="result-header-bar">
-          <button
-            type="button"
-            className="genshin-sub-btn"
-            onClick={onBack}
-          >
-            ← Trở về Wish
-          </button>
-
           <div className="result-header-title">
             <span>KẾT QUẢ {lastPullType === 1 ? 'RÚT ×1' : 'RÚT ×10'}</span>
             {lastPullType === 10 && (
@@ -636,10 +628,12 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
           <div className="result-footer-right">
             <button
               type="button"
-              className="genshin-sub-btn"
+              className="genshin-wish-btn wish-btn-ten"
               onClick={onBack}
             >
-              Xem toàn bộ Setlist 🎉
+              <div className="wish-btn-content">
+                <span className="wish-btn-main">Trở về</span>
+              </div>
             </button>
 
             <button

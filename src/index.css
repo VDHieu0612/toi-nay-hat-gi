@@ -766,7 +766,8 @@ html, body {
   height: 52px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  position: relative;
   padding: 0 24px;
   z-index: 20;
   animation: fadeInDown 0.4s ease forwards;
@@ -788,6 +789,8 @@ html, body {
 }
 
 .result-header-right {
+  position: absolute;
+  right: 24px;
   display: flex;
   align-items: center;
   gap: 10px;
