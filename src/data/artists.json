@@ -1,32 +1,236 @@
 [
-  { "id": "ca-si-thu-a", "name": "Ca sĩ thử A", "kind": "singer", "theme": "#6366f1" },
-  { "id": "ca-si-thu-b", "name": "Ca sĩ thử B", "kind": "singer", "theme": "#ec4899" },
-  { "id": "ca-si-thu-c", "name": "Ca sĩ thử C", "kind": "singer", "theme": "#eab308" },
-  { "id": "ca-si-thu-d", "name": "Ca sĩ thử D", "kind": "group", "theme": "#0ea5e9" },
-  { "id": "ca-si-thu-e", "name": "Ca sĩ thử E", "kind": "rapper", "theme": "#8b5cf6" },
-  { "id": "ca-si-thu-f", "name": "Ca sĩ thử F", "kind": "group", "theme": "#f43f5e" },
-  { "id": "ca-si-thu-g", "name": "Ca sĩ thử G", "kind": "singer", "theme": "#10b981" },
-  { "id": "ca-si-thu-h", "name": "Ca sĩ thử H", "kind": "singer", "theme": "#3b82f6" },
-  { "id": "ca-si-thu-i", "name": "Ca sĩ thử I", "kind": "group", "theme": "#f59e0b" },
-  { "id": "ca-si-thu-j", "name": "Ca sĩ thử J", "kind": "singer", "theme": "#14b8a6" },
-  { "id": "ca-si-thu-k", "name": "Ca sĩ thử K", "kind": "singer", "theme": "#6366f1" },
-  { "id": "ca-si-thu-l", "name": "Ca sĩ thử L", "kind": "singer", "theme": "#ec4899" },
-  { "id": "ca-si-thu-m", "name": "Ca sĩ thử M", "kind": "group", "theme": "#06b6d4" },
-  { "id": "ca-si-thu-n", "name": "Ca sĩ thử N", "kind": "rapper", "theme": "#84cc16" },
-  { "id": "ca-si-thu-o", "name": "Ca sĩ thử O", "kind": "singer", "theme": "#ef4444" },
-  { "id": "ca-si-thu-p", "name": "Ca sĩ thử P", "kind": "singer", "theme": "#a855f7" },
-  { "id": "ca-si-thu-q", "name": "Ca sĩ thử Q", "kind": "singer", "theme": "#3b82f6" },
-  { "id": "ca-si-thu-r", "name": "Ca sĩ thử R", "kind": "group", "theme": "#eab308" },
-  { "id": "ca-si-thu-s", "name": "Ca sĩ thử S", "kind": "singer", "theme": "#ec4899" },
-  { "id": "ca-si-thu-t", "name": "Ca sĩ thử T", "kind": "singer", "theme": "#64748b" },
-  { "id": "ca-si-thu-u", "name": "Ca sĩ thử U", "kind": "singer", "theme": "#7c3aed" },
-  { "id": "ca-si-thu-v", "name": "Ca sĩ thử V", "kind": "singer", "theme": "#0284c7" },
-  { "id": "ca-si-thu-w", "name": "Ca sĩ thử W", "kind": "rapper", "theme": "#16a34a" },
-  { "id": "ca-si-thu-x", "name": "Ca sĩ thử X", "kind": "singer", "theme": "#dc2626" },
-  { "id": "ca-si-thu-y", "name": "Ca sĩ thử Y", "kind": "group", "theme": "#9333ea" },
-  { "id": "ca-si-thu-z", "name": "Ca sĩ thử Z", "kind": "singer", "theme": "#db2777" },
-  { "id": "ca-si-thu-alpha", "name": "Ca sĩ thử Alpha", "kind": "singer", "theme": "#d97706" },
-  { "id": "ca-si-thu-beta", "name": "Ca sĩ thử Beta", "kind": "singer", "theme": "#f59e0b" },
-  { "id": "ca-si-thu-gamma", "name": "Ca sĩ thử Gamma", "kind": "singer", "theme": "#e11d48" },
-  { "id": "ca-si-thu-delta", "name": "Ca sĩ thử Delta", "kind": "rapper", "theme": "#4f46e5" }
+  {
+    "id": "ca-si-thu-a",
+    "name": "Ca sĩ thử A",
+    "kind": "singer",
+    "theme": "#6366f1"
+  },
+  {
+    "id": "ca-si-thu-b",
+    "name": "Ca sĩ thử B",
+    "kind": "singer",
+    "theme": "#ec4899"
+  },
+  {
+    "id": "ca-si-thu-c",
+    "name": "Ca sĩ thử C",
+    "kind": "singer",
+    "theme": "#eab308"
+  },
+  {
+    "id": "ca-si-thu-d",
+    "name": "Ca sĩ thử D",
+    "kind": "group",
+    "theme": "#0ea5e9"
+  },
+  {
+    "id": "ca-si-thu-e",
+    "name": "Ca sĩ thử E",
+    "kind": "rapper",
+    "theme": "#8b5cf6"
+  },
+  {
+    "id": "ca-si-thu-f",
+    "name": "Ca sĩ thử F",
+    "kind": "group",
+    "theme": "#f43f5e"
+  },
+  {
+    "id": "ca-si-thu-g",
+    "name": "Ca sĩ thử G",
+    "kind": "singer",
+    "theme": "#10b981"
+  },
+  {
+    "id": "ca-si-thu-h",
+    "name": "Ca sĩ thử H",
+    "kind": "singer",
+    "theme": "#3b82f6"
+  },
+  {
+    "id": "ca-si-thu-i",
+    "name": "Ca sĩ thử I",
+    "kind": "group",
+    "theme": "#f59e0b"
+  },
+  {
+    "id": "ca-si-thu-j",
+    "name": "Ca sĩ thử J",
+    "kind": "singer",
+    "theme": "#14b8a6"
+  },
+  {
+    "id": "ca-si-thu-k",
+    "name": "Ca sĩ thử K",
+    "kind": "singer",
+    "theme": "#6366f1"
+  },
+  {
+    "id": "ca-si-thu-l",
+    "name": "Ca sĩ thử L",
+    "kind": "singer",
+    "theme": "#ec4899"
+  },
+  {
+    "id": "ca-si-thu-m",
+    "name": "Ca sĩ thử M",
+    "kind": "group",
+    "theme": "#06b6d4"
+  },
+  {
+    "id": "ca-si-thu-n",
+    "name": "Ca sĩ thử N",
+    "kind": "rapper",
+    "theme": "#84cc16"
+  },
+  {
+    "id": "ca-si-thu-o",
+    "name": "Ca sĩ thử O",
+    "kind": "singer",
+    "theme": "#ef4444"
+  },
+  {
+    "id": "ca-si-thu-p",
+    "name": "Ca sĩ thử P",
+    "kind": "singer",
+    "theme": "#a855f7"
+  },
+  {
+    "id": "ca-si-thu-q",
+    "name": "Ca sĩ thử Q",
+    "kind": "singer",
+    "theme": "#3b82f6"
+  },
+  {
+    "id": "ca-si-thu-r",
+    "name": "Ca sĩ thử R",
+    "kind": "group",
+    "theme": "#eab308"
+  },
+  {
+    "id": "ca-si-thu-s",
+    "name": "Ca sĩ thử S",
+    "kind": "singer",
+    "theme": "#ec4899"
+  },
+  {
+    "id": "ca-si-thu-t",
+    "name": "Ca sĩ thử T",
+    "kind": "singer",
+    "theme": "#64748b"
+  },
+  {
+    "id": "ca-si-thu-u",
+    "name": "Ca sĩ thử U",
+    "kind": "singer",
+    "theme": "#7c3aed"
+  },
+  {
+    "id": "ca-si-thu-v",
+    "name": "Ca sĩ thử V",
+    "kind": "singer",
+    "theme": "#0284c7"
+  },
+  {
+    "id": "ca-si-thu-w",
+    "name": "Ca sĩ thử W",
+    "kind": "rapper",
+    "theme": "#16a34a"
+  },
+  {
+    "id": "ca-si-thu-x",
+    "name": "Ca sĩ thử X",
+    "kind": "singer",
+    "theme": "#dc2626"
+  },
+  {
+    "id": "ca-si-thu-y",
+    "name": "Ca sĩ thử Y",
+    "kind": "group",
+    "theme": "#9333ea"
+  },
+  {
+    "id": "ca-si-thu-z",
+    "name": "Ca sĩ thử Z",
+    "kind": "singer",
+    "theme": "#db2777"
+  },
+  {
+    "id": "ca-si-thu-alpha",
+    "name": "Ca sĩ thử Alpha",
+    "kind": "singer",
+    "theme": "#d97706"
+  },
+  {
+    "id": "ca-si-thu-beta",
+    "name": "Ca sĩ thử Beta",
+    "kind": "singer",
+    "theme": "#f59e0b"
+  },
+  {
+    "id": "ca-si-thu-gamma",
+    "name": "Ca sĩ thử Gamma",
+    "kind": "singer",
+    "theme": "#e11d48"
+  },
+  {
+    "id": "ca-si-thu-delta",
+    "name": "Ca sĩ thử Delta",
+    "kind": "rapper",
+    "theme": "#4f46e5"
+  },
+  {
+    "id": "son-tung-m-tp",
+    "name": "Sơn Tùng M-TP",
+    "kind": "singer",
+    "theme": "#f43f5e"
+  },
+  {
+    "id": "den",
+    "name": "Đen",
+    "kind": "rapper",
+    "theme": "#06b6d4"
+  },
+  {
+    "id": "soobin-hoang-son",
+    "name": "Soobin Hoàng Sơn",
+    "kind": "singer",
+    "theme": "#d97706"
+  },
+  {
+    "id": "jack-j97",
+    "name": "Jack - J97",
+    "kind": "singer",
+    "theme": "#a855f7"
+  },
+  {
+    "id": "quang-hung-masterd",
+    "name": "Quang Hùng MasterD",
+    "kind": "singer",
+    "theme": "#14b8a6"
+  },
+  {
+    "id": "hieuthuhai",
+    "name": "HIEUTHUHAI",
+    "kind": "rapper",
+    "theme": "#3b82f6"
+  },
+  {
+    "id": "tang-duy-tan",
+    "name": "Tăng Duy Tân",
+    "kind": "singer",
+    "theme": "#6366f1"
+  },
+  {
+    "id": "hoang-dung",
+    "name": "Hoàng Dũng",
+    "kind": "singer",
+    "theme": "#ec4899"
+  },
+  {
+    "id": "ngot",
+    "name": "Ngọt",
+    "kind": "group",
+    "theme": "#8b5cf6"
+  }
 ]

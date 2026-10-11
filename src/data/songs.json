@@ -1,583 +1,1366 @@
 [
   {
-    "id": "bai-thu-01",
-    "title": "Bài thử 01",
-    "artist": "Ca sĩ thử A",
-    "artistId": "ca-si-thu-a",
-    "year": 2018,
-    "genre": [
-      "ballad",
-      "pop"
-    ],
-    "voice": "nam",
-    "views": 22,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
-    "tags": [
-      "de-hat",
-      "de-ngam"
-    ]
-  },
-  {
-    "id": "bai-thu-02",
-    "title": "Bài thử 02",
-    "artist": "Ca sĩ thử B",
-    "artistId": "ca-si-thu-b",
-    "year": 2020,
+    "id": "em-cua-ngay-hom-qua-son-tung-m-tp",
+    "title": "Em của ngày hôm qua",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
     "genre": [
       "pop"
     ],
-    "voice": "nu",
-    "views": 15,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
-    "tags": [
-      "vui-tuoi",
-      "de-hat"
-    ]
-  },
-  {
-    "id": "bai-thu-03",
-    "title": "Bài thử 03",
-    "artist": "Ca sĩ thử C",
-    "artistId": "ca-si-thu-c",
-    "year": 2015,
-    "genre": [
-      "bolero"
-    ],
     "voice": "nam",
-    "views": 18,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
+    "rarity": 5,
     "tags": [
-      "sau-lang",
-      "hoai-niem"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-04",
-    "title": "Bài thử 04",
-    "artist": "Ca sĩ thử D",
-    "artistId": "ca-si-thu-d",
-    "year": 2012,
+    "id": "con-mua-ngang-qua-son-tung-m-tp",
+    "title": "Cơn mưa ngang qua",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
     "genre": [
-      "ballad"
-    ],
-    "voice": "song-ca",
-    "views": 28,
-    "viewsAsOf": "2026-10",
-    "difficulty": 3,
-    "rarity": 3,
-    "tags": [
-      "song-ca",
-      "lang-man"
-    ]
-  },
-  {
-    "id": "bai-thu-05",
-    "title": "Bài thử 05",
-    "artist": "Ca sĩ thử E",
-    "artistId": "ca-si-thu-e",
-    "year": 2022,
-    "genre": [
-      "rap",
       "pop"
     ],
     "voice": "nam",
-    "views": 35,
-    "viewsAsOf": "2026-10",
-    "difficulty": 3,
-    "rarity": 3,
+    "rarity": 5,
     "tags": [
-      "soi-dong",
-      "gioi-tre"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-06",
-    "title": "Bài thử 06",
-    "artist": "Ca sĩ thử F",
-    "artistId": "ca-si-thu-f",
-    "year": 2008,
+    "id": "chac-ai-do-se-ve-son-tung-m-tp",
+    "title": "Chắc ai đó sẽ về",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
     "genre": [
-      "rock"
+      "pop"
     ],
-    "voice": "tat-ca",
-    "views": 40,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "khong-phai-dang-vua-dau-son-tung-m-tp",
+    "title": "Không phải dạng vừa đâu",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
     "rarity": 4,
     "tags": [
-      "de-hat-dong-ca",
-      "quoc-dan"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-07",
-    "title": "Bài thử 07",
-    "artist": "Ca sĩ thử G",
-    "artistId": "ca-si-thu-g",
-    "year": 2016,
-    "genre": [
-      "pop"
-    ],
-    "voice": "nu",
-    "views": 12,
-    "viewsAsOf": "2026-10",
-    "difficulty": 1,
-    "rarity": 3,
-    "tags": [
-      "de-hat",
-      "de-thuong"
-    ]
-  },
-  {
-    "id": "bai-thu-08",
-    "title": "Bài thử 08",
-    "artist": "Ca sĩ thử H",
-    "artistId": "ca-si-thu-h",
-    "year": 2019,
+    "id": "am-tham-ben-em-son-tung-m-tp",
+    "title": "Âm thầm bên em",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
     "genre": [
       "ballad"
     ],
     "voice": "nam",
-    "views": 25,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
-    "tags": [
-      "de-hat-khi-say",
-      "sau-lang"
-    ]
-  },
-  {
-    "id": "bai-thu-09",
-    "title": "Bài thử 09",
-    "artist": "Ca sĩ thử I",
-    "artistId": "ca-si-thu-i",
-    "year": 2014,
-    "genre": [
-      "pop"
-    ],
-    "voice": "tat-ca",
-    "views": 30,
-    "viewsAsOf": "2026-10",
-    "difficulty": 1,
-    "rarity": 3,
-    "tags": [
-      "de-hat-dong-ca",
-      "vui-ve"
-    ]
-  },
-  {
-    "id": "bai-thu-10",
-    "title": "Bài thử 10",
-    "artist": "Ca sĩ thử J",
-    "artistId": "ca-si-thu-j",
-    "year": 2017,
-    "genre": [
-      "bolero"
-    ],
-    "voice": "nu",
-    "views": 14,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
-    "tags": [
-      "que-huong",
-      "de-hat"
-    ]
-  },
-  {
-    "id": "bai-thu-11",
-    "title": "Bài thử 11",
-    "artist": "Ca sĩ thử K",
-    "artistId": "ca-si-thu-k",
-    "year": 2021,
-    "genre": [
-      "pop"
-    ],
-    "voice": "nam",
-    "views": 38,
-    "viewsAsOf": "2026-10",
-    "difficulty": 3,
     "rarity": 4,
     "tags": [
-      "chill",
-      "nhe-nhang"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-12",
-    "title": "Bài thử 12",
-    "artist": "Ca sĩ thử L",
-    "artistId": "ca-si-thu-l",
-    "year": 2010,
-    "genre": [
-      "ballad"
-    ],
-    "voice": "nu",
-    "views": 20,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
-    "tags": [
-      "tam-trang",
-      "de-hat"
-    ]
-  },
-  {
-    "id": "bai-thu-13",
-    "title": "Bài thử 13",
-    "artist": "Ca sĩ thử M",
-    "artistId": "ca-si-thu-m",
-    "year": 2005,
+    "id": "chung-ta-khong-thuoc-ve-nhau-son-tung-m-tp",
+    "title": "Chúng ta không thuộc về nhau",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
     "genre": [
       "pop"
     ],
-    "voice": "song-ca",
-    "views": 32,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
+    "voice": "nam",
+    "rarity": 4,
     "tags": [
-      "hoai-niem",
-      "song-ca"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-14",
-    "title": "Bài thử 14",
-    "artist": "Ca sĩ thử N",
-    "artistId": "ca-si-thu-n",
-    "year": 2023,
+    "id": "lac-troi-son-tung-m-tp",
+    "title": "Lạc trôi",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "noi-nay-co-anh-son-tung-m-tp",
+    "title": "Nơi này có anh",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "chay-ngay-di-son-tung-m-tp",
+    "title": "Chạy ngay đi",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "hay-trao-cho-anh-son-tung-m-tp",
+    "title": "Hãy trao cho anh",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop",
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "co-chac-yeu-la-day-son-tung-m-tp",
+    "title": "Có chắc yêu là đây",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "chung-ta-cua-hien-tai-son-tung-m-tp",
+    "title": "Chúng ta của hiện tại",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "muon-roi-ma-sao-con-son-tung-m-tp",
+    "title": "Muộn rồi mà sao còn",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "making-my-way-son-tung-m-tp",
+    "title": "Making My Way",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "dung-lam-trai-tim-anh-dau-son-tung-m-tp",
+    "title": "Đừng làm trái tim anh đau",
+    "artist": "Sơn Tùng M-TP",
+    "artistId": "son-tung-m-tp",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "dua-nhau-di-tron-den",
+    "title": "Đưa nhau đi trốn",
+    "artist": "Đen",
+    "artistId": "den",
+    "genre": [
+      "rap"
+    ],
+    "voice": "song-ca",
+    "rarity": 5,
+    "tags": [
+      "ft-linh-cao-sang-t"
+    ],
+    "year": 2014
+  },
+  {
+    "id": "cho-toi-lang-thang-den",
+    "title": "Cho tôi lang thang",
+    "artist": "Đen",
+    "artistId": "den",
     "genre": [
       "rap"
     ],
     "voice": "nam",
-    "views": 26,
-    "viewsAsOf": "2026-10",
-    "difficulty": 3,
-    "rarity": 3,
+    "rarity": 5,
     "tags": [
-      "flow-em",
-      "hien-dai"
+      "ft-ngot"
     ]
   },
   {
-    "id": "bai-thu-15",
-    "title": "Bài thử 15",
-    "artist": "Ca sĩ thử O",
-    "artistId": "ca-si-thu-o",
-    "year": 2013,
+    "id": "bai-nay-chill-phet-den",
+    "title": "Bài này chill phết",
+    "artist": "Đen",
+    "artistId": "den",
     "genre": [
-      "rock"
-    ],
-    "voice": "nam",
-    "views": 16,
-    "viewsAsOf": "2026-10",
-    "difficulty": 3,
-    "rarity": 3,
-    "tags": [
-      "manh-me",
-      "nhiet-huyet"
-    ]
-  },
-  {
-    "id": "bai-thu-16",
-    "title": "Bài thử 16",
-    "artist": "Ca sĩ thử P",
-    "artistId": "ca-si-thu-p",
-    "year": 2018,
-    "genre": [
-      "ballad"
-    ],
-    "voice": "nu",
-    "views": 19,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
-    "tags": [
-      "buon",
-      "de-hat"
-    ]
-  },
-  {
-    "id": "bai-thu-17",
-    "title": "Bài thử 17",
-    "artist": "Ca sĩ thử Q",
-    "artistId": "ca-si-thu-q",
-    "year": 2011,
-    "genre": [
-      "pop"
-    ],
-    "voice": "nam",
-    "views": 24,
-    "viewsAsOf": "2026-10",
-    "difficulty": 2,
-    "rarity": 3,
-    "tags": [
-      "quen-thuoc",
-      "de-hat"
-    ]
-  },
-  {
-    "id": "bai-thu-18",
-    "title": "Bài thử 18",
-    "artist": "Ca sĩ thử R",
-    "artistId": "ca-si-thu-r",
-    "year": 2021,
-    "genre": [
-      "bolero"
+      "rap"
     ],
     "voice": "song-ca",
-    "views": 15,
-    "viewsAsOf": "2026-10",
-    "difficulty": 3,
-    "rarity": 3,
-    "tags": [
-      "song-ca",
-      "tru-tinh"
-    ]
-  },
-  {
-    "id": "bai-thu-19",
-    "title": "Bài thử 19",
-    "artist": "Ca sĩ thử S",
-    "artistId": "ca-si-thu-s",
-    "year": 2019,
-    "genre": [
-      "pop"
-    ],
-    "voice": "nu",
-    "views": 27,
-    "viewsAsOf": "2026-10",
-    "difficulty": 3,
-    "rarity": 3,
-    "tags": [
-      "groove",
-      "tre-trung"
-    ]
-  },
-  {
-    "id": "bai-thu-20",
-    "title": "Bài thử 20",
-    "artist": "Ca sĩ thử T",
-    "artistId": "ca-si-thu-t",
-    "year": 2000,
-    "genre": [
-      "ballad"
-    ],
-    "voice": "tat-ca",
-    "views": 42,
-    "viewsAsOf": "2026-10",
-    "difficulty": 1,
     "rarity": 4,
     "tags": [
-      "de-hat-dong-ca",
-      "kinh-dien"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-21",
-    "title": "Bài thử 21",
-    "artist": "Ca sĩ thử U",
-    "artistId": "ca-si-thu-u",
-    "year": 2017,
+    "id": "hai-trieu-nam-den",
+    "title": "Hai triệu năm",
+    "artist": "Đen",
+    "artistId": "den",
     "genre": [
-      "ballad"
+      "rap"
     ],
-    "voice": "nam",
-    "views": 65,
-    "viewsAsOf": "2026-10",
-    "difficulty": 4,
+    "voice": "song-ca",
     "rarity": 4,
     "tags": [
-      "cao-trao",
-      "not-cao",
-      "cam-xuc"
+      "kiem-tra-lai-giong-h"
     ]
   },
   {
-    "id": "bai-thu-22",
-    "title": "Bài thử 22",
-    "artist": "Ca sĩ thử V",
-    "artistId": "ca-si-thu-v",
-    "year": 2019,
+    "id": "loi-nho-den",
+    "title": "Lối nhỏ",
+    "artist": "Đen",
+    "artistId": "den",
     "genre": [
-      "ballad",
-      "pop"
+      "rap"
     ],
-    "voice": "nu",
-    "views": 78,
-    "viewsAsOf": "2026-10",
-    "difficulty": 4,
+    "voice": "song-ca",
     "rarity": 4,
     "tags": [
-      "cao-trao",
-      "giong-khoe"
+      "ft-phuong-anh-dao"
     ]
   },
   {
-    "id": "bai-thu-23",
-    "title": "Bài thử 23",
-    "artist": "Ca sĩ thử W",
-    "artistId": "ca-si-thu-w",
-    "year": 2021,
+    "id": "mot-trieu-like-den",
+    "title": "Một triệu like",
+    "artist": "Đen",
+    "artistId": "den",
     "genre": [
       "rap"
     ],
     "voice": "nam",
-    "views": 55,
-    "viewsAsOf": "2026-10",
-    "difficulty": 4,
     "rarity": 4,
     "tags": [
-      "rap-nhanh",
-      "ky-thuat"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-24",
-    "title": "Bài thử 24",
-    "artist": "Ca sĩ thử X",
-    "artistId": "ca-si-thu-x",
-    "year": 2015,
+    "id": "troi-hom-nay-nhieu-may-cuc-den",
+    "title": "Trời hôm nay nhiều mây cực",
+    "artist": "Đen",
+    "artistId": "den",
     "genre": [
-      "rock"
+      "rap"
     ],
     "voice": "nam",
-    "views": 60,
-    "viewsAsOf": "2026-10",
-    "difficulty": 4,
-    "rarity": 4,
+    "rarity": 3,
     "tags": [
-      "ghet-gao",
-      "chay-het-minh"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-25",
-    "title": "Bài thử 25",
-    "artist": "Ca sĩ thử Y",
-    "artistId": "ca-si-thu-y",
-    "year": 2016,
+    "id": "anh-dech-can-gi-nhieu-ngoai-em-den",
+    "title": "Anh đếch cần gì nhiều ngoài em",
+    "artist": "Đen",
+    "artistId": "den",
+    "genre": [
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "di-ve-nha-den",
+    "title": "Đi về nhà",
+    "artist": "Đen",
+    "artistId": "den",
+    "genre": [
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "ft-justatee"
+    ]
+  },
+  {
+    "id": "tron-tim-den",
+    "title": "Trốn tìm",
+    "artist": "Đen",
+    "artistId": "den",
+    "genre": [
+      "pop",
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "mang-tien-ve-cho-me-den",
+    "title": "Mang tiền về cho mẹ",
+    "artist": "Đen",
+    "artistId": "den",
+    "genre": [
+      "rap"
+    ],
+    "voice": "song-ca",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "ai-muon-nghe-khong-den",
+    "title": "Ai muốn nghe không",
+    "artist": "Đen",
+    "artistId": "den",
+    "genre": [
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "phia-sau-mot-co-gai-soobin-hoang-son",
+    "title": "Phía sau một cô gái",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "di-de-tro-ve-soobin-hoang-son",
+    "title": "Đi để trở về",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "xin-dung-lang-im-soobin-hoang-son",
+    "title": "Xin đừng lặng im",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "anh-da-quen-voi-co-don-soobin-hoang-son",
+    "title": "Anh đã quen với cô đơn",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "dep-nhat-la-em-soobin-hoang-son",
+    "title": "Đẹp nhất là em",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "pop"
+    ],
+    "voice": "song-ca",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "thang-nam-soobin-hoang-son",
+    "title": "Tháng năm",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "blackjack-soobin-hoang-son",
+    "title": "BlackJack",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "gia-nhu-soobin-hoang-son",
+    "title": "Giá như",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "ai-ma-biet-duoc-soobin-hoang-son",
+    "title": "Ai mà biết được",
+    "artist": "Soobin Hoàng Sơn",
+    "artistId": "soobin-hoang-son",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "hong-nhan-jack-j97",
+    "title": "Hồng nhan",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "bac-phan-jack-j97",
+    "title": "Bạc phận",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "song-gio-jack-j97",
+    "title": "Sóng gió",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "em-gi-oi-jack-j97",
+    "title": "Em gì ơi",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "voi-k-icm"
+    ]
+  },
+  {
+    "id": "la-1-thang-con-trai-jack-j97",
+    "title": "Là 1 thằng con trai",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "hoa-hai-duong-jack-j97",
+    "title": "Hoa hải đường",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "dom-dom-jack-j97",
+    "title": "Đom đóm",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "laylalay-jack-j97",
+    "title": "Laylalay",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "cuoi-cung-thi-jack-j97",
+    "title": "Cuối cùng thì",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "thien-ly-oi-jack-j97",
+    "title": "Thiên lý ơi",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "duoi-tan-cay-kho-hoa-no-jack-j97",
+    "title": "Dưới tán cây khô hoa nở",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "xoa-ten-anh-di-jack-j97",
+    "title": "Xóa tên anh đi",
+    "artist": "Jack - J97",
+    "artistId": "jack-j97",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "thuy-trieu-quang-hung-masterd",
+    "title": "Thủy triều",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "mua-da-quang-hung-masterd",
+    "title": "Mưa đá",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "de-den-de-di-quang-hung-masterd",
+    "title": "Dễ đến dễ đi",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "dung-khoc-mot-minh-quang-hung-masterd",
+    "title": "Đừng khóc một mình",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "dung-vi-anh-ma-khoc-quang-hung-masterd",
+    "title": "Đừng vì anh mà khóc",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "hoa-bat-tu-quang-hung-masterd",
+    "title": "Hoa bất tử",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "chi-con-mot-dem-quang-hung-masterd",
+    "title": "Chỉ còn một đêm",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "catch-me-if-you-can-quang-hung-masterd",
+    "title": "Catch me if you can",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "tinh-dau-qua-chen-quang-hung-masterd",
+    "title": "Tình đầu quá chén",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "song-ca",
+    "rarity": 3,
+    "tags": [
+      "voi-ha-anh-tuan"
+    ]
+  },
+  {
+    "id": "troi-em-lai-quang-hung-masterd",
+    "title": "Trói em lại",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "anh-mat-biet-cuoi-quang-hung-masterd",
+    "title": "Ánh mắt biết cười",
+    "artist": "Quang Hùng MasterD",
+    "artistId": "quang-hung-masterd",
+    "genre": [
+      "pop"
+    ],
+    "voice": "song-ca",
+    "rarity": 3,
+    "tags": [
+      "voi-tang-duy-tan"
+    ]
+  },
+  {
+    "id": "exit-sign-hieuthuhai",
+    "title": "Exit Sign",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "pop"
+    ],
+    "voice": "song-ca",
+    "rarity": 5,
+    "tags": [
+      "ft-marzuz"
+    ]
+  },
+  {
+    "id": "khong-the-say-hieuthuhai",
+    "title": "Không thể say",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "ngu-mot-minh-hieuthuhai",
+    "title": "Ngủ một mình",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "pop",
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "negav-kewtiie"
+    ]
+  },
+  {
+    "id": "ve-tinh-hieuthuhai",
+    "title": "Vệ tinh",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "mamma-mia-hieuthuhai",
+    "title": "Mamma Mia",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "kiem-tra-nghe-si-chi"
+    ]
+  },
+  {
+    "id": "nghe-nhu-tinh-yeu-hieuthuhai",
+    "title": "Nghe như tình yêu",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "khong-phai-gu-hieuthuhai",
+    "title": "Không phải gu",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "pop",
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "nolovenolife-hieuthuhai",
+    "title": "Nolovenolife",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "nuoc-mat-ca-sau-hieuthuhai",
+    "title": "Nước mắt cá sấu",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "mot-cong-doi-viec-hieuthuhai",
+    "title": "Một công đôi việc",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "rap"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "voi-hurrykng"
+    ]
+  },
+  {
+    "id": "hen-gap-em-duoi-anh-trang-hieuthuhai",
+    "title": "Hẹn gặp em dưới ánh trăng",
+    "artist": "HIEUTHUHAI",
+    "artistId": "hieuthuhai",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "manbo-hurrykng"
+    ]
+  },
+  {
+    "id": "cat-doi-noi-sau-tang-duy-tan",
+    "title": "Cắt đôi nỗi sầu",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "da-vu-tang-duy-tan",
+    "title": "Dạ vũ",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "ben-tren-tang-lau-tang-duy-tan",
+    "title": "Bên trên tầng lầu",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "say-trong-nu-cuoi-tang-duy-tan",
+    "title": "Say trong nụ cười",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "tinh-dau-tang-duy-tan",
+    "title": "Tình đầu",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "ngay-tho-tang-duy-tan",
+    "title": "Ngây thơ",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "05-khong-phai-tang-duy-tan",
+    "title": "05 (Không phai)",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "say-song-tang-duy-tan",
+    "title": "Say sóng",
+    "artist": "Tăng Duy Tân",
+    "artistId": "tang-duy-tan",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "drum7-2pillz"
+    ]
+  },
+  {
+    "id": "nang-tho-hoang-dung",
+    "title": "Nàng thơ",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "cuoi-tuan-hoang-dung",
+    "title": "Cuối tuần",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "la-ban-hoang-dung",
+    "title": "La bàn",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "ve-nghe-me-ru-hoang-dung",
+    "title": "Về nghe mẹ ru",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "voi-bach-tuyet"
+    ]
+  },
+  {
+    "id": "cho-anh-nhe-hoang-dung",
+    "title": "Chờ anh nhé",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "nep-vao-anh-va-nghe-anh-hat-hoang-dung",
+    "title": "Nép vào anh và nghe anh hát",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "khi-em-lon-hoang-dung",
+    "title": "Khi em lớn",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
     "genre": [
       "ballad"
     ],
     "voice": "song-ca",
-    "views": 72,
-    "viewsAsOf": "2026-10",
-    "difficulty": 4,
+    "rarity": 3,
+    "tags": [
+      "voi-orange"
+    ]
+  },
+  {
+    "id": "tach-hoang-dung",
+    "title": "Tách",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "pop"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "em-trong-cay-hoang-dung",
+    "title": "Em trồng cây",
+    "artist": "Hoàng Dũng",
+    "artistId": "hoang-dung",
+    "genre": [
+      "ballad"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "em-dao-nay-ngot",
+    "title": "Em dạo này",
+    "artist": "Ngọt",
+    "artistId": "ngot",
+    "genre": [
+      "rock"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "cho-toi-di-theo-ngot",
+    "title": "Cho tôi đi theo",
+    "artist": "Ngọt",
+    "artistId": "ngot",
+    "genre": [
+      "rock"
+    ],
+    "voice": "nam",
+    "rarity": 5,
+    "tags": [
+      "2016-2019"
+    ],
+    "year": 2016
+  },
+  {
+    "id": "ca-hoi-ngot",
+    "title": "Cá hồi",
+    "artist": "Ngọt",
+    "artistId": "ngot",
+    "genre": [
+      "rock"
+    ],
+    "voice": "nam",
     "rarity": 4,
     "tags": [
-      "hoa-giong",
-      "cao-trao"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-26",
-    "title": "Bài thử 26",
-    "artist": "Ca sĩ thử Z",
-    "artistId": "ca-si-thu-z",
-    "year": 2022,
+    "id": "khong-lam-gi-ngot",
+    "title": "Không làm gì",
+    "artist": "Ngọt",
+    "artistId": "ngot",
     "genre": [
-      "pop"
-    ],
-    "voice": "nu",
-    "views": 88,
-    "viewsAsOf": "2026-10",
-    "difficulty": 4,
-    "rarity": 5,
-    "tags": [
-      "luyen-lay",
-      "ky-thuat"
-    ]
-  },
-  {
-    "id": "bai-thu-27",
-    "title": "Bài thử 27",
-    "artist": "Ca sĩ thử Alpha",
-    "artistId": "ca-si-thu-alpha",
-    "year": 2020,
-    "genre": [
-      "bolero"
+      "rock"
     ],
     "voice": "nam",
-    "views": 52,
-    "viewsAsOf": "2026-10",
-    "difficulty": 4,
     "rarity": 4,
     "tags": [
-      "rung-giong",
-      "chuyen-nghiep"
+      "quen-thuoc"
     ]
   },
   {
-    "id": "bai-thu-28",
-    "title": "Bài thử 28",
-    "artist": "Ca sĩ thử Beta",
-    "artistId": "ca-si-thu-beta",
-    "year": 2018,
+    "id": "xanh-ngot",
+    "title": "Xanh",
+    "artist": "Ngọt",
+    "artistId": "ngot",
     "genre": [
-      "ballad",
+      "rock"
+    ],
+    "voice": "nam",
+    "rarity": 4,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "lan-cuoi-di-ben-em-xot-xa-nguoi-oi-ngot",
+    "title": "Lần cuối (đi bên em xót xa người ơi)",
+    "artist": "Ngọt",
+    "artistId": "ngot",
+    "genre": [
+      "rock"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "chuyen-kenh-san-pham-nay-khong-phai-la-thuoc-ngot",
+    "title": "Chuyển kênh (sản phẩm này không phải là thuốc)",
+    "artist": "Ngọt",
+    "artistId": "ngot",
+    "genre": [
+      "rock"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "may-khi-ngot",
+    "title": "Mấy khi",
+    "artist": "Ngọt",
+    "artistId": "ngot",
+    "genre": [
+      "rock"
+    ],
+    "voice": "nam",
+    "rarity": 3,
+    "tags": [
+      "quen-thuoc"
+    ]
+  },
+  {
+    "id": "vi-ai-ngot",
+    "title": "Vì ai",
+    "artist": "Ngọt",
+    "artistId": "ngot",
+    "genre": [
       "pop"
     ],
     "voice": "nam",
-    "views": 185,
-    "viewsAsOf": "2026-10",
-    "difficulty": 5,
-    "rarity": 5,
+    "rarity": 3,
     "tags": [
-      "sieu-cao-trao",
-      "pha-giong",
-      "de-hat-khi-say"
-    ],
-    "challenge": "Hát đoạn điệp khúc bằng giọng gió hoặc đứng một chân suốt bài!"
+      "quen-thuoc"
+    ]
   },
   {
-    "id": "bai-thu-29",
-    "title": "Bài thử 29",
-    "artist": "Ca sĩ thử Gamma",
-    "artistId": "ca-si-thu-gamma",
-    "year": 2022,
+    "id": "bartender-ngot",
+    "title": "Bartender",
+    "artist": "Ngọt",
+    "artistId": "ngot",
     "genre": [
-      "rock",
-      "pop"
-    ],
-    "voice": "nu",
-    "views": 140,
-    "viewsAsOf": "2026-10",
-    "difficulty": 5,
-    "rarity": 5,
-    "tags": [
-      "quai-vat",
-      "chay-het-minh"
-    ],
-    "challenge": "Lên nốt cao nhất không được nhắm mắt, mời cả phòng đồng ca!"
-  },
-  {
-    "id": "bai-thu-30",
-    "title": "Bài thử 30",
-    "artist": "Ca sĩ thử Delta",
-    "artistId": "ca-si-thu-delta",
-    "year": 2023,
-    "genre": [
-      "rap",
-      "pop"
+      "rock"
     ],
     "voice": "nam",
-    "views": 230,
-    "viewsAsOf": "2026-10",
-    "difficulty": 5,
-    "rarity": 5,
+    "rarity": 3,
     "tags": [
-      "fast-flow",
-      "khong-tho"
-    ],
-    "challenge": "Bắn rap không vấp chữ nào, nếu vấp phải uống 1 ngụm nước!"
+      "quen-thuoc"
+    ]
   }
 ]

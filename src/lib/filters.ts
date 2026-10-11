@@ -76,11 +76,11 @@ export function filterByBanner(songs: Song[], banner: Banner): Song[] {
       if (!hasVoice) return false;
     }
 
-    // Lọc theo năm
-    if (yearFrom !== undefined && song.year < yearFrom) {
+    // Lọc theo năm (nếu bài hát có năm phát hành)
+    if (yearFrom !== undefined && song.year !== undefined && song.year < yearFrom) {
       return false;
     }
-    if (yearTo !== undefined && song.year > yearTo) {
+    if (yearTo !== undefined && song.year !== undefined && song.year > yearTo) {
       return false;
     }
 

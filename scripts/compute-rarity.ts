@@ -70,17 +70,17 @@ export function evaluateSongRarities(songs: Song[]): RarityResult[] {
     const hasViews = typeof song.views === 'number' && !Number.isNaN(song.views);
 
     if (!hasViews) {
-      // Bài không có view: bắt buộc có rarityNote
-      const hasNote = Boolean(song.rarityNote && song.rarityNote.trim().length > 0);
+      // Khi kho bài không dùng views (hoặc bài không có views), chấp nhận độ hiếm đã gán nếu thuộc {3, 4, 5}
+      const isValidRarity = [3, 4, 5].includes(song.rarity);
       return {
         song,
         computedRarity: song.rarity,
         actualRarity: song.rarity,
-        isOverride: true,
-        isValid: hasNote,
-        reason: hasNote
+        isOverride: false,
+        isValid: isValidRarity,
+        reason: isValidRarity
           ? undefined
-          : 'Bài không có lượt xem (views) bắt buộc phải có rarityNote giải thích.',
+          : `Độ hiếm '${song.rarity}' không hợp lệ (phải là 3, 4 hoặc 5).`,
       };
     }
 

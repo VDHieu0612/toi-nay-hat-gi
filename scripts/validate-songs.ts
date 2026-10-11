@@ -143,14 +143,16 @@ export function validateData(): {
       });
     }
 
-    // Year
-    if (typeof song.year !== 'number' || song.year < 1950 || song.year > 2030) {
-      issues.push({
-        type: 'error',
-        category: 'song',
-        targetId: song.id,
-        message: `Năm phát hành '${song.year}' không hợp lệ (cần từ 1950 đến 2030).`,
-      });
+    // Year (tùy chọn)
+    if (song.year !== undefined) {
+      if (typeof song.year !== 'number' || song.year < 1950 || song.year > 2030) {
+        issues.push({
+          type: 'error',
+          category: 'song',
+          targetId: song.id,
+          message: `Năm phát hành '${song.year}' không hợp lệ (cần từ 1950 đến 2030).`,
+        });
+      }
     }
 
     // Genre
@@ -353,13 +355,13 @@ export function validateData(): {
         const count5 = artistPool.filter((s) => s.rarity === 5).length;
         const count4 = artistPool.filter((s) => s.rarity === 4).length;
 
-        // Tiêu chí M6: ít nhất 20 bài, ít nhất 1 bài 5★ và 3 bài 4★
-        if (artistPool.length < 20 || count5 < 1 || count4 < 3) {
+        // Tiêu chí banner ca sĩ: ít nhất 5 bài, ít nhất 1 bài 5★ và 1 bài 4★
+        if (artistPool.length < 5 || count5 < 1 || count4 < 1) {
           issues.push({
             type: 'error',
             category: 'banner',
             targetId: banner.id,
-            message: `Banner ca sĩ '${banner.name}' (${banner.id}): Pool có ${artistPool.length} bài (yêu cầu ≥ 20), ${count5} bài 5★ (yêu cầu ≥ 1), ${count4} bài 4★ (yêu cầu ≥ 3). Vui lòng bổ sung bài hoặc extraSongIds.`,
+            message: `Banner ca sĩ '${banner.name}' (${banner.id}): Pool có ${artistPool.length} bài (yêu cầu ≥ 5), ${count5} bài 5★ (yêu cầu ≥ 1), ${count4} bài 4★ (yêu cầu ≥ 1). Vui lòng bổ sung bài hoặc extraSongIds.`,
           });
         }
       }

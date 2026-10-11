@@ -1,15 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Song, Artist, Genre, Voice, Rarity } from '../src/lib/types';
+import type { Song, Artist, Banner, Genre, Voice, Rarity } from '../src/lib/types';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 const SONGS_FILE = path.resolve(__dirname, '../src/data/songs.json');
 const ARTISTS_FILE = path.resolve(__dirname, '../src/data/artists.json');
+const BANNERS_FILE = path.resolve(__dirname, '../src/data/banners.json');
 
 const VALID_GENRES: Genre[] = ['ballad', 'pop', 'rap', 'bolero', 'rock'];
 const VALID_VOICES: Voice[] = ['nam', 'nu', 'song-ca', 'tat-ca'];
+
+const PALETTE = [
+  '#6366f1', '#ec4899', '#8b5cf6', '#0ea5e9',
+  '#10b981', '#f59e0b', '#f43f5e', '#06b6d4',
+  '#d97706', '#a855f7', '#14b8a6', '#3b82f6',
+];
 
 /**
  * Chuyển chuỗi tiếng Việt thành slug kebab-case chuẩn:
@@ -61,13 +69,35 @@ export function parseCsvLine(line: string): string[] {
   return result;
 }
 
-export function importCsv(csvFilePath: string): void {
-  if (!fs.existsSync(csvFilePath)) {
-    console.error(`\n❌ [LỖI] Không tìm thấy file CSV: ${csvFilePath}\n`);
+/**
+ * Tải nội dung CSV từ file local hoặc URL (Google Sheet online)
+ */
+export async function loadCsvContent(source: string): Promise<string> {
+  if (source.startsWith('http://') || source.startsWith('https://')) {
+    console.log(`\n🌐 Đang kết nối và tải file từ Google Sheet / URL:\n   ${source}...`);
+    const res = await fetch(source);
+    if (!res.ok) {
+      throw new Error(`Tải dữ liệu thất bại (HTTP ${res.status}): ${res.statusText}`);
+    }
+    return await res.text();
+  }
+
+  const resolvedPath = path.resolve(process.cwd(), source);
+  if (!fs.existsSync(resolvedPath)) {
+    throw new Error(`Không tìm thấy file: ${resolvedPath}`);
+  }
+  return fs.readFileSync(resolvedPath, 'utf-8');
+}
+
+export async function importCsv(source: string): Promise<void> {
+  let content = '';
+  try {
+    content = await loadCsvContent(source);
+  } catch (err: any) {
+    console.error(`\n❌ [LỖI] ${err.message}\n`);
     process.exit(1);
   }
 
-  const content = fs.readFileSync(csvFilePath, 'utf-8');
   const lines = content.split(/\r?\n/).filter((l) => l.trim().length > 0);
 
   if (lines.length < 2) {
@@ -115,24 +145,42 @@ export function importCsv(csvFilePath: string): void {
   }
   const artistsMap = new Map<string, Artist>(existingArtists.map((a) => [a.id, a]));
 
-  const songs: Song[] = [];
-  const errors: string[] = [];
-  const songIds = new Set<string>();
+  interface RawRow {
+    lineNum: number;
+    title: string;
+    artist: string;
+    artistId: string;
+    songId: string;
+    year?: number;
+    genres: Genre[];
+    voice: Voice;
+    views?: number;
+    viewsAsOf?: string;
+    manualRarity?: Rarity;
+    rarityNote?: string;
+    note?: string;
+    tags: string[];
+    challenge?: string;
+  }
 
-  // Duyệt từng dòng dữ liệu
+  const rawRows: RawRow[] = [];
+  const errors: string[] = [];
+  const seenSongIds = new Set<string>();
+
   for (let i = 1; i < lines.length; i++) {
     const lineNum = i + 1;
     const row = parseCsvLine(lines[i]);
 
     const title = row[colIndex.title] || '';
     const artist = row[colIndex.artist] || '';
-    const yearStr = row[colIndex.year] || '';
+    const yearStr = colIndex.year !== -1 ? row[colIndex.year] || '' : '';
     const genreStr = row[colIndex.genre] || '';
     const voiceStr = (row[colIndex.voice] || '').toLowerCase() as Voice;
     const viewsStr = colIndex.views !== -1 ? row[colIndex.views] : '';
     const viewsAsOfStr = colIndex.viewsAsOf !== -1 ? row[colIndex.viewsAsOf] : '';
     const rarityStr = colIndex.rarity !== -1 ? row[colIndex.rarity] : '';
     const rarityNote = colIndex.rarityNote !== -1 ? row[colIndex.rarityNote] : undefined;
+    const noteStr = colIndex.note !== -1 ? row[colIndex.note] || '' : '';
     const tagsStr = colIndex.tags !== -1 ? row[colIndex.tags] : '';
     const challenge = colIndex.challenge !== -1 ? row[colIndex.challenge] : undefined;
 
@@ -145,36 +193,31 @@ export function importCsv(csvFilePath: string): void {
       continue;
     }
 
-    const noteStr = colIndex.note !== -1 ? row[colIndex.note] || '' : '';
-
-    let year = 2020;
+    let year: number | undefined;
     if (yearStr && yearStr.trim() !== '') {
-      const parsed = Number.parseInt(yearStr, 10);
-      if (!Number.isNaN(parsed) && parsed >= 1950 && parsed <= 2030) {
-        year = parsed;
-      } else {
-        errors.push(`Dòng ${lineNum}: Năm '${yearStr}' không hợp lệ (cần trong khoảng 1950 - 2030).`);
+      const parsedYear = Number.parseInt(yearStr, 10);
+      if (!Number.isNaN(parsedYear) && parsedYear >= 1950 && parsedYear <= 2030) {
+        year = parsedYear;
       }
     } else if (noteStr) {
-      const yearMatch = noteStr.match(/\b(19\d{2}|20\d{2})\b/);
-      if (yearMatch) {
-        year = Number.parseInt(yearMatch[1], 10);
+      const match = noteStr.match(/\b(19\d{2}|20\d{2})\b/);
+      if (match) {
+        year = Number.parseInt(match[1], 10);
       }
     }
 
-    // Genre: phân tách bằng '|'
     const genres = genreStr
       .split('|')
       .map((g) => g.trim().toLowerCase() as Genre)
       .filter(Boolean);
 
     if (genres.length === 0) {
-      errors.push(`Dòng ${lineNum}: Phải có ít nhất 1 thể loại (genre).`);
+      errors.push(`Dòng ${lineNum}: Cần ít nhất 1 thể loại (genre).`);
     } else {
-      const invalidGenres = genres.filter((g) => !VALID_GENRES.includes(g));
-      if (invalidGenres.length > 0) {
+      const invalid = genres.filter((g) => !VALID_GENRES.includes(g));
+      if (invalid.length > 0) {
         errors.push(
-          `Dòng ${lineNum}: Thể loại không hợp lệ: ${invalidGenres.join(', ')}. Chỉ chấp nhận: ${VALID_GENRES.join(', ')}.`
+          `Dòng ${lineNum}: Thể loại không hợp lệ: ${invalid.join(', ')}. Chỉ chấp nhận: ${VALID_GENRES.join(', ')}.`
         );
       }
     }
@@ -185,118 +228,222 @@ export function importCsv(csvFilePath: string): void {
       );
     }
 
-    // Views
     let views: number | undefined;
     if (viewsStr && viewsStr.trim() !== '') {
-      views = Number.parseFloat(viewsStr);
-      if (Number.isNaN(views) || views < 0) {
-        errors.push(`Dòng ${lineNum}: Lượt xem '${viewsStr}' phải là số không âm.`);
-      } else if (!viewsAsOfStr || !/^\d{4}-\d{2}$/.test(viewsAsOfStr)) {
-        errors.push(`Dòng ${lineNum}: Có views thì bắt buộc phải có viewsAsOf dạng YYYY-MM.`);
+      const parsedViews = Number.parseFloat(viewsStr);
+      if (!Number.isNaN(parsedViews) && parsedViews >= 0) {
+        views = parsedViews;
       }
     }
 
-    // Rarity
-    let rarity: Rarity = 3;
+    let manualRarity: Rarity | undefined;
     if (rarityStr && rarityStr.trim() !== '') {
-      const parsedRarity = Number.parseInt(rarityStr, 10);
-      if ([3, 4, 5].includes(parsedRarity)) {
-        rarity = parsedRarity as Rarity;
-      } else {
-        errors.push(`Dòng ${lineNum}: Rarity '${rarityStr}' không hợp lệ (chỉ chấp nhận 3, 4, 5).`);
+      const parsedR = Number.parseInt(rarityStr, 10);
+      if ([3, 4, 5].includes(parsedR)) {
+        manualRarity = parsedR as Rarity;
       }
     }
 
     const artistId = toKebabCase(artist);
+    const songId = toKebabCase(`${title}-${artist}`);
+
+    if (seenSongIds.has(songId)) {
+      errors.push(`Dòng ${lineNum}: Trùng bài hát '${title}' của ca sĩ '${artist}'.`);
+    }
+    seenSongIds.add(songId);
+
+    // Xác định vai trò (singer/rapper/group)
+    let kind: 'singer' | 'rapper' | 'group' = 'singer';
+    const lowerArtist = artist.toLowerCase();
+    if (lowerArtist.includes('rap') || ['den', 'hieuthuhai', 'justatee', 'suboi'].includes(artistId)) {
+      kind = 'rapper';
+    } else if (['ngot', 'chillies', 'da-lab', 'ca-hoi-hoang'].includes(artistId)) {
+      kind = 'group';
+    }
+
     if (!artistsMap.has(artistId)) {
+      const colorIndex = artistsMap.size % PALETTE.length;
       artistsMap.set(artistId, {
         id: artistId,
         name: artist,
-        kind: 'singer',
-        theme: '#6366f1',
+        kind,
+        theme: PALETTE[colorIndex],
       });
     }
 
-    const songId = toKebabCase(`${title}-${artist}`);
-    if (songIds.has(songId)) {
-      errors.push(`Dòng ${lineNum}: Trùng mã bài hát '${songId}' (Bài: '${title}', Ca sĩ: '${artist}').`);
-    }
-    songIds.add(songId);
-
     const tags = tagsStr
       ? tagsStr.split(/[|,]/).map((t) => t.trim().toLowerCase()).filter(Boolean)
-      : ['quen-thuoc'];
+      : noteStr
+        ? [toKebabCase(noteStr.slice(0, 20))]
+        : ['quen-thuoc'];
 
-    const song: Song = {
-      id: songId,
+    rawRows.push({
+      lineNum,
       title,
       artist,
       artistId,
+      songId,
       year,
-      genre: genres,
+      genres,
       voice: voiceStr,
-      rarity,
+      views,
+      viewsAsOf: viewsAsOfStr || undefined,
+      manualRarity,
+      rarityNote,
+      note: noteStr || undefined,
       tags,
-    };
-
-    if (views !== undefined) {
-      song.views = views;
-      song.viewsAsOf = viewsAsOfStr;
-    }
-    const resolvedRarityNote =
-      rarityNote && rarityNote.trim()
-        ? rarityNote.trim()
-        : views === undefined
-          ? noteStr || 'Bài nổi bật từ kho danh mục'
-          : undefined;
-
-    if (resolvedRarityNote) {
-      song.rarityNote = resolvedRarityNote;
-    }
-    if (challenge && challenge.trim()) {
-      song.challenge = challenge.trim();
-    }
-
-    songs.push(song);
+      challenge,
+    });
   }
 
   if (errors.length > 0) {
-    console.error(`\n❌ [LỖI NHẬP LIỆU CSV] Tìm thấy ${errors.length} lỗi:\n`);
+    console.error(`\n❌ [LỖI DỮ LIỆU CSV] Tìm thấy ${errors.length} lỗi:\n`);
     for (const err of errors) {
-      console.error(`  - ${err}`);
+      console.error(`  • ${err}`);
     }
-    console.error(`\nVui lòng sửa file CSV và thử lại.\n`);
+    console.error(`\nVui lòng kiểm tra lại file CSV.\n`);
     process.exit(1);
   }
 
-  // Ghi file JSON
-  fs.writeFileSync(SONGS_FILE, JSON.stringify(songs, null, 2) + '\n', 'utf-8');
+  // Tự động phân bổ độ hiếm theo ca sĩ nếu không có cột rarity
+  // Gom nhóm bài theo artistId
+  const artistSongsMap = new Map<string, RawRow[]>();
+  for (const r of rawRows) {
+    const list = artistSongsMap.get(r.artistId) || [];
+    list.push(r);
+    artistSongsMap.set(r.artistId, list);
+  }
+
+  const finalSongs: Song[] = [];
+
+  for (const rows of artistSongsMap.values()) {
+    const n = rows.length;
+    // Phân bổ hợp lý:
+    // 1-2 bài đầu: 5★ (Siêu hit)
+    // 30% tiếp: 4★ (Hit)
+    // còn lại: 3★ (Bài ngon)
+    const fiveStarCount = Math.max(1, Math.round(n * 0.18));
+    const fourStarCount = Math.max(1, Math.round(n * 0.32));
+
+    for (let idx = 0; idx < rows.length; idx++) {
+      const r = rows[idx];
+
+      let rarity: Rarity = 3;
+      if (r.manualRarity) {
+        rarity = r.manualRarity;
+      } else if (idx < fiveStarCount) {
+        rarity = 5;
+      } else if (idx < fiveStarCount + fourStarCount) {
+        rarity = 4;
+      } else {
+        rarity = 3;
+      }
+
+      const song: Song = {
+        id: r.songId,
+        title: r.title,
+        artist: r.artist,
+        artistId: r.artistId,
+        genre: r.genres,
+        voice: r.voice,
+        rarity,
+        tags: r.tags,
+      };
+
+      if (r.year) song.year = r.year;
+      if (r.views !== undefined) song.views = r.views;
+      if (r.viewsAsOf) song.viewsAsOf = r.viewsAsOf;
+      if (r.rarityNote) song.rarityNote = r.rarityNote;
+      if (r.challenge) song.challenge = r.challenge;
+
+      finalSongs.push(song);
+    }
+  }
+
+  // Tự động cập nhật danh sách Banner ca sĩ trong banners.json
+  // Giữ lại banner tổng hợp "tong-hop"
+  let existingBanners: Banner[] = [];
+  if (fs.existsSync(BANNERS_FILE)) {
+    try {
+      existingBanners = JSON.parse(fs.readFileSync(BANNERS_FILE, 'utf-8'));
+    } catch {
+      existingBanners = [];
+    }
+  }
+
+  const generalBanners = existingBanners.filter((b) => b.id === 'tong-hop');
+  if (generalBanners.length === 0) {
+    generalBanners.push({
+      id: 'tong-hop',
+      type: 'general',
+      name: 'Tổng Hợp Quán Hát',
+      tagline: 'Bài Ca Muôn Màu',
+      description: 'Kho bài hát phong phú đủ mọi thể loại và giọng hát cho mọi thành viên trong phòng hát.',
+      featured: [],
+      theme: '#6366f1',
+    });
+  }
+
+  // Tạo banner cho các ca sĩ có từ 5 bài trở lên
+  const generatedArtistBanners: Banner[] = [];
+  for (const [artId, rows] of artistSongsMap.entries()) {
+    if (rows.length < 5) continue;
+
+    const artistObj = artistsMap.get(artId);
+    if (!artistObj) continue;
+
+    const artistSongList = finalSongs.filter((s) => s.artistId === artId);
+    const featured5 = artistSongList.filter((s) => s.rarity === 5).map((s) => s.id);
+    const featured4 = artistSongList.filter((s) => s.rarity === 4).map((s) => s.id);
+    const featured = [...featured5.slice(0, 2), ...featured4.slice(0, 1)];
+
+    generatedArtistBanners.push({
+      id: `spotlight-${artId}`,
+      type: 'artist',
+      artistId: artId,
+      name: artistObj.name,
+      description: `Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của ${artistObj.name} sẵn sàng cho đêm karaoke bùng cháy!`,
+      featured,
+      theme: artistObj.theme || '#6366f1',
+    });
+  }
+
+  const finalBanners = [...generalBanners, ...generatedArtistBanners];
+
+  // Ghi các file JSON
+  fs.writeFileSync(SONGS_FILE, JSON.stringify(finalSongs, null, 2) + '\n', 'utf-8');
   fs.writeFileSync(
     ARTISTS_FILE,
     JSON.stringify(Array.from(artistsMap.values()), null, 2) + '\n',
     'utf-8'
   );
+  fs.writeFileSync(BANNERS_FILE, JSON.stringify(finalBanners, null, 2) + '\n', 'utf-8');
 
   console.log(`\n======================================================`);
-  console.log(`  NHẬP FILE CSV THÀNH CÔNG!`);
-  console.log(`  - Đã nhập: ${songs.length} bài hát vào ${SONGS_FILE}`);
-  console.log(`  - Đã cập nhật: ${artistsMap.size} ca sĩ vào ${ARTISTS_FILE}`);
+  console.log(`  NHẬP DỮ LIỆU THÀNH CÔNG!`);
+  console.log(`  • Đã nhập: ${finalSongs.length} bài hát vào ${path.basename(SONGS_FILE)}`);
+  console.log(`  • Đã cập nhật: ${artistsMap.size} ca sĩ vào ${path.basename(ARTISTS_FILE)}`);
+  console.log(`  • Đã tạo: ${generatedArtistBanners.length} banner ca sĩ xoay tua vào ${path.basename(BANNERS_FILE)}`);
   console.log(`======================================================\n`);
-  console.log(`Tiếp theo, hãy chạy:`);
-  console.log(`  1. npx vite-node scripts/compute-rarity.ts (tính phân vị lượt xem)`);
-  console.log(`  2. npx vite-node scripts/validate-songs.ts (kiểm tra toàn diện trước khi build)\n`);
 }
 
-function run(): void {
-  const filePath = process.argv.slice(2).find((arg) => !arg.startsWith('--'));
-  if (!filePath) {
-    console.log(`\nSử dụng: npx vite-node scripts/import-csv.ts <duong-dan-file.csv>\n`);
+async function run(): Promise<void> {
+  const source = process.argv.slice(2).find((arg) => !arg.startsWith('--'));
+  if (!source) {
+    console.log(`\nSử dụng:`);
+    console.log(`  - File local:  npx vite-node scripts/import-csv.ts <duong-dan-file.csv>`);
+    console.log(`  - Google Sheet: npx vite-node scripts/import-csv.ts "https://docs.google.com/spreadsheets/d/.../export?format=csv"\n`);
     process.exit(0);
   }
-  importCsv(filePath);
+  await importCsv(source);
 }
 
-// Chạy trực tiếp qua node/vite-node khi được gọi trực tiếp
-if (process.argv.some((arg) => arg.includes('import-csv'))) {
-  run();
+if (
+  process.argv.some((arg) => arg.includes('import-csv')) ||
+  !process.argv.some((arg) => arg.includes('vitest') || arg.includes('test'))
+) {
+  run().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }

@@ -9,127 +9,119 @@
     "theme": "#6366f1"
   },
   {
-    "id": "spotlight-ca-si-a",
+    "id": "spotlight-son-tung-m-tp",
     "type": "artist",
-    "artistId": "ca-si-thu-a",
-    "name": "Ca Sĩ Thử A",
-    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Ca sĩ thử A cùng dàn khách mời song ca và nghệ sĩ cùng thời.",
-    "featured": ["bai-thu-01", "bai-thu-21", "bai-thu-28"],
-    "extraSongIds": [
-      "bai-thu-02",
-      "bai-thu-03",
-      "bai-thu-04",
-      "bai-thu-05",
-      "bai-thu-07",
-      "bai-thu-08",
-      "bai-thu-09",
-      "bai-thu-10",
-      "bai-thu-12",
-      "bai-thu-13",
-      "bai-thu-15",
-      "bai-thu-17",
-      "bai-thu-18",
-      "bai-thu-19",
-      "bai-thu-20",
-      "bai-thu-21",
-      "bai-thu-22",
-      "bai-thu-25",
-      "bai-thu-26",
-      "bai-thu-28"
+    "artistId": "son-tung-m-tp",
+    "name": "Sơn Tùng M-TP",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Sơn Tùng M-TP sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "em-cua-ngay-hom-qua-son-tung-m-tp",
+      "con-mua-ngang-qua-son-tung-m-tp",
+      "khong-phai-dang-vua-dau-son-tung-m-tp"
+    ],
+    "theme": "#f43f5e"
+  },
+  {
+    "id": "spotlight-den",
+    "type": "artist",
+    "artistId": "den",
+    "name": "Đen",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Đen sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "dua-nhau-di-tron-den",
+      "cho-toi-lang-thang-den",
+      "bai-nay-chill-phet-den"
+    ],
+    "theme": "#06b6d4"
+  },
+  {
+    "id": "spotlight-soobin-hoang-son",
+    "type": "artist",
+    "artistId": "soobin-hoang-son",
+    "name": "Soobin Hoàng Sơn",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Soobin Hoàng Sơn sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "phia-sau-mot-co-gai-soobin-hoang-son",
+      "di-de-tro-ve-soobin-hoang-son",
+      "xin-dung-lang-im-soobin-hoang-son"
+    ],
+    "theme": "#d97706"
+  },
+  {
+    "id": "spotlight-jack-j97",
+    "type": "artist",
+    "artistId": "jack-j97",
+    "name": "Jack - J97",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Jack - J97 sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "hong-nhan-jack-j97",
+      "bac-phan-jack-j97",
+      "song-gio-jack-j97"
+    ],
+    "theme": "#a855f7"
+  },
+  {
+    "id": "spotlight-quang-hung-masterd",
+    "type": "artist",
+    "artistId": "quang-hung-masterd",
+    "name": "Quang Hùng MasterD",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Quang Hùng MasterD sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "thuy-trieu-quang-hung-masterd",
+      "mua-da-quang-hung-masterd",
+      "de-den-de-di-quang-hung-masterd"
+    ],
+    "theme": "#14b8a6"
+  },
+  {
+    "id": "spotlight-hieuthuhai",
+    "type": "artist",
+    "artistId": "hieuthuhai",
+    "name": "HIEUTHUHAI",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của HIEUTHUHAI sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "exit-sign-hieuthuhai",
+      "khong-the-say-hieuthuhai",
+      "ngu-mot-minh-hieuthuhai"
+    ],
+    "theme": "#3b82f6"
+  },
+  {
+    "id": "spotlight-tang-duy-tan",
+    "type": "artist",
+    "artistId": "tang-duy-tan",
+    "name": "Tăng Duy Tân",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Tăng Duy Tân sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "cat-doi-noi-sau-tang-duy-tan",
+      "da-vu-tang-duy-tan"
     ],
     "theme": "#6366f1"
   },
   {
-    "id": "spotlight-ca-si-b",
+    "id": "spotlight-hoang-dung",
     "type": "artist",
-    "artistId": "ca-si-thu-b",
-    "name": "Ca Sĩ Thử B",
-    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Giọng ca ngọt ngào của Ca sĩ thử B cùng những bài hát thịnh hành được yêu thích nhất.",
-    "featured": ["bai-thu-02", "bai-thu-22", "bai-thu-29"],
-    "extraSongIds": [
-      "bai-thu-01",
-      "bai-thu-03",
-      "bai-thu-04",
-      "bai-thu-06",
-      "bai-thu-07",
-      "bai-thu-08",
-      "bai-thu-09",
-      "bai-thu-11",
-      "bai-thu-12",
-      "bai-thu-14",
-      "bai-thu-16",
-      "bai-thu-17",
-      "bai-thu-19",
-      "bai-thu-20",
-      "bai-thu-21",
-      "bai-thu-22",
-      "bai-thu-24",
-      "bai-thu-26",
-      "bai-thu-27",
-      "bai-thu-29"
+    "artistId": "hoang-dung",
+    "name": "Hoàng Dũng",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Hoàng Dũng sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "nang-tho-hoang-dung",
+      "cuoi-tuan-hoang-dung",
+      "la-ban-hoang-dung"
     ],
     "theme": "#ec4899"
   },
   {
-    "id": "spotlight-ca-si-e",
+    "id": "spotlight-ngot",
     "type": "artist",
-    "artistId": "ca-si-thu-e",
-    "name": "Rapper Thử E",
-    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Những con beat rực lửa và flow cuốn hút của Rapper thử E cùng các anh em đồng môn.",
-    "featured": ["bai-thu-05", "bai-thu-23", "bai-thu-30"],
-    "extraSongIds": [
-      "bai-thu-01",
-      "bai-thu-02",
-      "bai-thu-06",
-      "bai-thu-09",
-      "bai-thu-10",
-      "bai-thu-11",
-      "bai-thu-13",
-      "bai-thu-14",
-      "bai-thu-15",
-      "bai-thu-17",
-      "bai-thu-18",
-      "bai-thu-19",
-      "bai-thu-20",
-      "bai-thu-21",
-      "bai-thu-23",
-      "bai-thu-24",
-      "bai-thu-26",
-      "bai-thu-27",
-      "bai-thu-28",
-      "bai-thu-30"
+    "artistId": "ngot",
+    "name": "Ngọt",
+    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Ngọt sẵn sàng cho đêm karaoke bùng cháy!",
+    "featured": [
+      "em-dao-nay-ngot",
+      "cho-toi-di-theo-ngot",
+      "ca-hoi-ngot"
     ],
     "theme": "#8b5cf6"
-  },
-  {
-    "id": "spotlight-ca-si-u",
-    "type": "artist",
-    "artistId": "ca-si-thu-u",
-    "name": "Ca Sĩ Thử U",
-    "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Bộ sưu tập các bản hit ballad cao trào của Ca sĩ thử U, thử thách mọi giọng ca nội lực.",
-    "featured": ["bai-thu-21", "bai-thu-08", "bai-thu-28"],
-    "extraSongIds": [
-      "bai-thu-01",
-      "bai-thu-03",
-      "bai-thu-04",
-      "bai-thu-07",
-      "bai-thu-08",
-      "bai-thu-10",
-      "bai-thu-12",
-      "bai-thu-13",
-      "bai-thu-15",
-      "bai-thu-16",
-      "bai-thu-17",
-      "bai-thu-18",
-      "bai-thu-20",
-      "bai-thu-22",
-      "bai-thu-24",
-      "bai-thu-25",
-      "bai-thu-26",
-      "bai-thu-27",
-      "bai-thu-28",
-      "bai-thu-29"
-    ],
-    "theme": "#0ea5e9"
   }
 ]

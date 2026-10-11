@@ -13,7 +13,7 @@ export interface Song {
   id: string;            // duy nhất, kebab-case, ví dụ "ten-bai-ca-si"
   title: string;
   artist: string;
-  year: number;
+  year?: number;
   artistId: string;      // trỏ tới artists.json
   genre: Genre[];        // chỉ dùng 5 nhóm: ballad, pop, rap, bolero, rock. KHÔNG đưa "song-ca" vào genre
   voice: Voice;

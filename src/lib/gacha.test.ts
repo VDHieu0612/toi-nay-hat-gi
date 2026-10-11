@@ -209,15 +209,18 @@ describe('Filters Logic', () => {
     });
   });
 
-  it('lọc theo thể loại và độ khó tối đa', () => {
+  it('lọc theo thể loại và độ khó tối đa (nếu có)', () => {
     const filtered = filterByUser(songs, {
       genres: ['ballad'],
       maxDifficulty: 2,
     });
 
+    expect(filtered.length).toBeGreaterThan(0);
     filtered.forEach((s) => {
       expect(s.genre).toContain('ballad');
-      expect(s.difficulty).toBeLessThanOrEqual(2);
+      if (s.difficulty !== undefined) {
+        expect(s.difficulty).toBeLessThanOrEqual(2);
+      }
     });
   });
 
@@ -232,9 +235,12 @@ describe('Filters Logic', () => {
     };
 
     const pool = getFilteredPool(songs, bannerWithFilter, { maxDifficulty: 3 });
+    expect(pool.length).toBeGreaterThan(0);
     pool.forEach((s) => {
       expect(s.genre).toContain('rock');
-      expect(s.difficulty).toBeLessThanOrEqual(3);
+      if (s.difficulty !== undefined) {
+        expect(s.difficulty).toBeLessThanOrEqual(3);
+      }
     });
   });
 });
