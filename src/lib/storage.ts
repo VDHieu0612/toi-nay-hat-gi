@@ -12,6 +12,8 @@ const STORAGE_KEYS = {
   PULL_STATE: 'karaoke_gacha_pull_state',
   HISTORY: 'karaoke_gacha_history',
   COLLECTION: 'karaoke_gacha_collection',
+  SELECTED_BANNER: 'karaoke_gacha_selected_banner',
+  DISMISS_ORIENTATION_HINT: 'karaoke_gacha_dismiss_orientation_hint',
 } as const;
 
 export const DEFAULT_PULL_STATE: PullState = {
@@ -160,3 +162,52 @@ export function clearCollection(): void {
     console.error('Failed to clear collection from localStorage:', err);
   }
 }
+
+/**
+ * Lấy banner ID đã chọn trước đó
+ */
+export function loadSelectedBannerId(): string | null {
+  if (!isLocalStorageAvailable()) return null;
+  try {
+    return window.localStorage.getItem(STORAGE_KEYS.SELECTED_BANNER);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Lưu banner ID đã chọn
+ */
+export function saveSelectedBannerId(bannerId: string): void {
+  if (!isLocalStorageAvailable()) return;
+  try {
+    window.localStorage.setItem(STORAGE_KEYS.SELECTED_BANNER, bannerId);
+  } catch (err) {
+    console.error('Failed to save selected banner to localStorage:', err);
+  }
+}
+
+/**
+ * Lấy trạng thái đóng gợi ý xoay ngang
+ */
+export function loadDismissOrientationHint(): boolean {
+  if (!isLocalStorageAvailable()) return false;
+  try {
+    return window.localStorage.getItem(STORAGE_KEYS.DISMISS_ORIENTATION_HINT) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Lưu trạng thái đóng gợi ý xoay ngang
+ */
+export function saveDismissOrientationHint(dismissed: boolean): void {
+  if (!isLocalStorageAvailable()) return;
+  try {
+    window.localStorage.setItem(STORAGE_KEYS.DISMISS_ORIENTATION_HINT, String(dismissed));
+  } catch (err) {
+    console.error('Failed to save orientation hint state:', err);
+  }
+}
+

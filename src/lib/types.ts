@@ -17,6 +17,7 @@ export interface Song {
 export interface Banner {
   id: string;
   name: string;
+  tagline?: string;      // mô tả ngắn hiển thị ở thumbnail
   description: string;
   filter?: {             // lọc cố định của banner (tùy chọn)
     genre?: string[];
