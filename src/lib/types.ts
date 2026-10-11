@@ -42,6 +42,7 @@ export interface Banner {
   };
   featured: string[];    // id các bài rate-up (có thể rỗng)
   theme: string;         // mã màu chủ đạo của banner, ví dụ "#7c3aed"
+  imageUrl?: string;     // URL hình ảnh poster/minh họa của banner (tùy chọn)
 }
 
 export interface PullState {

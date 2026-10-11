@@ -9,32 +9,10 @@
     "theme": "#6366f1"
   },
   {
-    "id": "thu-rate-up",
-    "type": "general",
-    "name": "Cao Trào & Thách Thức",
-    "tagline": "Bùng Cháy Sân Khấu",
-    "description": "Tăng 50% tỉ lệ xuất hiện các bài cao trào Bài thử 21 (4★) và Bài thử 28 (5★).",
-    "featured": ["bai-thu-21", "bai-thu-28"],
-    "theme": "#f43f5e"
-  },
-  {
-    "id": "ballad-tam-trang",
-    "type": "genre",
-    "name": "Giai Điệu Trữ Tình",
-    "tagline": "Sâu Lắng Cảm Xúc",
-    "description": "Tuyển tập những bản ballad lắng đọng, phù hợp giải tỏa cảm xúc cuối buổi tiệc.",
-    "filter": {
-      "genre": ["ballad"]
-    },
-    "featured": ["bai-thu-01", "bai-thu-22"],
-    "theme": "#0284c7"
-  },
-  {
     "id": "spotlight-ca-si-a",
     "type": "artist",
     "artistId": "ca-si-thu-a",
-    "name": "Ca Sĩ Thử A · Đêm Nhạc Thần Tượng",
-    "tagline": "Tiêu Điểm 2 Ngày",
+    "name": "Ca Sĩ Thử A",
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Ca sĩ thử A cùng dàn khách mời song ca và nghệ sĩ cùng thời.",
     "featured": ["bai-thu-01", "bai-thu-21", "bai-thu-28"],
     "extraSongIds": [
@@ -65,8 +43,7 @@
     "id": "spotlight-ca-si-b",
     "type": "artist",
     "artistId": "ca-si-thu-b",
-    "name": "Ca Sĩ Thử B · Giai Điệu Thanh Xuân",
-    "tagline": "Tiêu Điểm 2 Ngày",
+    "name": "Ca Sĩ Thử B",
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Giọng ca ngọt ngào của Ca sĩ thử B cùng những bài hát thịnh hành được yêu thích nhất.",
     "featured": ["bai-thu-02", "bai-thu-22", "bai-thu-29"],
     "extraSongIds": [
@@ -97,8 +74,7 @@
     "id": "spotlight-ca-si-e",
     "type": "artist",
     "artistId": "ca-si-thu-e",
-    "name": "Rapper Thử E · Sân Khấu Bùng Nổ",
-    "tagline": "Tiêu Điểm 2 Ngày",
+    "name": "Rapper Thử E",
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Những con beat rực lửa và flow cuốn hút của Rapper thử E cùng các anh em đồng môn.",
     "featured": ["bai-thu-05", "bai-thu-23", "bai-thu-30"],
     "extraSongIds": [
@@ -129,8 +105,7 @@
     "id": "spotlight-ca-si-u",
     "type": "artist",
     "artistId": "ca-si-thu-u",
-    "name": "Ca Sĩ Thử U · Nốt Cao Chạm Đáy",
-    "tagline": "Tiêu Điểm 2 Ngày",
+    "name": "Ca Sĩ Thử U",
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Bộ sưu tập các bản hit ballad cao trào của Ca sĩ thử U, thử thách mọi giọng ca nội lực.",
     "featured": ["bai-thu-21", "bai-thu-08", "bai-thu-28"],
     "extraSongIds": [

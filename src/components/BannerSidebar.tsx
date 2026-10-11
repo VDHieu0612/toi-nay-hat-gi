@@ -24,10 +24,9 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
     return getArtistRotationInfo(banners);
   }, [banners]);
 
-  // Phân nhóm banner theo mục M2.2 & M7
+  // Phân nhóm banner: chỉ TỔNG HỢP (Tổng Hợp Quán Hát) và CA SĨ (bỏ Thể Loại theo yêu cầu)
   const categories = useMemo<BannerCategory[]>(() => {
-    const general = banners.filter((b) => b.type === 'general');
-    const genre = banners.filter((b) => b.type === 'genre');
+    const general = banners.filter((b) => b.type === 'general' && b.id === 'tong-hop');
     const artist = banners.filter((b) => b.type === 'artist');
 
     const result: BannerCategory[] = [];
@@ -36,13 +35,6 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
       result.push({
         title: 'Tổng Hợp',
         banners: general,
-      });
-    }
-
-    if (genre.length > 0) {
-      result.push({
-        title: 'Thể Loại',
-        banners: genre,
       });
     }
 
@@ -126,12 +118,10 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
                     >
                       {isCurrentActiveArtist ? (
                         <span className="banner-thumb-badge live">✦ MỞ</span>
-                      ) : isArtist ? (
-                        <span className="banner-thumb-badge artist">CA SĨ</span>
-                      ) : banner.featured && banner.featured.length > 0 ? (
-                        <span className="banner-thumb-badge">UP</span>
                       ) : (
-                        <span className="banner-thumb-badge std">STD</span>
+                        <span className="banner-thumb-badge std">
+                          {isArtist ? '★' : 'STD'}
+                        </span>
                       )}
 
                       {/* Vinyl record icon SVG inside thumbnail */}
@@ -148,16 +138,9 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
                       </svg>
                     </div>
 
-                    <div className="banner-thumb-info">
+                    <div className="banner-thumb-info banner-thumb-info-clean">
+                      {/* Về phần bên trái: chỉ hiển thị tên ca sĩ / tên banner, không cần thông tin gì khác */}
                       <span className="banner-thumb-name">{banner.name}</span>
-                      <span className="banner-thumb-tagline">
-                        {isCurrentActiveArtist
-                          ? '✦ Đang mở đợt này'
-                          : isArtist
-                            ? 'Xoay tua 2 ngày'
-                            : banner.tagline ||
-                              (banner.featured?.length ? 'Rate-Up' : 'Tiêu Chuẩn')}
-                      </span>
                     </div>
                   </button>
                 );

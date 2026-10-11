@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { Banner, Song } from '../lib/types';
-import { SongCard } from './SongCard';
 import { getArtistRotationInfo } from '../lib/rotation';
 
 interface BannerDetailProps {
@@ -18,7 +17,6 @@ interface BannerDetailProps {
 export const BannerDetail: React.FC<BannerDetailProps> = ({
   banner,
   allBanners = [],
-  allSongs,
   poolCount,
   onPullOne,
   onPullTen,
@@ -35,13 +33,6 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
 
   const isArtist = banner.type === 'artist';
   const isActiveArtist = isArtist && rotationInfo?.activeBannerId === banner.id;
-
-  // Tìm các bài hát rate-up nếu có
-  const featuredSongs = (banner.featured || [])
-    .map((id) => allSongs.find((s) => s.id === id))
-    .filter((s): s is Song => Boolean(s));
-
-  const hasFeatured = featuredSongs.length > 0;
   const isPoolEmpty = poolCount === 0;
 
   return (
@@ -53,14 +44,12 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
         {/* Lớp phủ gradient và trang trí góc */}
         <div className="banner-poster-backdrop" />
 
-        {/* Cột trái nội dung thông tin */}
+        {/* Cột trái: Nội dung thông tin banner (tiêu đề, luật rút, đợt xoay tua, mô tả) */}
         <div className="banner-poster-info">
           <div className="banner-tag-pill">
             {isArtist
-              ? '✦ TIÊU ĐIỂM NGHỆ SĨ · XOAY TUA 2 NGÀY ✦'
-              : hasFeatured
-                ? '✦ SỰ KIỆN RATE-UP ✦'
-                : '✦ BANNER TIÊU CHUẨN ✦'}
+              ? '✦ TIÊU ĐIỂM CA SĨ · XOAY TUA 2 NGÀY ✦'
+              : '✦ BANNER TIÊU CHUẨN ✦'}
           </div>
 
           <h2 className="banner-main-title">
@@ -72,18 +61,12 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
               <span className="guarantee-icon">❖</span>
               Mỗi 10 lượt rút bảo đảm có ít nhất một bài 4★ trở lên.
             </p>
-            {hasFeatured && (
-              <p className="banner-rateup-line">
-                <span className="guarantee-icon">★</span>
-                Tăng 50% tỉ lệ rơi vào các bài hát Rate-Up!
-              </p>
-            )}
             {isArtist && rotationInfo && (
               <p className="banner-rateup-line banner-rotation-status-line">
                 <span className="guarantee-icon">⏰</span>
                 {isActiveArtist ? (
                   <span>
-                    <strong>Đang mở đợt này:</strong> {rotationInfo.timeRemainingFormatted} (Kỳ sau: {rotationInfo.nextBanner.name.split('·')[0].trim()})
+                    <strong>Đang mở đợt này:</strong> {rotationInfo.timeRemainingFormatted} (Kỳ sau: {rotationInfo.nextBanner.name})
                   </span>
                 ) : (
                   <span>
@@ -97,41 +80,52 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
           <p className="banner-desc-text">{banner.description}</p>
         </div>
 
-        {/* Cột phải / Giữa: Hiển thị bài Rate-Up hoặc SVG sân khấu */}
+        {/* Cột phải / Giữa: Khoảng trống để chèn hình ảnh banner (thay thế thẻ card theo yêu cầu) */}
         <div className="banner-poster-showcase">
-          {hasFeatured ? (
-            <div className="banner-featured-list">
-              {featuredSongs.map((song) => (
-                <div key={song.id} className="featured-card-wrapper">
-                  <div className="featured-up-badge">UP!</div>
-                  <SongCard song={song} className="preview-card" />
+          <div className="banner-image-placeholder-container">
+            {banner.imageUrl ? (
+              <img
+                src={banner.imageUrl}
+                alt={`Tranh banner ${banner.name}`}
+                className="banner-artwork-image"
+              />
+            ) : (
+              <div className="banner-image-artwork-slot" title="Khu vực hình ảnh banner">
+                {/* Khung minh họa nghệ thuật sân khấu & đĩa than */}
+                <div className="artwork-ambient-glow" style={{ backgroundColor: banner.theme }} />
+                <svg
+                  className="banner-stage-svg"
+                  viewBox="0 0 240 240"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="120" cy="120" r="105" stroke="currentColor" strokeWidth="2" opacity="0.2" />
+                  <circle cx="120" cy="120" r="85" stroke="currentColor" strokeWidth="3" opacity="0.4" />
+                  <circle cx="120" cy="120" r="60" stroke="currentColor" strokeWidth="2" opacity="0.6" />
+                  <circle cx="120" cy="120" r="40" fill="currentColor" opacity="0.15" />
+                  <circle cx="120" cy="120" r="16" fill="currentColor" opacity="0.8" />
+                  {/* Kim máy đĩa than / micro nghệ thuật */}
+                  <path
+                    d="M120 15 L120 45 M120 195 L120 225 M15 120 L45 120 M195 120 L225 120"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    opacity="0.4"
+                  />
+                  <path
+                    d="M170 60 L135 105"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    opacity="0.75"
+                  />
+                </svg>
+                <div className="artwork-label-badge">
+                  <span>✦ KHU VỰC HÌNH ẢNH BANNER ✦</span>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="banner-illustration-wrapper">
-              <svg
-                className="banner-stage-svg"
-                viewBox="0 0 200 200"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Vinyl turntable & stage lighting SVG */}
-                <circle cx="100" cy="100" r="90" stroke="currentColor" strokeWidth="2" opacity="0.3" />
-                <circle cx="100" cy="100" r="75" stroke="currentColor" strokeWidth="3" opacity="0.5" />
-                <circle cx="100" cy="100" r="55" stroke="currentColor" strokeWidth="2" opacity="0.6" />
-                <circle cx="100" cy="100" r="35" fill="currentColor" opacity="0.2" />
-                <circle cx="100" cy="100" r="14" fill="currentColor" opacity="0.8" />
-                <path
-                  d="M100 15 L100 45 M100 155 L100 185 M15 100 L45 100 M155 100 L185 100"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="banner-illu-caption">Quán Hát Muôn Màu</div>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Thanh dưới cùng của Poster */}
@@ -226,17 +220,20 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
               <div className="details-section">
                 <h4>Quy tắc xác suất</h4>
                 <ul>
-                  <li>5★ (Huyền thoại): <strong>3%</strong> cơ sở (Bảo hiểm 40 lần chắc chắn 5★).</li>
-                  <li>4★ (Cao trào): <strong>15%</strong> cơ sở (Bảo hiểm rút 10 ít nhất 1 bài ≥ 4★).</li>
-                  <li>3★ (Phổ biến): <strong>82%</strong> cơ sở.</li>
-                  {hasFeatured && (
-                    <li>Tỉ lệ Rate-Up: Khi ra 4★ hoặc 5★, có <strong>50%</strong> cơ hội là bài trong danh sách featured.</li>
+                  <li>5★ (Siêu hit): <strong>3%</strong> cơ sở (Bảo hiểm 40 lần chắc chắn 5★, dùng chung toàn bộ các banner).</li>
+                  <li>4★ (Hit): <strong>15%</strong> cơ sở (Bảo hiểm rút 10 ít nhất 1 bài ≥ 4★).</li>
+                  <li>3★ (Bài ngon): <strong>82%</strong> cơ sở.</li>
+                  {banner.featured && banner.featured.length > 0 && (
+                    <li>Tỉ lệ Rate-Up: Khi ra 4★ hoặc 5★, có <strong>50%</strong> cơ hội trúng các bài tiêu điểm.</li>
+                  )}
+                  {isArtist && (
+                    <li>Chu kỳ xoay tua: Banner ca sĩ thay đổi mỗi <strong>2 ngày</strong>.</li>
                   )}
                 </ul>
               </div>
               <div className="details-section">
-                <h4>Số bài trong kho banner hiện tại</h4>
-                <p>Tổng số bài khả dụng: <strong>{poolCount}</strong> bài</p>
+                <h4>Kho bài hát khả dụng</h4>
+                <p>Tổng số bài hiện tại trong banner: <strong>{poolCount}</strong> bài</p>
               </div>
             </div>
           </div>

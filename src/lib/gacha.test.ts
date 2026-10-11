@@ -7,8 +7,8 @@ import bannersData from '../data/banners.json';
 
 const songs = songsData as Song[];
 const banners = bannersData as Banner[];
-const generalBanner = banners.find((b) => b.id === 'tong-hop')!;
-const rateUpBanner = banners.find((b) => b.id === 'thu-rate-up')!;
+const generalBanner = banners.find((b) => b.id === 'tong-hop') || banners[0];
+const rateUpBanner = banners.find((b) => b.featured && b.featured.length > 0) || banners[0];
 
 describe('Gacha Logic - Single Pull (pull)', () => {
   it('rút 1 trả về đúng 1 bài và state mới không mutate state cũ', () => {
