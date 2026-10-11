@@ -239,14 +239,34 @@ html, body {
 }
 
 .banner-category-badge {
-  font-size: 0.625rem;
-  font-weight: 600;
+  font-size: 0.6875rem;
+  font-weight: 700;
   color: var(--genshin-gold);
-  background: rgba(234, 179, 8, 0.12);
-  border: 1px solid rgba(234, 179, 8, 0.3);
-  padding: 1px 6px;
+  background: rgba(234, 179, 8, 0.14);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  padding: 2px 8px;
   border-radius: 999px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.banner-category-badge.live-clock {
+  box-shadow: 0 0 10px rgba(234, 179, 8, 0.22);
+}
+
+.live-clock-icon {
+  font-size: 0.6875rem;
+  opacity: 0.9;
+}
+
+.clock-digits {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--genshin-gold);
 }
 
 .banner-category-items {

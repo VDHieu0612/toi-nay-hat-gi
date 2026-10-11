@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Banner, Song } from '../lib/types';
 import { getArtistRotationInfo } from '../lib/rotation';
 
@@ -25,11 +25,19 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
   activeFilterCount = 0,
 }) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [currentTime, setCurrentTime] = useState<number>(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Tính thông tin xoay tua 2 ngày nếu là banner ca sĩ
   const rotationInfo = useMemo(() => {
-    return getArtistRotationInfo(allBanners.length > 0 ? allBanners : [banner]);
-  }, [allBanners, banner]);
+    return getArtistRotationInfo(allBanners.length > 0 ? allBanners : [banner], currentTime);
+  }, [allBanners, banner, currentTime]);
 
   const isArtist = banner.type === 'artist';
   const isActiveArtist = isArtist && rotationInfo?.activeBannerId === banner.id;
@@ -66,7 +74,7 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
                 <span className="guarantee-icon">⏰</span>
                 {isActiveArtist ? (
                   <span>
-                    <strong>Đang mở đợt này:</strong> {rotationInfo.timeRemainingFormatted} (Kỳ sau: {rotationInfo.nextBanner.name})
+                    <strong>Đang mở đợt này:</strong> <span className="clock-digits">{rotationInfo.countdownClock}</span> (Kỳ sau: {rotationInfo.nextBanner.name})
                   </span>
                 ) : (
                   <span>

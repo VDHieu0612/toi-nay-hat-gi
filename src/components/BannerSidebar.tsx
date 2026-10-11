@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Banner } from '../lib/types';
 import { getArtistRotationInfo } from '../lib/rotation';
 
@@ -19,10 +19,20 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
   selectedBanner,
   onSelectBanner,
 }) => {
+  // Cập nhật thời gian thực mỗi 1 giây để đồng hồ đếm ngược nhảy liên tục
+  const [currentTime, setCurrentTime] = useState<number>(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Lấy thông tin xoay tua 2 ngày của các banner ca sĩ
   const rotationInfo = useMemo(() => {
-    return getArtistRotationInfo(banners);
-  }, [banners]);
+    return getArtistRotationInfo(banners, currentTime);
+  }, [banners, currentTime]);
 
   // Phân nhóm banner: chỉ TỔNG HỢP (Tổng Hợp Quán Hát) và CA SĨ (bỏ Thể Loại theo yêu cầu)
   const categories = useMemo<BannerCategory[]>(() => {
@@ -41,7 +51,7 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
     if (artist.length > 0) {
       result.push({
         title: 'Ca Sĩ · Xoay Tua 2 Ngày',
-        badge: rotationInfo ? rotationInfo.timeRemainingFormatted : undefined,
+        badge: rotationInfo ? rotationInfo.countdownClock : undefined,
         banners: artist,
       });
     }
@@ -85,8 +95,11 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
             <div className="banner-category-header">
               <span className="banner-category-title">{category.title}</span>
               {category.badge && (
-                <span className="banner-category-badge" title="Thời gian còn lại của đợt xoay tua">
-                  {category.badge}
+                <span
+                  className="banner-category-badge live-clock"
+                  title="Đồng hồ đếm ngược đợt xoay tua 2 ngày (giờ : phút : giây)"
+                >
+                  <span className="live-clock-icon">⏱</span> {category.badge}
                 </span>
               )}
             </div>

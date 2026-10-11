@@ -11,9 +11,24 @@ export interface RotationInfo {
   activeBanner: Banner;
   cycleNumber: number;
   msRemaining: number;
-  timeRemainingFormatted: string; // "Còn 1 ngày 14 giờ" hoặc "Còn 8 giờ 32 phút"
+  timeRemainingFormatted: string; // "Còn 1 ngày 14 giờ"
+  countdownClock: string;         // "06 : 53 : 24" (giờ : phút : giây)
   allArtistBanners: Banner[];
   nextBanner: Banner;
+}
+
+/**
+ * Định dạng đồng hồ đếm ngược thời gian thực theo định dạng (giờ : phút : giây)
+ * Ví dụ: 06 : 53 : 24 hoặc 30 : 15 : 08
+ */
+export function formatCountdownClock(msRemaining: number): string {
+  const totalSeconds = Math.max(0, Math.floor(msRemaining / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 }
 
 /**
@@ -61,6 +76,7 @@ export function getArtistRotationInfo(
     cycleNumber,
     msRemaining,
     timeRemainingFormatted: formatRemainingTime(msRemaining),
+    countdownClock: formatCountdownClock(msRemaining),
     allArtistBanners: artistBanners,
     nextBanner: artistBanners[nextIndex],
   };

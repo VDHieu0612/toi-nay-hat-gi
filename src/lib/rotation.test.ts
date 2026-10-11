@@ -4,6 +4,7 @@ import {
   ROTATION_ANCHOR_TIMESTAMP,
   getArtistRotationInfo,
   formatRemainingTime,
+  formatCountdownClock,
   isArtistBannerActive,
 } from './rotation';
 import { Banner } from './types';
@@ -90,5 +91,19 @@ describe('rotation.ts (Xoay tua banner ca sĩ mỗi 2 ngày)', () => {
     // 45 phút
     const ms3 = 45 * 60 * 1000;
     expect(formatRemainingTime(ms3)).toBe('Còn 45 phút');
+  });
+
+  it('định dạng đồng hồ đếm ngược (giờ : phút : giây) chính xác', () => {
+    // 6 giờ 53 phút 24 giây
+    const ms = (6 * 3600 + 53 * 60 + 24) * 1000;
+    expect(formatCountdownClock(ms)).toBe('06:53:24');
+
+    // 0 giờ 2 phút 5 giây
+    const msShort = (2 * 60 + 5) * 1000;
+    expect(formatCountdownClock(msShort)).toBe('00:02:05');
+
+    // 32 giờ 0 phút 0 giây
+    const msOver24 = 32 * 3600 * 1000;
+    expect(formatCountdownClock(msOver24)).toBe('32:00:00');
   });
 });
