@@ -7,6 +7,7 @@ import { getFilteredPool } from './lib/filters';
 import { loadPullState, savePullState, resetPullState } from './lib/storage';
 import { BannerSelect } from './components/BannerSelect';
 import { ResultGrid } from './components/ResultGrid';
+import { PullAnimation } from './components/PullAnimation';
 
 const allSongs = songsData as Song[];
 const banners = bannersData as Banner[];
@@ -15,6 +16,8 @@ export const App: React.FC = () => {
   const [selectedBanner, setSelectedBanner] = useState<Banner>(banners[0]);
   const [pullState, setPullState] = useState<PullState>(() => loadPullState());
   const [recentSongs, setRecentSongs] = useState<Song[]>([]);
+  const [animatingSongs, setAnimatingSongs] = useState<Song[]>([]);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   // Lưu pullState vào localStorage mỗi khi state thay đổi
   useEffect(() => {
@@ -25,8 +28,9 @@ export const App: React.FC = () => {
     try {
       const pool = getFilteredPool(allSongs, selectedBanner);
       const result = pull(pool, selectedBanner, pullState);
-      setRecentSongs(result.songs);
       setPullState(result.state);
+      setAnimatingSongs(result.songs);
+      setIsAnimating(true);
     } catch (err: any) {
       alert(err.message || 'Lỗi khi rút thẻ');
     }
@@ -36,11 +40,17 @@ export const App: React.FC = () => {
     try {
       const pool = getFilteredPool(allSongs, selectedBanner);
       const result = pullTen(pool, selectedBanner, pullState);
-      setRecentSongs(result.songs);
       setPullState(result.state);
+      setAnimatingSongs(result.songs);
+      setIsAnimating(true);
     } catch (err: any) {
       alert(err.message || 'Lỗi khi rút thẻ');
     }
+  };
+
+  const handleAnimationComplete = () => {
+    setIsAnimating(false);
+    setRecentSongs(animatingSongs);
   };
 
   const handleResetPity = () => {
@@ -118,6 +128,13 @@ export const App: React.FC = () => {
 
         <ResultGrid songs={recentSongs} />
       </main>
+
+      {/* Hiệu ứng gacha toàn màn hình (M3) */}
+      <PullAnimation
+        isOpen={isAnimating}
+        songs={animatingSongs}
+        onComplete={handleAnimationComplete}
+      />
     </div>
   );
 };
