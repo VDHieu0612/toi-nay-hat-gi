@@ -7,6 +7,7 @@ import {
   getSearchKaraokeUrl,
   getAllGenres,
   countActiveFilters,
+  ALL_GENRES,
 } from './filters';
 import { Song, Banner, UserFilter } from './types';
 
@@ -15,9 +16,12 @@ const mockSongs: Song[] = [
     id: 'bai-1',
     title: 'Bài Ca Hy Vọng',
     artist: 'Trần Tiến',
+    artistId: 'tran-tien',
     year: 1995,
     genre: ['ballad'],
     voice: 'nam',
+    views: 25,
+    viewsAsOf: '2026-10',
     difficulty: 2,
     rarity: 3,
     tags: ['hoai-niem'],
@@ -26,9 +30,12 @@ const mockSongs: Song[] = [
     id: 'bai-2',
     title: 'Giấc Mơ Có Thật',
     artist: 'Lệ Quyên',
+    artistId: 'le-quyen',
     year: 2004,
-    genre: ['ballad', 'vpop'],
+    genre: ['ballad', 'pop'],
     voice: 'nu',
+    views: 60,
+    viewsAsOf: '2026-10',
     difficulty: 3,
     rarity: 4,
     tags: ['sau-lang'],
@@ -37,9 +44,12 @@ const mockSongs: Song[] = [
     id: 'bai-3',
     title: 'Cơn Mưa Tình Yêu',
     artist: 'Hà Anh Tuấn & Phương Linh',
+    artistId: 'ha-anh-tuan',
     year: 2007,
     genre: ['ballad', 'pop'],
     voice: 'song-ca',
+    views: 70,
+    viewsAsOf: '2026-10',
     difficulty: 3,
     rarity: 4,
     tags: ['lang-man'],
@@ -48,9 +58,12 @@ const mockSongs: Song[] = [
     id: 'bai-4',
     title: 'Tâm Hồn Của Đá',
     artist: 'Bức Tường',
+    artistId: 'buc-tuong',
     year: 2002,
     genre: ['rock'],
     voice: 'tat-ca',
+    views: 120,
+    viewsAsOf: '2026-10',
     difficulty: 4,
     rarity: 5,
     tags: ['soi-dong'],
@@ -59,9 +72,12 @@ const mockSongs: Song[] = [
     id: 'bai-5',
     title: 'Duyên Phận',
     artist: 'Như Quỳnh',
+    artistId: 'nhu-quynh',
     year: 2011,
     genre: ['bolero'],
     voice: 'nu',
+    views: 18,
+    viewsAsOf: '2026-10',
     difficulty: 2,
     rarity: 3,
     tags: ['de-hat'],
@@ -70,9 +86,12 @@ const mockSongs: Song[] = [
     id: 'bai-6',
     title: 'Chạy Ngay Đi',
     artist: 'Sơn Tùng M-TP',
+    artistId: 'son-tung',
     year: 2018,
-    genre: ['rap', 'vpop'],
+    genre: ['rap', 'pop'],
     voice: 'nam',
+    views: 80,
+    viewsAsOf: '2026-10',
     difficulty: 4,
     rarity: 4,
     tags: ['soi-dong'],
@@ -81,9 +100,12 @@ const mockSongs: Song[] = [
     id: 'bai-7',
     title: 'Cắt Đôi Nỗi Sầu',
     artist: 'Tăng Duy Tân',
+    artistId: 'tang-duy-tan',
     year: 2023,
-    genre: ['vpop', 'pop'],
+    genre: ['pop'],
     voice: 'nam',
+    views: 30,
+    viewsAsOf: '2026-10',
     difficulty: 1,
     rarity: 3,
     tags: ['de-hat'],
@@ -92,6 +114,7 @@ const mockSongs: Song[] = [
 
 const mockBannerAll: Banner = {
   id: 'banner-tong-hop',
+  type: 'general',
   name: 'Tổng hợp',
   description: 'Mọi bài hát',
   featured: [],
@@ -100,6 +123,7 @@ const mockBannerAll: Banner = {
 
 const mockBannerBallad: Banner = {
   id: 'banner-ballad',
+  type: 'genre',
   name: 'Đêm Ballad',
   description: 'Chỉ các bài ballad',
   filter: {
@@ -131,36 +155,22 @@ describe('M4: Bộ lọc bài hát (filters.ts)', () => {
     });
   });
 
-  describe('2. filterByUser', () => {
+  describe('2. filterByUser (M4: giọng & thể loại)', () => {
     it('lọc chính xác theo giọng hát', () => {
       const nuOnly = filterByUser(mockSongs, { voice: 'nu' });
       expect(nuOnly.map((s) => s.id)).toEqual(['bai-2', 'bai-4', 'bai-5']); // bai-4 có voice tat-ca
     });
 
-    it('lọc chính xác theo thể loại (chọn nhiều)', () => {
+    it('lọc chính xác theo thể loại (chọn nhiều trong 5 nhóm)', () => {
       const rockOrBolero = filterByUser(mockSongs, { genres: ['rock', 'bolero'] });
       expect(rockOrBolero.map((s) => s.id)).toEqual(['bai-4', 'bai-5']);
     });
 
-    it('lọc chính xác theo thập niên (decade)', () => {
-      const decade90s = filterByUser(mockSongs, { decade: '1990s' });
-      expect(decade90s.map((s) => s.id)).toEqual(['bai-1']);
-
-      const decade2000s = filterByUser(mockSongs, { decade: '2000s' });
-      expect(decade2000s.map((s) => s.id)).toEqual(['bai-2', 'bai-3', 'bai-4']);
-
-      const decade2020s = filterByUser(mockSongs, { decade: '2020s' });
-      expect(decade2020s.map((s) => s.id)).toEqual(['bai-7']);
-    });
-
-    it('lọc chính xác theo độ khó tối đa', () => {
-      const easyOnly = filterByUser(mockSongs, { maxDifficulty: 2 });
-      expect(easyOnly.map((s) => s.id)).toEqual(['bai-1', 'bai-5', 'bai-7']);
-    });
-
-    it('kết hợp nhiều bộ lọc cùng lúc: giọng nam + độ khó <= 2', () => {
-      const combined = filterByUser(mockSongs, { voice: 'nam', maxDifficulty: 2 });
-      expect(combined.map((s) => s.id)).toEqual(['bai-1', 'bai-7']);
+    it('kết hợp lọc giọng nam + thể loại pop', () => {
+      const combined = filterByUser(mockSongs, { voice: 'nam', genres: ['pop'] });
+      // bai-4 (tat-ca) có genre rock nên không lọt vào pop
+      // bai-6 (nam, rap/pop) và bai-7 (nam, pop)
+      expect(combined.map((s) => s.id)).toEqual(['bai-6', 'bai-7']);
     });
 
     it('trả về rỗng khi không có bài nào thỏa mãn bộ lọc', () => {
@@ -177,9 +187,23 @@ describe('M4: Bộ lọc bài hát (filters.ts)', () => {
 
     it('áp dụng cả filter cố định của banner và filter của user', () => {
       // Banner chỉ nhận ballad (bai-1, bai-2, bai-3)
-      // User chọn thêm: thập niên 2000s (bai-2, bai-3)
-      const result = getFilteredPool(mockSongs, mockBannerBallad, { decade: '2000s' });
-      expect(result.map((s) => s.id)).toEqual(['bai-2', 'bai-3']);
+      // User chọn thêm: giọng nu (bai-2)
+      const result = getFilteredPool(mockSongs, mockBannerBallad, { voice: 'nu' });
+      expect(result.map((s) => s.id)).toEqual(['bai-2']);
+    });
+
+    it('hỗ trợ banner ca sĩ với artistId', () => {
+      const artistBanner: Banner = {
+        id: 'banner-son-tung',
+        type: 'artist',
+        artistId: 'son-tung',
+        name: 'Sơn Tùng M-TP',
+        description: 'Các ca khúc của Sơn Tùng',
+        featured: ['bai-6'],
+        theme: '#8b5cf6',
+      };
+      const result = filterByBanner(mockSongs, artistBanner);
+      expect(result.map((s) => s.id)).toEqual(['bai-6']);
     });
   });
 
@@ -187,7 +211,6 @@ describe('M4: Bộ lọc bài hát (filters.ts)', () => {
     it('sinh đúng URL tìm kiếm YouTube kèm từ khóa karaoke', () => {
       const url = getSearchKaraokeUrl('Cắt Đôi Nỗi Sầu', 'Tăng Duy Tân');
       expect(url).toContain('https://www.youtube.com/results?search_query=');
-      // Đảm bảo encodeURIComponent xử lý chuẩn tiếng Việt có dấu
       const expectedQuery = encodeURIComponent('Cắt Đôi Nỗi Sầu Tăng Duy Tân karaoke');
       expect(url).toBe(`https://www.youtube.com/results?search_query=${expectedQuery}`);
     });
@@ -199,16 +222,19 @@ describe('M4: Bộ lọc bài hát (filters.ts)', () => {
   });
 
   describe('5. Tiện ích bổ trợ (getAllGenres, countActiveFilters)', () => {
-    it('lấy đầy đủ danh sách thể loại không trùng lặp', () => {
+    it('getAllGenres trả về các thể loại chuẩn thuộc 5 nhóm', () => {
+      expect(ALL_GENRES).toEqual(['ballad', 'pop', 'rap', 'bolero', 'rock']);
       const genres = getAllGenres(mockSongs);
       expect(genres).toContain('ballad');
-      expect(genres).toContain('rock');
-      expect(genres).toContain('bolero');
+      expect(genres).toContain('pop');
       expect(genres).toContain('rap');
-      expect(genres).toContain('vpop');
+      expect(genres).toContain('bolero');
+      expect(genres).toContain('rock');
+      expect(genres).not.toContain('song-ca');
+      expect(genres).not.toContain('vpop');
     });
 
-    it('đếm chính xác số lượng bộ lọc đang hoạt động', () => {
+    it('đếm chính xác số lượng bộ lọc đang hoạt động (chỉ giọng & thể loại)', () => {
       expect(countActiveFilters(undefined)).toBe(0);
       expect(countActiveFilters({})).toBe(0);
       expect(countActiveFilters({ voice: 'tat-ca' })).toBe(0);
@@ -216,8 +242,8 @@ describe('M4: Bộ lọc bài hát (filters.ts)', () => {
       const f1: UserFilter = { voice: 'nam', genres: ['ballad'] };
       expect(countActiveFilters(f1)).toBe(2);
 
-      const f2: UserFilter = { voice: 'nu', genres: ['vpop'], decade: '2010s', maxDifficulty: 3 };
-      expect(countActiveFilters(f2)).toBe(4);
+      const f2: UserFilter = { voice: 'nu' };
+      expect(countActiveFilters(f2)).toBe(1);
     });
   });
 });

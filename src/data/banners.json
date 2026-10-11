@@ -1,6 +1,7 @@
 [
   {
     "id": "tong-hop",
+    "type": "general",
     "name": "Tổng Hợp Quán Hát",
     "tagline": "Bài Ca Muôn Màu",
     "description": "Kho bài hát phong phú đủ mọi thể loại, thập niên và giọng hát cho mọi thành viên trong phòng hát.",
@@ -9,6 +10,7 @@
   },
   {
     "id": "thu-rate-up",
+    "type": "general",
     "name": "Cao Trào & Thách Thức",
     "tagline": "Bùng Cháy Sân Khấu",
     "description": "Tăng 50% tỉ lệ xuất hiện các bài cao trào Bài thử 21 (4★) và Bài thử 28 (5★).",
@@ -17,6 +19,7 @@
   },
   {
     "id": "ballad-tam-trang",
+    "type": "genre",
     "name": "Giai Điệu Trữ Tình",
     "tagline": "Sâu Lắng Cảm Xúc",
     "description": "Tuyển tập những bản ballad lắng đọng, phù hợp giải tỏa cảm xúc cuối buổi tiệc.",

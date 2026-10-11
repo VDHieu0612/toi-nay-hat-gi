@@ -1,11 +1,6 @@
-import { Song, Banner, UserFilter, Voice } from './types';
+import { Song, Banner, UserFilter, Voice, Genre } from './types';
 
-export const DECADE_RANGES: Record<string, { yearFrom: number; yearTo: number; label: string }> = {
-  '1990s': { yearFrom: 1990, yearTo: 1999, label: 'Thập niên 90s (1990 - 1999)' },
-  '2000s': { yearFrom: 2000, yearTo: 2009, label: 'Thập niên 2000s (2000 - 2009)' },
-  '2010s': { yearFrom: 2010, yearTo: 2019, label: 'Thập niên 2010s (2010 - 2019)' },
-  '2020s': { yearFrom: 2020, yearTo: 2029, label: 'Thập niên 2020s (2020 - nay)' },
-};
+export const ALL_GENRES: Genre[] = ['ballad', 'pop', 'rap', 'bolero', 'rock'];
 
 /**
  * Sinh link tìm kiếm karaoke trên YouTube (Mục 4.3):
@@ -17,25 +12,23 @@ export function getSearchKaraokeUrl(title: string, artist: string): string {
 }
 
 /**
- * Lấy danh sách toàn bộ các thể loại (genre) có trong kho bài hát
+ * Lấy danh sách thể loại có trong kho bài hát (hoặc mặc định 5 nhóm)
  */
-export function getAllGenres(songs: Song[]): string[] {
-  const set = new Set<string>();
+export function getAllGenres(songs?: Song[]): Genre[] {
+  if (!songs || songs.length === 0) return ALL_GENRES;
+  const set = new Set<Genre>();
   songs.forEach((s) => s.genre.forEach((g) => set.add(g)));
-  return Array.from(set).sort();
+  return ALL_GENRES.filter((g) => set.has(g));
 }
 
 /**
- * Đếm số lượng tiêu chí lọc đang được người dùng áp dụng
+ * Đếm số lượng tiêu chí lọc đang được người dùng áp dụng (M4: chỉ giọng & thể loại)
  */
 export function countActiveFilters(userFilter?: UserFilter): number {
   if (!userFilter) return 0;
   let count = 0;
   if (userFilter.voice && userFilter.voice !== 'tat-ca') count++;
   if (userFilter.genres && userFilter.genres.length > 0) count++;
-  if (userFilter.decade && userFilter.decade !== 'tat-ca') count++;
-  if ((userFilter.yearFrom !== undefined || userFilter.yearTo !== undefined) && !userFilter.decade) count++;
-  if (userFilter.maxDifficulty !== undefined && userFilter.maxDifficulty < 5) count++;
   return count;
 }
 
@@ -58,6 +51,11 @@ export function matchVoice(songVoice: Voice, targetVoice?: Voice): boolean {
  * Lọc pool bài hát theo filter cố định của banner
  */
 export function filterByBanner(songs: Song[], banner: Banner): Song[] {
+  if (banner.type === 'artist' && banner.artistId) {
+    const extraIds = banner.extraSongIds || [];
+    return songs.filter((s) => s.artistId === banner.artistId || extraIds.includes(s.id));
+  }
+
   if (!banner.filter) {
     return songs;
   }
@@ -91,22 +89,14 @@ export function filterByBanner(songs: Song[], banner: Banner): Song[] {
 }
 
 /**
- * Lọc pool bài hát theo filter người dùng chọn (Mục 4.1, M4)
+ * Lọc pool bài hát theo filter người dùng chọn (M4: chỉ giọng và thể loại; maxDifficulty giữ cho tương thích ngược)
  */
 export function filterByUser(songs: Song[], userFilter?: UserFilter): Song[] {
   if (!userFilter) {
     return songs;
   }
 
-  const { voice, genres, decade, yearFrom, yearTo, maxDifficulty } = userFilter;
-
-  // Xác định khoảng năm hiệu lực (ưu tiên thập niên nếu chọn)
-  let effYearFrom = yearFrom;
-  let effYearTo = yearTo;
-  if (decade && decade !== 'tat-ca' && DECADE_RANGES[decade]) {
-    effYearFrom = DECADE_RANGES[decade].yearFrom;
-    effYearTo = DECADE_RANGES[decade].yearTo;
-  }
+  const { voice, genres, maxDifficulty } = userFilter;
 
   return songs.filter((song) => {
     // 1. Lọc theo giọng hát (nam/nữ/song ca/tất cả)
@@ -120,16 +110,8 @@ export function filterByUser(songs: Song[], userFilter?: UserFilter): Song[] {
       if (!hasGenre) return false;
     }
 
-    // 3. Lọc theo thập niên / khoảng năm
-    if (effYearFrom !== undefined && song.year < effYearFrom) {
-      return false;
-    }
-    if (effYearTo !== undefined && song.year > effYearTo) {
-      return false;
-    }
-
-    // 4. Lọc theo độ khó tối đa
-    if (maxDifficulty !== undefined && song.difficulty > maxDifficulty) {
+    // 3. Lọc theo độ khó tối đa (tương thích ngược)
+    if (maxDifficulty !== undefined && song.difficulty !== undefined && song.difficulty > maxDifficulty) {
       return false;
     }
 
@@ -148,3 +130,4 @@ export function getFilteredPool(
   const bannerPool = filterByBanner(songs, banner);
   return filterByUser(bannerPool, userFilter);
 }
+

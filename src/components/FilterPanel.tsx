@@ -1,6 +1,13 @@
-import React from 'react';
-import { Song, Banner, UserFilter, Voice } from '../lib/types';
-import { getAllGenres, DECADE_RANGES, countActiveFilters, getFilteredPool } from '../lib/filters';
+import React, { useMemo } from 'react';
+import { Song, Banner, UserFilter, Voice, Genre } from '../lib/types';
+import {
+  ALL_GENRES,
+  countActiveFilters,
+  getFilteredPool,
+  filterByBanner,
+  filterByUser,
+  matchVoice,
+} from '../lib/filters';
 
 interface FilterPanelProps {
   isOpen: boolean;
@@ -10,6 +17,14 @@ interface FilterPanelProps {
   allSongs: Song[];
   selectedBanner: Banner;
 }
+
+const GENRE_LABELS: Record<Genre, string> = {
+  ballad: 'Ballad',
+  pop: 'Pop',
+  rap: 'Rap',
+  bolero: 'Bolero',
+  rock: 'Rock',
+};
 
 export const FilterPanel: React.FC<FilterPanelProps> = ({
   isOpen,
@@ -21,12 +36,41 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const allAvailableGenres = getAllGenres(allSongs);
+  // Pool bài hát của banner (trước khi áp dụng filter của user)
+  const bannerPool = useMemo(() => filterByBanner(allSongs, selectedBanner), [allSongs, selectedBanner]);
+
   const activeCount = countActiveFilters(userFilter);
+  const currentVoice = userFilter.voice || 'tat-ca';
+  const currentGenres = userFilter.genres || [];
 
   // Tính số lượng bài trong pool khi áp dụng bộ lọc hiện tại
   const previewPool = getFilteredPool(allSongs, selectedBanner, userFilter);
   const poolCount = previewPool.length;
+
+  // Tính số bài khả dụng cho từng lựa chọn giọng
+  const voiceCounts: Record<Voice, number> = {
+    'tat-ca': filterByUser(bannerPool, { genres: userFilter.genres }).length,
+    nam: filterByUser(bannerPool, { voice: 'nam', genres: userFilter.genres }).length,
+    nu: filterByUser(bannerPool, { voice: 'nu', genres: userFilter.genres }).length,
+    'song-ca': filterByUser(bannerPool, { voice: 'song-ca', genres: userFilter.genres }).length,
+  };
+
+  // Tính số bài khả dụng cho từng thể loại theo giọng đang chọn
+  const genreCounts = useMemo(() => {
+    const counts: Record<Genre, number> = {
+      ballad: 0,
+      pop: 0,
+      rap: 0,
+      bolero: 0,
+      rock: 0,
+    };
+    ALL_GENRES.forEach((g) => {
+      counts[g] = bannerPool.filter(
+        (s) => matchVoice(s.voice, userFilter.voice) && s.genre.includes(g)
+      ).length;
+    });
+    return counts;
+  }, [bannerPool, userFilter.voice]);
 
   const handleVoiceChange = (v: Voice) => {
     onChangeFilter({
@@ -35,13 +79,12 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     });
   };
 
-  const handleToggleGenre = (genre: string) => {
-    const current = userFilter.genres || [];
-    let updated: string[];
-    if (current.includes(genre)) {
-      updated = current.filter((g) => g !== genre);
+  const handleToggleGenre = (genre: Genre) => {
+    let updated: Genre[];
+    if (currentGenres.includes(genre)) {
+      updated = currentGenres.filter((g) => g !== genre);
     } else {
-      updated = [...current, genre];
+      updated = [...currentGenres, genre];
     }
     onChangeFilter({
       ...userFilter,
@@ -50,9 +93,11 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   };
 
   const handleSelectAllGenres = () => {
+    // Chọn tất cả các thể loại có bài khả dụng
+    const available = ALL_GENRES.filter((g) => genreCounts[g] > 0);
     onChangeFilter({
       ...userFilter,
-      genres: [...allAvailableGenres],
+      genres: available.length > 0 ? available : undefined,
     });
   };
 
@@ -63,28 +108,9 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     });
   };
 
-  const handleDecadeChange = (decadeKey: string) => {
-    onChangeFilter({
-      ...userFilter,
-      decade: decadeKey === 'tat-ca' ? undefined : decadeKey,
-    });
-  };
-
-  const handleMaxDifficultyChange = (diff: number) => {
-    onChangeFilter({
-      ...userFilter,
-      maxDifficulty: diff === 5 ? undefined : diff,
-    });
-  };
-
   const handleResetAll = () => {
     onChangeFilter({});
   };
-
-  const currentVoice = userFilter.voice || 'tat-ca';
-  const currentGenres = userFilter.genres || [];
-  const currentDecade = userFilter.decade || 'tat-ca';
-  const currentMaxDiff = userFilter.maxDifficulty || 5;
 
   return (
     <div className="filter-modal-overlay" onClick={onClose}>
@@ -115,7 +141,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           </button>
         </div>
 
-        {/* Nội dung các trường lọc */}
+        {/* Nội dung các trường lọc (M4: chỉ giọng & thể loại) */}
         <div className="filter-modal-body">
           {/* 1. GIỌNG HÁT */}
           <section className="filter-group">
@@ -127,34 +153,38 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                 type="button"
                 className={`filter-pill ${currentVoice === 'tat-ca' ? 'is-active' : ''}`}
                 onClick={() => handleVoiceChange('tat-ca')}
+                disabled={voiceCounts['tat-ca'] === 0}
               >
-                Tất cả giọng
+                Tất cả ({voiceCounts['tat-ca']})
               </button>
               <button
                 type="button"
                 className={`filter-pill ${currentVoice === 'nam' ? 'is-active' : ''}`}
                 onClick={() => handleVoiceChange('nam')}
+                disabled={voiceCounts.nam === 0}
               >
-                Nam 👨
+                Nam 👨 ({voiceCounts.nam})
               </button>
               <button
                 type="button"
                 className={`filter-pill ${currentVoice === 'nu' ? 'is-active' : ''}`}
                 onClick={() => handleVoiceChange('nu')}
+                disabled={voiceCounts.nu === 0}
               >
-                Nữ 👩
+                Nữ 👩 ({voiceCounts.nu})
               </button>
               <button
                 type="button"
                 className={`filter-pill ${currentVoice === 'song-ca' ? 'is-active' : ''}`}
                 onClick={() => handleVoiceChange('song-ca')}
+                disabled={voiceCounts['song-ca'] === 0}
               >
-                Song ca 👥
+                Song ca 👥 ({voiceCounts['song-ca']})
               </button>
             </div>
           </section>
 
-          {/* 2. THỂ LOẠI (CHỌN NHIỀU) */}
+          {/* 2. THỂ LOẠI (CHỌN NHIỀU TRONG 5 NHÓM: BALLAD, POP, RAP, BOLERO, ROCK) */}
           <section className="filter-group">
             <div className="filter-group-header-with-action">
               <h4 className="filter-group-title">
@@ -180,83 +210,29 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             </div>
 
             <div className="filter-tags-grid">
-              {allAvailableGenres.map((g) => {
+              {ALL_GENRES.map((g) => {
                 const isSelected = currentGenres.includes(g);
+                const count = genreCounts[g];
+                const isDisabled = count === 0;
+
                 return (
                   <button
                     key={g}
                     type="button"
                     className={`filter-tag-pill ${isSelected ? 'is-active' : ''}`}
                     onClick={() => handleToggleGenre(g)}
+                    disabled={isDisabled}
+                    title={isDisabled ? `Không có bài ${GENRE_LABELS[g]} nào` : undefined}
                   >
-                    {isSelected ? '✓ ' : ''}{g.toUpperCase()}
+                    {isSelected ? '✓ ' : ''}
+                    {GENRE_LABELS[g]} ({count})
                   </button>
                 );
               })}
             </div>
           </section>
 
-          {/* 3. THẬP NIÊN */}
-          <section className="filter-group">
-            <h4 className="filter-group-title">
-              <span className="filter-group-icon">⏳</span> Thập Niên
-            </h4>
-            <div className="filter-pills-row">
-              <button
-                type="button"
-                className={`filter-pill ${currentDecade === 'tat-ca' ? 'is-active' : ''}`}
-                onClick={() => handleDecadeChange('tat-ca')}
-              >
-                Mọi thời kỳ
-              </button>
-              {Object.entries(DECADE_RANGES).map(([key, item]) => (
-                <button
-                  key={key}
-                  type="button"
-                  className={`filter-pill ${currentDecade === key ? 'is-active' : ''}`}
-                  onClick={() => handleDecadeChange(key)}
-                  title={item.label}
-                >
-                  {key}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          {/* 4. ĐỘ KHÓ TỐI ĐA */}
-          <section className="filter-group">
-            <h4 className="filter-group-title">
-              <span className="filter-group-icon">⚡</span> Độ Khó Tối Đa
-            </h4>
-            <div className="filter-difficulty-row">
-              {[1, 2, 3, 4, 5].map((diff) => {
-                const isSelected = currentMaxDiff === diff;
-                return (
-                  <button
-                    key={diff}
-                    type="button"
-                    className={`filter-diff-btn ${isSelected ? 'is-active' : ''}`}
-                    onClick={() => handleMaxDifficultyChange(diff)}
-                  >
-                    <span className="diff-number">{diff}★</span>
-                    <span className="diff-label">
-                      {diff === 1
-                        ? 'Rất dễ'
-                        : diff === 2
-                        ? 'Dễ'
-                        : diff === 3
-                        ? 'Vừa'
-                        : diff === 4
-                        ? 'Khó'
-                        : 'Mọi cấp'}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* 5. THỐNG KÊ VÀ CẢNH BÁO THỜI GIAN THỰC */}
+          {/* 3. THỐNG KÊ VÀ CẢNH BÁO THỜI GIAN THỰC */}
           <div className="filter-summary-card">
             <div className="filter-summary-info">
               <span>Số bài hát khả dụng:</span>

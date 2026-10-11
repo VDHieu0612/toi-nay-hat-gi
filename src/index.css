@@ -1906,6 +1906,17 @@ html, body {
   box-shadow: 0 0 8px rgba(234, 179, 8, 0.25);
 }
 
+.filter-pill:disabled,
+.filter-tag-pill:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: #64748b;
+  pointer-events: none;
+}
+
 /* Difficulty Selector Row */
 .filter-difficulty-row {
   display: grid;
