@@ -10,6 +10,7 @@ interface ResultScreenProps {
   lastPullType: 1 | 10;
   onBack: () => void;
   onPullAgain: (count: 1 | 10) => void;
+  onOpenSetlist?: () => void;
   speedMultiplier?: number;
   onReplay?: () => void;
 }
@@ -19,6 +20,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   lastPullType,
   onBack,
   onPullAgain,
+  onOpenSetlist,
   speedMultiplier = ANIMATION_CONFIG.speedMultiplier,
 }) => {
   // 5 Nhịp: 0 (Chuẩn bị), 1 (Sao băng), 2 (Va chạm), 3 (Thẻ rơi vào hàng), 4 (Lật thẻ), 5 (Tổng kết)
@@ -616,6 +618,19 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
                 <span className="wish-btn-main">Trở về</span>
               </div>
             </button>
+
+            {onOpenSetlist && (
+              <button
+                type="button"
+                className="genshin-wish-btn wish-btn-single"
+                onClick={onOpenSetlist}
+                title="Xem Setlist tổng hợp, chia bài theo nhóm & tải ảnh"
+              >
+                <div className="wish-btn-content">
+                  <span className="wish-btn-main">📋 Xem Setlist</span>
+                </div>
+              </button>
+            )}
 
             <button
               type="button"

@@ -14,6 +14,9 @@ import {
 import { HomeScreen } from './components/HomeScreen';
 import { ResultScreen } from './components/ResultScreen';
 import { DebugBar } from './components/DebugBar';
+import { History } from './components/History';
+import { Setlist } from './components/Setlist';
+import { addHistoryEntry, addSongsToCollection } from './lib/storage';
 import { ANIMATION_CONFIG } from './lib/animationConfig';
 
 const allSongs = songsData as Song[];
@@ -34,6 +37,13 @@ export const App: React.FC = () => {
   const [userFilter, setUserFilter] = useState<UserFilter>({});
 
   const [pullState, setPullState] = useState<PullState>(() => loadPullState());
+
+  // M5: Quản lý modal Lịch sử & Setlist
+  const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
+  const [setlistModalData, setSetlistModalData] = useState<{
+    songs: Song[];
+    bannerName: string;
+  } | null>(null);
 
   // Kết quả lượt rút hiện tại (khi có giá trị sẽ mở ResultScreen với chuỗi 5 nhịp gacha)
   const [activeResult, setActiveResult] = useState<{
@@ -115,6 +125,14 @@ export const App: React.FC = () => {
       setPullState(result.state);
       setResultKeyNonce((n) => n + 1);
       setActiveResult({ songs: result.songs, lastPullType: 1 });
+
+      // M5: Lưu vào lịch sử và bộ sưu tập
+      addHistoryEntry({
+        bannerId: selectedBanner.id,
+        bannerName: selectedBanner.name,
+        songs: result.songs,
+      });
+      addSongsToCollection(result.songs.map((s) => s.id));
     } catch (err: any) {
       alert(err.message || 'Lỗi khi rút thẻ');
     }
@@ -126,6 +144,14 @@ export const App: React.FC = () => {
       setPullState(result.state);
       setResultKeyNonce((n) => n + 1);
       setActiveResult({ songs: result.songs, lastPullType: 10 });
+
+      // M5: Lưu vào lịch sử và bộ sưu tập
+      addHistoryEntry({
+        bannerId: selectedBanner.id,
+        bannerName: selectedBanner.name,
+        songs: result.songs,
+      });
+      addSongsToCollection(result.songs.map((s) => s.id));
     } catch (err: any) {
       alert(err.message || 'Lỗi khi rút thẻ');
     }
@@ -166,6 +192,12 @@ export const App: React.FC = () => {
           lastPullType={activeResult.lastPullType}
           onBack={() => setActiveResult(null)}
           onPullAgain={handlePullAgain}
+          onOpenSetlist={() =>
+            setSetlistModalData({
+              songs: activeResult.songs,
+              bannerName: selectedBanner.name,
+            })
+          }
           speedMultiplier={speedMultiplier}
           onReplay={handleReplay}
         />
@@ -182,6 +214,30 @@ export const App: React.FC = () => {
           onPullTen={handlePullTen}
           userFilter={userFilter}
           onChangeFilter={setUserFilter}
+          onOpenHistory={() => setIsHistoryOpen(true)}
+        />
+      )}
+
+      {/* Modal Lịch sử & Bộ sưu tập (M5) */}
+      <History
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        allSongs={allSongs}
+        onOpenSetlistForEntry={(entrySongs, entryBannerName) => {
+          setSetlistModalData({
+            songs: entrySongs,
+            bannerName: entryBannerName,
+          });
+        }}
+      />
+
+      {/* Modal Setlist tổng hợp & Chế độ nhóm (M5) */}
+      {setlistModalData && (
+        <Setlist
+          isOpen={Boolean(setlistModalData)}
+          onClose={() => setSetlistModalData(null)}
+          songs={setlistModalData.songs}
+          bannerName={setlistModalData.bannerName}
         />
       )}
     </div>

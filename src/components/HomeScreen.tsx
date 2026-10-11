@@ -19,6 +19,7 @@ interface HomeScreenProps {
   onPullTen: () => void;
   userFilter: UserFilter;
   onChangeFilter: (filter: UserFilter) => void;
+  onOpenHistory: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -33,6 +34,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onPullTen,
   userFilter,
   onChangeFilter,
+  onOpenHistory,
 }) => {
   const [hintDismissed, setHintDismissed] = useState(() => loadDismissOrientationHint());
   const [soundEnabled, setSoundEnabled] = useState(false);
@@ -120,7 +122,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           poolCount={poolCount}
           onPullOne={onPullOne}
           onPullTen={onPullTen}
-          onOpenHistory={() => alert('Lịch sử sẽ được hoàn thiện ở M5')}
+          onOpenHistory={onOpenHistory}
           onOpenFilter={() => setIsFilterOpen(true)}
           activeFilterCount={countActiveFilters(userFilter)}
         />
