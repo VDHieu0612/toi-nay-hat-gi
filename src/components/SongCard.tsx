@@ -4,7 +4,6 @@ import { Song } from '../lib/types';
 interface SongCardProps {
   song: Song;
   isFlipped?: boolean; // false = mặt sau (úp), true = mặt trước
-  onFlip?: () => void;
   showBeam?: boolean;  // Hiển thị chùm sáng vươn lên
   isFocused5Star?: boolean; // Khi đang zoom lớn giữa màn hình ở nhịp 4
   starCountReveal?: number; // Đếm số sao dần dần (1..5) khi đang reveal 5★
@@ -15,7 +14,6 @@ interface SongCardProps {
 export const SongCard: React.FC<SongCardProps> = ({
   song,
   isFlipped = true,
-  onFlip,
   showBeam = true,
   isFocused5Star = false,
   starCountReveal,
@@ -32,14 +30,6 @@ export const SongCard: React.FC<SongCardProps> = ({
         isFocused5Star ? 'is-focused-5star' : ''
       } ${className}`}
       style={style}
-      onClick={!isFlipped && onFlip ? onFlip : undefined}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          !isFlipped && onFlip && onFlip();
-        }
-      }}
     >
       {/* Chùm sáng (beam) bốc lên từ đỉnh vòm - phần tử riêng biệt không bị che */}
       {isFlipped && showBeam && (
@@ -86,7 +76,6 @@ export const SongCard: React.FC<SongCardProps> = ({
               <polygon points="50,25 58,47 80,55 58,63 50,85 42,63 20,55 42,47" fill="currentColor" opacity="0.6" />
               <circle cx="50" cy="55" r="7" fill="currentColor" />
             </svg>
-            <span className="card-back-prompt">Lật thẻ</span>
           </div>
         </div>
 

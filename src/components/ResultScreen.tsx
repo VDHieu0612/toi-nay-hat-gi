@@ -424,33 +424,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     }
   };
 
-  // Nút Skip ở mọi nhịp: bỏ qua thẳng tới nhịp 5 với tất cả thẻ đã ngửa
-  const handleSkipAll = () => {
-    const allFlipped: Record<number, boolean> = {};
-    sortedSongs.forEach((_, idx) => {
-      allFlipped[idx] = true;
-    });
-    setFlippedMap(allFlipped);
-    setSpotlight5StarIndex(null);
-    setAnticipatingCardIndex(null);
-    setPurplePulse(false);
-    setCameraShake(false);
-    setIsHitstopped(false);
-    setPhase(5);
-  };
-
-  const handleFlipSingle = (index: number) => {
-    setFlippedMap((prev) => ({ ...prev, [index]: true }));
-    const r = sortedSongs[index].rarity;
-    playAudioTone(r === 5 ? 'flip5' : r === 4 ? 'flip4' : 'flip3');
-    if (r === 4) {
-      setPurplePulse(true);
-      setTimeout(() => setPurplePulse(false), ANIMATION_CONFIG.flip4PulseDuration / speedMultiplier);
-    }
-  };
-
   const flippedCount = Object.values(flippedMap).filter(Boolean).length;
-  const isAllFlipped = flippedCount === sortedSongs.length;
 
   return (
     <div
@@ -501,18 +475,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         </aside>
       )}
 
-      {/* Nút Skip luôn hiển thị ở mọi nhịp (trừ khi đã vào nhịp 5 hoàn tất) */}
-      {phase < 5 && (
-        <button
-          type="button"
-          className="genshin-global-skip-btn"
-          onClick={handleSkipAll}
-          title="Bỏ qua hiệu ứng và xem ngay toàn bộ kết quả"
-        >
-          Skip ⏭
-        </button>
-      )}
-
       {/* Nút bật/tắt âm thanh */}
       <button
         type="button"
@@ -532,18 +494,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
               <span className="result-header-counter">
                 ({flippedCount}/{sortedSongs.length})
               </span>
-            )}
-          </div>
-
-          <div className="result-header-right">
-            {phase === 4 && !isAllFlipped && (
-              <button
-                type="button"
-                className="genshin-flip-all-btn"
-                onClick={handleSkipAll}
-              >
-                Lật tất cả ⚡
-              </button>
             )}
           </div>
         </header>
@@ -587,7 +537,6 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
                   <SongCard
                     song={song}
                     isFlipped={isFlipped}
-                    onFlip={() => handleFlipSingle(index)}
                     showBeam={isFlipped && phase >= 4}
                   />
                 </div>
