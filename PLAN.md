@@ -257,17 +257,17 @@ Một "tranh banner" lớn, nền và màu theo `theme` của banner đang chọ
 - Portrait: có gợi ý xoay ngang, tab banner ngang ở trên, nút rút cố định ở đáy, không tràn ngang trên màn 375px.
 - Trên điện thoại landscape (khoảng 640-900px rộng), mọi thành phần vừa một màn hình, không bị che bởi thanh địa chỉ hoặc tai thỏ.
 
-### M3: Thẻ bài gọn + chuỗi hiệu ứng gacha kiểu "sao băng"
+### M3: Thẻ bài gọn + chuỗi hiệu ứng gacha chủ đề "sân khấu karaoke"
 
 > Hai bản M3 trước **bị loại bỏ** (bản 1: thẻ ngang, animation đơn giản; bản 2: thẻ cắt bằng `clip-path` làm mất nội dung, thẻ quá to nên không hiện đủ 10 thẻ, quá nhiều thông tin, animation còn đơn điệu). Làm lại hoàn toàn theo spec dưới đây. Không động đến `lib/gacha.ts`.
 
 #### 3.0. Ranh giới sao chép (BẮT BUỘC đọc)
 
-Mục tiêu là **cùng cảm giác và cùng cấu trúc nhịp điệu** với màn hình gacha của các game (sao băng báo màu độ hiếm, va chạm, lật từng thẻ, thẻ hiếm lật sau cùng), **không phải bản sao**.
+Mục tiêu là **cùng cảm giác và cùng cấu trúc nhịp điệu** với màn hình gacha của các game (màu báo trước độ hiếm, bùng nổ, lật từng thẻ, thẻ hiếm lật sau cùng), **không phải bản sao**.
 
 - **KHÔNG** dùng, trích xuất hay mô phỏng sát hình: video, sprite, nhân vật, khung thẻ, biểu tượng, font, âm thanh/nhạc của Genshin Impact hay game nào khác.
 - Mọi hình ảnh là **SVG/CSS/canvas tự vẽ**. Âm thanh (nếu có) là **tự tổng hợp bằng Web Audio** hoặc file **CC0/giấy phép cho phép dùng thương mại** (ghi nguồn và giấy phép vào `CREDITS.md`).
-- Ý tưởng chung (sao băng bay, đổi màu theo độ hiếm, tia sáng, rung màn hình, lật thẻ) là cơ chế phổ biến, được phép dùng; cách thể hiện phải là của riêng dự án.
+- Ý tưởng chung (đổi màu theo độ hiếm, tia sáng, rung màn hình, lật thẻ) là cơ chế phổ biến, được phép dùng; cách thể hiện phải là của riêng dự án.
 
 #### 3.1. `SongCard`: gọn, chỉ cần tên bài + ca sĩ
 
@@ -316,21 +316,27 @@ Dùng biến CSS tính kích thước thẻ, không đặt cỡ cố định:
 - Dùng `dvh` và `env(safe-area-inset-*)`.
 - Chữ trên thẻ dùng `clamp()` theo `--card-w` để luôn đọc được; **tên bài phải đọc rõ ở `--card-w` nhỏ nhất**.
 
-#### 3.3. `PullAnimation`: chuỗi 5 nhịp (cấu trúc kiểu "sao băng")
+#### 3.3. `PullAnimation`: chuỗi 5 nhịp (chủ đề "sân khấu karaoke")
 
 Tổng thời lượng (không tính Skip): khoảng **4-6 giây** cho rút 10 thường, **6-8 giây** nếu có 5★. Mỗi nhịp là một bước trong một timeline (GSAP timeline hoặc tương đương) để dễ chỉnh tốc độ.
 
-**Nhịp 0: Chuẩn bị (0,6 giây)**
-- Chuyển cảnh: màn hình tối dần thành bầu trời đêm có sao nhấp nháy (canvas hoặc CSS, có hiệu ứng parallax nhẹ).
+**Chủ đề thị giác: "sân khấu karaoke"** (thay cho sao băng của các bản trước). Toàn bộ hiệu ứng tự sinh bằng code, **không dùng video hay ảnh dựng sẵn trả phí**.
 
-**Nhịp 1: Sao băng (1,6-2,2 giây), nhịp quan trọng nhất**
-- Một **sao băng** bay vòng cung từ góc trên trái qua giữa màn hình, đầu sáng có **đuôi mờ dần** (vẽ bằng canvas), kèm hạt bụi sáng rơi theo.
-- **Màu sao băng = độ hiếm cao nhất của lượt rút:** xanh (3★), tím (4★), vàng (5★).
-- Tốc độ tăng dần (ease-in); với 5★ thêm: nền ngả vàng dần, sao băng lớn hơn, rung nhẹ.
-- Có thể có **khoảnh khắc đổi màu** ngắn (ví dụ xanh → tím) trước khi chốt, như một "đánh lừa" tạo hồi hộp. Màu cuối **luôn đúng** độ hiếm thực.
+**Nhịp 0: Tối sân khấu (0,5 giây)**
+- Màn hình tối dần, nền gradient sâu (xanh đen sang tím rất tối) kèm vignette.
+- 2-3 chùm **đèn spotlight** mờ quét chậm từ trên xuống.
 
-**Nhịp 2: Va chạm (0,6-0,8 giây)**
-- Chớp trắng toàn màn hình, **vòng sóng xung kích** lan ra, **tia sáng tỏa** (conic-gradient xoay) màu theo độ hiếm, **rung màn hình** ngắn (biên độ nhỏ), nổ hạt từ canvas.
+**Nhịp 1: Tích năng lượng (1,8-2,4 giây), nhịp quan trọng nhất**
+- 80-200 **hạt sáng** xuất hiện ở rìa màn hình rồi **xoáy hút vào tâm** theo quỹ đạo xoắn ốc (góc quay tăng, bán kính giảm), tăng tốc dần (ease-in), kết thành một **quả cầu năng lượng** phình dần ở giữa.
+- Quả cầu **đập theo nhịp** (khoảng 120 BPM, mỗi nhịp khoảng 0,5 giây): mỗi nhịp phát ra một **vòng sóng âm** mỏng lan ra, quả cầu phồng 8-12% rồi co lại. **Thanh equalizer** (24-40 thanh) ở đáy màn hình nhảy theo nhịp, màu theo độ hiếm. Các spotlight quét nhanh dần và hội tụ về tâm.
+- **Màu quả cầu = độ hiếm cao nhất của lượt rút:** xanh (3★), tím (4★), vàng (5★). Giữ khoảnh khắc đổi màu "đánh lừa" (xanh, tím, vàng) trước khi chốt; màu cuối luôn đúng độ hiếm thực. Với 5★: nền ngả vàng, nhịp đập nhanh gấp đôi trong 0,6 giây cuối, rung nhẹ.
+- **Anticipation:** cuối nhịp, quả cầu co lại nhỏ trong khoảng 120 ms (hút mọi hạt vào) rồi mới nổ.
+
+**Nhịp 2: Beat drop (0,8-1,0 giây)**
+- Hitstop 60-80 ms ngay khi nổ, rồi chớp sáng theo màu độ hiếm (đỉnh opacity không quá 0,75).
+- Đồng thời: 2-3 vòng sóng xung kích, tia sáng xoay (12-16 tia), nổ hạt phát sáng, rung màn hình giảm dần, spotlight chớp mạnh rồi quét ra ngoài, thanh equalizer bật lên cao nhất rồi hạ xuống.
+- **5★:** thêm tia laser quét ngang và **confetti ánh vàng** (hạt chữ nhật mảnh, xoay, rơi chậm).
+- Không có khoảng nào quá 150 ms mà màn hình không có chuyển động.
 
 **Nhịp 3: Thẻ rơi vào hàng (0,8-1,2 giây)**
 - Rút 1: thẻ úp bay lên từ điểm va chạm, phóng to từ 0,6 lên 1, dừng giữa màn hình.
@@ -348,11 +354,11 @@ Tổng thời lượng (không tính Skip): khoảng **4-6 giây** cho rút 10 t
 
 **Nút Skip luôn hiển thị** ở mọi nhịp. Bấm Skip: bỏ qua thẳng tới nhịp 5 với tất cả thẻ đã ngửa (vẫn hiển thị đúng độ hiếm).
 
-**Âm thanh (tùy chọn, mặc định tắt, có nút bật/tắt):** gợi ý lớp âm theo nhịp: tiếng gió/rít khi sao băng, tiếng va chạm, tiếng "ting" khi lật thẻ (cao độ tăng theo độ hiếm), tiếng đếm sao khi 5★. Tự tổng hợp bằng Web Audio hoặc dùng file CC0; ghi `CREDITS.md`. Nếu chưa có âm thanh thì bỏ qua, không bắt buộc.
+**Âm thanh (tùy chọn, mặc định tắt, có nút bật/tắt):** gợi ý lớp âm theo nhịp: tiếng tích năng lượng tăng cao độ kèm nhịp kick, tiếng beat drop, tiếng "ting" khi lật thẻ (cao độ tăng theo độ hiếm), tiếng đếm sao khi 5★. Tự tổng hợp bằng Web Audio hoặc dùng file CC0; ghi `CREDITS.md`. Nếu chưa có âm thanh thì bỏ qua, không bắt buộc.
 
 #### 3.4. Hiệu năng và khả năng truy cập
-- Chỉ animate `transform` và `opacity` cho DOM; hạt và sao băng vẽ trên **một canvas duy nhất** phủ toàn màn hình, `requestAnimationFrame`, giới hạn số hạt (tối đa khoảng 150 trên điện thoại, 300 trên desktop), `devicePixelRatio` tối đa 2, dừng khi tab bị ẩn.
-- Tôn trọng `prefers-reduced-motion`: bỏ sao băng và rung màn hình, chỉ giữ chớp sáng nhẹ và lật thẻ nhanh, vẫn ra đủ kết quả.
+- Chỉ animate `transform` và `opacity` cho DOM; hạt vẽ trên **canvas chính phủ toàn màn hình** (cộng một canvas bloom độ phân giải thấp theo mục 3.5-A), `requestAnimationFrame`, giới hạn số hạt (tối đa 200 trên điện thoại, 400 trên desktop), `devicePixelRatio` tối đa 2, dừng khi tab bị ẩn.
+- Tôn trọng `prefers-reduced-motion`: bỏ hạt xoáy, rung màn hình và confetti, chỉ giữ chớp sáng nhẹ và lật thẻ nhanh, vẫn ra đủ kết quả.
 - Không để trang có thanh cuộn dọc thừa ở màn kết quả.
 - Giữ 60fps trên điện thoại tầm trung; nếu tụt FPS thì tự giảm số hạt.
 - Không thêm thư viện ngoài danh sách ở mục 2.
@@ -361,14 +367,18 @@ Tổng thời lượng (không tính Skip): khoảng **4-6 giây** cho rút 10 t
 
 > Bản v3 đã đúng cấu trúc 5 nhịp, thẻ đã gọn, 10 thẻ đã vừa một hàng, không còn bị cắt chữ: **giữ nguyên các phần đó**. Phần dưới đây là các thông số **cụ thể** để tăng "lực" cho hiệu ứng. Đây là chỉnh sửa trên code hiện có, **không viết lại từ đầu**. (Đơn vị `px` là CSS px ở desktop 1920px, scale theo `vmin` cho màn hình khác.)
 
-**A. Sao băng (nhịp 1): quá nhỏ và mảnh, chìm trong nền tối**
-- Đầu sao băng bán kính **≥ 14px** (≈ `0.9vmin`), vẽ **3 lớp** (lõi trắng, quầng màu, quầng ngoài mờ) với `globalCompositeOperation = "lighter"` để có bloom.
-- Đuôi dài **≥ 25% chiều rộng viewport**, gradient thon dần về 0, độ dày giảm theo chiều dài.
-- Đường bay là **đường cong (bezier)**, không phải đường thẳng chéo.
-- Thêm **tia lóe 4 cánh (flare)** ở đầu và một quầng sáng nền (radial-gradient, opacity ~0.25) di chuyển theo sao băng.
-- Giữ nguyên hiệu ứng đổi màu xanh → tím đã có (đang tốt), màu cuối luôn đúng độ hiếm.
+**A. Kỹ thuật vẽ bắt buộc để hiệu ứng không bị phẳng (áp dụng cho nhịp 1 và 2)**
 
-**B. Va chạm (nhịp 2): hiện là một khung chớp gần trắng toàn màn hình, rồi màn hình trống**
+Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi bằng gradient thẳng nên nhìn phẳng. Với chủ đề mới, bắt buộc dùng các kỹ thuật sau:
+1. **Hạt bằng sprite phát sáng:** tạo sẵn vài texture radial-gradient trên canvas ẩn (nhiều kích thước, theo màu 3/4/5★), vẽ bằng `drawImage` với `globalCompositeOperation = "lighter"`. **Không** vẽ vòng tròn tô màu cứng, **không** dùng `shadowBlur` (chậm và xấu).
+2. **Bloom giả:** thêm một canvas thứ hai phủ chồng, độ phân giải bằng một nửa, chép lại nội dung canvas chính mỗi khung, áp CSS `filter: blur(10px) brightness(1.5)` và `mix-blend-mode: screen`. Tự tắt lớp bloom nếu FPS thấp hơn 45.
+3. **Vệt mờ (persistence):** thay `clearRect` bằng tô `destination-out` với alpha 0,15-0,25 mỗi khung, để hạt để lại vệt sáng mờ dần.
+4. **Hạt đa dạng:** kích thước 2-24px, tuổi thọ khác nhau, **màu đổi theo tuổi** (trắng, rồi màu độ hiếm, rồi trong suốt), alpha giảm theo ease-out, một phần hạt nhấp nháy.
+5. **Chuyển động có hồn:** mọi chuyển động dùng easing (không tuyến tính), có anticipation, overshoot, hitstop; quỹ đạo xoáy có thêm nhiễu nhỏ (sin hoặc noise) để không đều như máy.
+6. **Nền sống:** gradient nền đổi dần theo màu độ hiếm trong nhịp 1, kèm vignette. Spotlight vẽ bằng `conic-gradient` hoặc `linear-gradient` mờ biên, `filter: blur(6px)`, `mix-blend-mode: screen`, quét theo hàm sin.
+7. **Ngân sách hiệu năng:** tối đa 200 hạt trên điện thoại (400 trên desktop), `devicePixelRatio` tối đa 2, tự giảm số hạt khi FPS thấp.
+
+**B. Beat drop (nhịp 2): trước đây là một khung chớp gần trắng toàn màn hình, rồi màn hình trống**
 - **Hitstop:** đóng băng toàn bộ chuyển động **60-80 ms** ngay lúc va chạm, trước khi chớp.
 - Chớp sáng theo **màu độ hiếm**, đỉnh opacity **≤ 0.75** (không cháy trắng), lên 120 ms, xuống 350 ms.
 - **Ngay sau chớp, không có khoảng trống**, chạy đồng thời: 2-3 **vòng sóng xung kích** (stroke, scale từ 0 đến ~1.6 viewport, mờ dần, lệch nhau 80 ms); **tia sáng xoay** (conic-gradient ≥ 12 tia, fade trong ~0.9 giây); **nổ hạt** (120 hạt desktop / 60 hạt điện thoại, vận tốc giảm dần, trọng lực nhẹ); **rung màn hình** biên độ ~6px, 250 ms, giảm dần (damped).
@@ -400,20 +410,26 @@ Tổng thời lượng (không tính Skip): khoảng **4-6 giây** cho rút 10 t
 
 **G. Độ sáng tổng thể:** cảnh đang quá tối nên hiệu ứng bị chìm. Tăng độ sáng và số lượng sao nền, thêm vignette nhẹ, hạt phải nổi rõ trên nền.
 
-**H. Âm thanh:** bản quay video **không có tiếng** (có thể do mặc định tắt). Phải có tối thiểu 3 âm tự tổng hợp bằng Web Audio: **whoosh** sao băng, **impact** va chạm, **chime lật thẻ** (cao độ tăng theo độ hiếm). Mặc định vẫn tắt, nhưng ở lượt rút đầu tiên hiện một gợi ý nhỏ "Bật âm thanh để trải nghiệm tốt hơn" (có nút bật, nhớ lựa chọn). Kiểm tra bật/tắt hoạt động.
+**H. Âm thanh:** bản quay video **không có tiếng** (có thể do mặc định tắt). Phải có tối thiểu 3 âm tự tổng hợp bằng Web Audio: **tiếng tích năng lượng** (cao độ tăng dần, kèm nhịp kick theo BPM), **impact** lúc beat drop, **chime lật thẻ** (cao độ tăng theo độ hiếm). Mặc định vẫn tắt, nhưng ở lượt rút đầu tiên hiện một gợi ý nhỏ "Bật âm thanh để trải nghiệm tốt hơn" (có nút bật, nhớ lựa chọn). Kiểm tra bật/tắt hoạt động.
 
 **I. Công cụ tinh chỉnh (bắt buộc, để chỉnh nhanh mà không phải rút ngẫu nhiên):**
 - Gom mọi thông số thời gian, số hạt, cường độ vào **một file `animationConfig.ts`**.
 - Chế độ debug khi có `?debug=1` trên URL: hiện bảng nhỏ với các nút **"Giả lập: toàn 3★ / có 4★ / có 5★"** (ép kết quả, **không** ảnh hưởng pity thật), nút **Replay**, và thanh trượt hệ số tốc độ (0.25× đến 2×) để xem chậm từng nhịp. Chế độ này **không** hiển thị với người dùng thường.
 - Lý do: bản chạy thử hiện chỉ mới thấy kịch bản có 4★, **chưa ai thấy nhịp 5★ takeover chạy**.
 
+#### 3.6. Nguồn mẫu tham khảo và lối thoát
+
+- **Tham khảo mã mẫu để học kỹ thuật** (CodePen, GitHub, ví dụ của Three.js): từ khóa như "particles converge canvas", "energy orb", "radial burst", "light rays", "audio visualizer bars". **Chỉ dùng mẫu có giấy phép MIT / CC0 / Apache-2.0** (hiệu ứng đẹp trên mạng thường là phi thương mại hoặc không ghi giấy phép: không dùng). Viết lại theo ý tưởng, không dán nguyên; ghi nguồn vào `CREDITS.md`.
+- **Không dùng** video, ảnh hay Lottie trả phí hoặc giấy phép không rõ. Mọi hiệu ứng tự sinh bằng code.
+- **Lối thoát:** nếu sau khi áp dụng mục 3.5-A mà hiệu ứng vẫn phẳng, chuyển lớp hiệu ứng sang **PixiJS** (kèm `pixi-filters` có bloom thật) chỉ cho phần nền và hạt. **Phải hỏi chủ dự án trước khi thêm thư viện.**
+
 **Tiêu chí hoàn thành**
 - **Thẻ:** chỉ có sao, hình minh họa nhỏ, tên bài và ca sĩ. Không có chữ hay icon nào bị cắt. Không dùng `clip-path` lên container nội dung.
 - **Kích thước:** desktop 1280-1920px, cả 10 thẻ vừa một hàng, không cuộn; tên bài đọc rõ. Điện thoại landscape: cuộn ngang mượt, thẻ đọc rõ.
-- **Animation:** có đủ 5 nhịp; màu sao băng báo đúng độ hiếm cao nhất; có va chạm (chớp, sóng, tia, rung); 10 thẻ rơi vào một hàng; lật theo thứ tự thấp đến cao; 5★ lật cuối với hiệu ứng riêng.
+- **Animation:** có đủ 5 nhịp; màu quả cầu năng lượng báo đúng độ hiếm cao nhất; có beat drop (chớp, sóng, tia, rung); 10 thẻ rơi vào một hàng; lật theo thứ tự thấp đến cao; 5★ lật cuối với hiệu ứng riêng.
 - **Skip** hoạt động ở mọi thời điểm. Tắt hiệu ứng (`prefers-reduced-motion`) vẫn dùng được.
 - 60fps trên điện thoại tầm trung, không giật rõ rệt.
-- Mục 3.5: sao băng có bloom và đuôi dài; va chạm có hitstop, sóng, tia, hạt, rung và **không có khoảng trống > 150 ms**; thẻ bay ra từ tâm va chạm; 4★ có khoảnh khắc riêng; chùm sáng 3★/4★/5★ phân biệt rõ; có `animationConfig.ts` và chế độ `?debug=1` ép được cả ba kịch bản (toàn 3★, có 4★, có 5★).
+- Mục 3.5: hạt vẽ bằng sprite phát sáng có bloom giả và vệt mờ; quả cầu đập theo nhịp với vòng sóng âm và equalizer; beat drop có hitstop, sóng, tia, hạt, rung và **không có khoảng trống > 150 ms**; thẻ bay ra từ tâm va chạm; 4★ có khoảnh khắc riêng; chùm sáng 3★/4★/5★ phân biệt rõ; có `animationConfig.ts` và chế độ `?debug=1` ép được cả ba kịch bản (toàn 3★, có 4★, có 5★).
 - Không có tài sản của game khác trong repo; có `CREDITS.md` nếu dùng âm thanh bên ngoài.
 
 ### M4: Bộ lọc + nút "Tìm karaoke"
@@ -494,7 +510,7 @@ Tổng thời lượng (không tính Skip): khoảng **4-6 giây** cho rút 10 t
 - [ ] Màn hình chính dạng Wish screen: banner 30% trái / nội dung + nút rút 70% phải, không cuộn dọc ở landscape.
 - [ ] Rút 1 và Rút 10 hoạt động, tỉ lệ đúng đặc tả, có test.
 - [ ] Pity và đảm bảo 4★ khi rút 10 hoạt động.
-- [ ] Thẻ gọn (chỉ sao, tên bài, ca sĩ) và chuỗi hiệu ứng 5 nhịp (sao băng, va chạm, lật thẻ), có Skip.
+- [ ] Thẻ gọn (chỉ sao, tên bài, ca sĩ) và chuỗi hiệu ứng 5 nhịp (tích năng lượng, beat drop, lật thẻ), có Skip.
 - [ ] Rút 10 hiển thị một hàng ngang (cuộn ngang + snap trên điện thoại, khuyến nghị landscape).
 - [ ] Bộ lọc giọng/thể loại/thập niên/độ khó.
 - [ ] Nút Tìm karaoke đúng từ khóa.

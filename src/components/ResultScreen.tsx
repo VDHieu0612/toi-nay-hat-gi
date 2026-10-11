@@ -91,7 +91,9 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   };
 
   // Âm thanh Web Audio tổng hợp tự động theo nhịp (Điểm H)
-  const playAudioTone = (type: 'whoosh' | 'impact' | 'flip3' | 'flip4' | 'flip5' | 'starCount') => {
+  const playAudioTone = (
+    type: 'energyBuildup' | 'beatDrop' | 'flip3' | 'flip4' | 'flip5' | 'starCount'
+  ) => {
     if (!soundEnabled) return;
     try {
       if (!audioCtxRef.current) {
@@ -102,31 +104,61 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
 
       const now = ctx.currentTime;
 
-      if (type === 'whoosh') {
+      if (type === 'energyBuildup') {
+        const buildDur = (ANIMATION_CONFIG.energyBuildDuration / 1000) / speedMultiplier;
+        // 1. Rising harmonic synth
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.exponentialRampToValueAtTime(750, now + 1.2 / speedMultiplier);
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2 / speedMultiplier);
-        osc.connect(gain);
+        const filter = ctx.createBiquadFilter();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(110, now);
+        osc.frequency.exponentialRampToValueAtTime(650, now + buildDur);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(220, now);
+        filter.frequency.exponentialRampToValueAtTime(2600, now + buildDur);
+
+        gain.gain.setValueAtTime(0.03, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + buildDur * 0.9);
+        gain.gain.linearRampToValueAtTime(0.001, now + buildDur);
+
+        osc.connect(filter);
+        filter.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
-        osc.stop(now + 1.2 / speedMultiplier);
-      } else if (type === 'impact') {
-        // Impact boom: Sub-bass punch + lowpass sweep
+        osc.stop(now + buildDur);
+
+        // 2. Nhịp kick 120 BPM (mỗi 0.5s theo nhịp đập)
+        const beatInterval = 0.5 / speedMultiplier;
+        const totalBeats = Math.floor(buildDur / beatInterval);
+        for (let b = 0; b < totalBeats; b++) {
+          const beatTime = now + (b * beatInterval);
+          const kickOsc = ctx.createOscillator();
+          const kickGain = ctx.createGain();
+          kickOsc.type = 'sine';
+          kickOsc.frequency.setValueAtTime(115, beatTime);
+          kickOsc.frequency.exponentialRampToValueAtTime(32, beatTime + 0.12 / speedMultiplier);
+          kickGain.gain.setValueAtTime(0.25, beatTime);
+          kickGain.gain.exponentialRampToValueAtTime(0.001, beatTime + 0.14 / speedMultiplier);
+          kickOsc.connect(kickGain);
+          kickGain.connect(ctx.destination);
+          kickOsc.start(beatTime);
+          kickOsc.stop(beatTime + 0.15 / speedMultiplier);
+        }
+      } else if (type === 'beatDrop') {
+        // Beat drop punch: Deep 808 sub-bass drop + impact
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(130, now);
-        osc.frequency.exponentialRampToValueAtTime(32, now + 0.45 / speedMultiplier);
-        gain.gain.setValueAtTime(0.35, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5 / speedMultiplier);
+        osc.frequency.setValueAtTime(145, now);
+        osc.frequency.exponentialRampToValueAtTime(28, now + 0.6 / speedMultiplier);
+        gain.gain.setValueAtTime(0.42, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65 / speedMultiplier);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.5 / speedMultiplier);
+        osc.stop(now + 0.65 / speedMultiplier);
       } else if (type === 'flip3') {
         // 3★: Chime thanh mảnh (A4 440Hz -> 523Hz)
         const osc = ctx.createOscillator();
@@ -217,28 +249,28 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     setPhase(0);
 
     const prepDur = ANIMATION_CONFIG.prepareDuration / speedMultiplier;
-    const meteorDur = ANIMATION_CONFIG.meteorDuration / speedMultiplier;
+    const energyBuildDur = ANIMATION_CONFIG.energyBuildDuration / speedMultiplier;
     const hitstopDur = ANIMATION_CONFIG.hitstopDuration / speedMultiplier;
     const overlapImpact = ANIMATION_CONFIG.overlapWithImpact / speedMultiplier;
     const cardFlightDur = ANIMATION_CONFIG.cardFlightDuration / speedMultiplier;
 
-    // Nhịp 1: Bắt đầu sao băng
+    // Nhịp 1: Tích năng lượng (sân khấu bắt đầu hút hạt, quả cầu phình dần)
     timeouts.push(
       setTimeout(() => {
         if (cancel) return;
         setPhase(1);
-        playAudioTone('whoosh');
+        playAudioTone('energyBuildup');
 
         if (maxRarity === 5) {
           setCameraShake(true);
         }
 
-        // Animate meteor progress từ 0 đến 1
+        // Animate progress từ 0 đến 1
         const startTime = Date.now();
         const tick = () => {
           if (cancel) return;
           const elapsed = Date.now() - startTime;
-          const p = Math.min(1, elapsed / meteorDur);
+          const p = Math.min(1, elapsed / energyBuildDur);
           setMeteorProgress(p);
           if (p < 1) {
             requestAnimationFrame(tick);
@@ -248,8 +280,8 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
       }, prepDur)
     );
 
-    // Điểm B: Hitstop 60-80ms đóng băng chuyển động ngay khi va chạm
-    const hitTime = prepDur + meteorDur;
+    // Điểm B: Hitstop 60-80ms đóng băng chuyển động ngay khi nổ
+    const hitTime = prepDur + energyBuildDur;
     timeouts.push(
       setTimeout(() => {
         if (cancel) return;
@@ -257,7 +289,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
       }, hitTime)
     );
 
-    // Nhịp 2: Va chạm (ngay sau Hitstop) - Chớp màu độ hiếm, sóng xung kích, tia sáng, rung màn hình
+    // Nhịp 2: Beat drop (ngay sau Hitstop) - Chớp màu độ hiếm, sóng xung kích, tia sáng, rung màn hình
     const impactTime = hitTime + hitstopDur;
     timeouts.push(
       setTimeout(() => {
@@ -266,7 +298,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         setPhase(2);
         setCameraShake(true);
         setImpactTriggered(true);
-        playAudioTone('impact');
+        playAudioTone('beatDrop');
 
         // Damped screen shake dừng sau 250ms
         timeouts.push(

@@ -1,28 +1,34 @@
 export interface AnimationConfig {
-  // Nhịp 0: Chuẩn bị
+  // Nhịp 0: Tối sân khấu (0.5s)
   prepareDuration: number;
 
-  // Nhịp 1: Sao băng
-  meteorDuration: number;
-  meteorHeadRadius: number; // px (>= 14px)
-  meteorTailLengthRatio: number; // tỉ lệ so với viewport width (>= 0.25)
-  meteorFlareSize: number;
+  // Nhịp 1: Tích năng lượng (1.8 - 2.4s)
+  energyBuildDuration: number; // 2100ms
+  meteorDuration: number; // Alias tương thích ngược
+  orbBpm: number; // 120 BPM
+  orbPulseScale: number; // 0.10 (phồng 8-12%)
+  orbMaxRadius: number; // 40px
+  anticipationDuration: number; // 120ms co lại trước khi nổ
+  spiralParticlesDesktop: number; // 160 hạt xoáy
+  spiralParticlesMobile: number; // 80 hạt xoáy
+  equalizerBarCount: number; // 32 thanh
 
-  // Nhịp 2: Va chạm
+  // Nhịp 2: Beat drop (0.8 - 1.0s)
   hitstopDuration: number; // 60-80ms đóng băng trước khi chớp
   flashInDuration: number; // 120ms
   flashOutDuration: number; // 350ms
   flashMaxOpacity: number; // <= 0.75
-  shockwaveCount: number; // 2-3 vòng
+  shockwaveCount: number; // 2-3 vòng sóng
   shockwaveStagger: number; // 80ms
-  raysCount: number; // >= 12 tia
+  raysCount: number; // 12-16 tia xoay
   raysDuration: number; // ~900ms
   shakeDuration: number; // 250ms
-  shakeAmplitude: number; // ~6px
-  particlesDesktop: number; // 120
-  particlesMobile: number; // 60
+  shakeAmplitude: number; // ~6px damped
+  particlesDesktop: number; // 140 hạt nổ
+  particlesMobile: number; // 70 hạt nổ
+  confettiCount: number; // 40 mảnh confetti ánh vàng (5★)
 
-  // Nhịp 3: Thẻ rơi vào hàng
+  // Nhịp 3: Thẻ rơi vào hàng (0.8 - 1.2s)
   cardFlightDuration: number; // ms
   cardStagger: number; // 60ms từ giữa ra hai bên
   overlapWithImpact: number; // overlap >= 300ms
@@ -41,35 +47,41 @@ export interface AnimationConfig {
 }
 
 export const ANIMATION_CONFIG: AnimationConfig = {
-  // Nhịp 0: Chuẩn bị
-  prepareDuration: 600,
+  // Nhịp 0: Tối sân khấu (0.5s)
+  prepareDuration: 500,
 
-  // Nhịp 1: Sao băng (A)
-  meteorDuration: 1800,
-  meteorHeadRadius: 15, // >= 14px
-  meteorTailLengthRatio: 0.32, // >= 25% chiều rộng viewport
-  meteorFlareSize: 24,
+  // Nhịp 1: Tích năng lượng (2.1s - trong dải 1.8-2.4s)
+  energyBuildDuration: 2100,
+  meteorDuration: 2100, // Alias
+  orbBpm: 120,
+  orbPulseScale: 0.10,
+  orbMaxRadius: 42,
+  anticipationDuration: 120, // 120ms co thắt
+  spiralParticlesDesktop: 160,
+  spiralParticlesMobile: 80,
+  equalizerBarCount: 32,
 
-  // Nhịp 2: Va chạm (B)
+  // Nhịp 2: Beat drop (0.9s - trong dải 0.8-1.0s)
   hitstopDuration: 70, // 60-80 ms
   flashInDuration: 120, // 120 ms
   flashOutDuration: 350, // 350 ms
   flashMaxOpacity: 0.72, // <= 0.75
-  shockwaveCount: 3, // 2-3 vòng sóng
-  shockwaveStagger: 80, // lệch nhau 80 ms
-  raysCount: 14, // >= 12 tia
-  raysDuration: 900, // ~0.9s
+  shockwaveCount: 3, // 3 vòng sóng xung kích
+  shockwaveStagger: 80, // lệch 80 ms
+  raysCount: 14, // 14 tia xoay
+  raysDuration: 900, // 900 ms
   shakeDuration: 250, // 250 ms
   shakeAmplitude: 6, // ~6px
-  particlesDesktop: 120,
-  particlesMobile: 60,
+  particlesDesktop: 140,
+  particlesMobile: 70,
+  confettiCount: 40,
 
-  // Nhịp 3: Thẻ vào hàng (C)
+  // Nhịp 3: Thẻ vào hàng
   cardFlightDuration: 900,
   cardStagger: 60, // 60 ms từ giữa ra 2 bên
   overlapWithImpact: 320, // overlap >= 0.3s
 
-  // Nhịp 4: Lật thẻ (D)
+  // Nhịp 4: Lật thẻ
   flip3Stagger: 120, // 0.12s
   flip3Duration: 350, // 0.35s
   flip4PrePause: 350, // 0.35s trước lật

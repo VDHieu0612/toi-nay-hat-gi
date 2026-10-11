@@ -649,20 +649,59 @@ html, body {
 }
 
 /* =========================================
-   GACHA RESULT VIEWPORT & 5 PHASES
+   GACHA RESULT VIEWPORT & 5 PHASES (Chủ đề Sân khấu Karaoke)
    ========================================= */
 .gacha-result-viewport {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100dvh;
-  background: radial-gradient(ellipse at 50% 25%, #131b31 0%, #060912 100%);
+  background: radial-gradient(ellipse at 50% 30%, #100b20 0%, #060814 60%, #020308 100%);
   z-index: 9999;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
   transition: background 0.8s ease;
+}
+
+/* Vignette sân khấu */
+.gacha-result-viewport::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Canvas sân khấu & Fake Bloom (Kỹ thuật 2) */
+.karaoke-stage-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gacha-main-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gacha-bloom-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(10px) brightness(1.5);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0.95;
 }
 
 .gacha-result-viewport.camera-shake-active {
