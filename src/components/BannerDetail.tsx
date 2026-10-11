@@ -9,6 +9,8 @@ interface BannerDetailProps {
   onPullOne: () => void;
   onPullTen: () => void;
   onOpenHistory?: () => void;
+  onOpenFilter?: () => void;
+  activeFilterCount?: number;
 }
 
 export const BannerDetail: React.FC<BannerDetailProps> = ({
@@ -18,6 +20,8 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
   onPullOne,
   onPullTen,
   onOpenHistory,
+  onOpenFilter,
+  activeFilterCount = 0,
 }) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
@@ -106,6 +110,17 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
           <div className="banner-bottom-left-btns">
             <button
               type="button"
+              className={`genshin-sub-btn filter-trigger-btn ${activeFilterCount > 0 ? 'has-active-filters' : ''}`}
+              onClick={onOpenFilter}
+              title="Mở bộ lọc kho bài hát"
+            >
+              <span>Bộ lọc</span>
+              {activeFilterCount > 0 && (
+                <span className="filter-badge">{activeFilterCount}</span>
+              )}
+            </button>
+            <button
+              type="button"
               className="genshin-sub-btn"
               onClick={() => setShowDetailsModal(true)}
             >
@@ -120,32 +135,46 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
             </button>
           </div>
 
-          <div className="banner-bottom-right-btns">
-            <button
-              type="button"
-              className="genshin-wish-btn wish-btn-single"
-              onClick={onPullOne}
-              disabled={isPoolEmpty}
-              title={isPoolEmpty ? 'Pool bài hát rỗng' : 'Rút 1 bài'}
-            >
-              <div className="wish-btn-content">
-                <span className="wish-btn-main">Rút ×1</span>
-                <span className="wish-btn-sub">1 bài hát</span>
+          <div className="banner-bottom-right-container">
+            {/* Cảnh báo pool bài hát (Mục 4.2) */}
+            {poolCount > 0 && poolCount < 10 && (
+              <div className="pool-warning-pill pool-warning-low" title="Kho bài còn ít">
+                ⚠️ Còn {poolCount} bài sau lọc (cho phép bài trùng khi rút 10)
               </div>
-            </button>
+            )}
+            {poolCount === 0 && (
+              <div className="pool-warning-pill pool-warning-empty" title="Kho bài rỗng">
+                ⛔ Không có bài hát nào phù hợp bộ lọc. Vui lòng nới lỏng bộ lọc!
+              </div>
+            )}
 
-            <button
-              type="button"
-              className="genshin-wish-btn wish-btn-ten"
-              onClick={onPullTen}
-              disabled={isPoolEmpty}
-              title={isPoolEmpty ? 'Pool bài hát rỗng' : 'Rút 10 bài setlist'}
-            >
-              <div className="wish-btn-content">
-                <span className="wish-btn-main">Rút ×10</span>
-                <span className="wish-btn-sub">Đảm bảo ≥ 4★ · Setlist</span>
-              </div>
-            </button>
+            <div className="banner-bottom-right-btns">
+              <button
+                type="button"
+                className="genshin-wish-btn wish-btn-single"
+                onClick={onPullOne}
+                disabled={isPoolEmpty}
+                title={isPoolEmpty ? 'Bộ lọc không tìm thấy bài hát nào' : 'Rút 1 bài'}
+              >
+                <div className="wish-btn-content">
+                  <span className="wish-btn-main">Rút ×1</span>
+                  <span className="wish-btn-sub">1 bài hát</span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                className="genshin-wish-btn wish-btn-ten"
+                onClick={onPullTen}
+                disabled={isPoolEmpty}
+                title={isPoolEmpty ? 'Bộ lọc không tìm thấy bài hát nào' : 'Rút 10 bài setlist'}
+              >
+                <div className="wish-btn-content">
+                  <span className="wish-btn-main">Rút ×10</span>
+                  <span className="wish-btn-sub">Đảm bảo ≥ 4★ · Setlist</span>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>

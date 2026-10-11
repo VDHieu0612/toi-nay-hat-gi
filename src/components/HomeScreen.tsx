@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Banner, Song, PullState } from '../lib/types';
+import { Banner, Song, PullState, UserFilter } from '../lib/types';
 import { BannerSidebar } from './BannerSidebar';
 import { BannerDetail } from './BannerDetail';
+import { FilterPanel } from './FilterPanel';
 import { CONFIG } from '../lib/gacha';
+import { countActiveFilters } from '../lib/filters';
 import { loadDismissOrientationHint, saveDismissOrientationHint } from '../lib/storage';
 
 interface HomeScreenProps {
@@ -15,6 +17,8 @@ interface HomeScreenProps {
   poolCount: number;
   onPullOne: () => void;
   onPullTen: () => void;
+  userFilter: UserFilter;
+  onChangeFilter: (filter: UserFilter) => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -27,9 +31,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   poolCount,
   onPullOne,
   onPullTen,
+  userFilter,
+  onChangeFilter,
 }) => {
   const [hintDismissed, setHintDismissed] = useState(() => loadDismissOrientationHint());
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleDismissHint = () => {
     setHintDismissed(true);
@@ -114,8 +121,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           onPullOne={onPullOne}
           onPullTen={onPullTen}
           onOpenHistory={() => alert('Lịch sử sẽ được hoàn thiện ở M5')}
+          onOpenFilter={() => setIsFilterOpen(true)}
+          activeFilterCount={countActiveFilters(userFilter)}
         />
       </main>
+
+      {/* Modal bộ lọc bài hát (M4) */}
+      <FilterPanel
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        userFilter={userFilter}
+        onChangeFilter={onChangeFilter}
+        allSongs={allSongs}
+        selectedBanner={selectedBanner}
+      />
     </div>
   );
 };

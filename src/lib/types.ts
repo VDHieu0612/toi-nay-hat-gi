@@ -42,6 +42,7 @@ export interface PullResult {
 export interface UserFilter {
   voice?: Voice;
   genres?: string[];
+  decade?: string;
   yearFrom?: number;
   yearTo?: number;
   maxDifficulty?: number;

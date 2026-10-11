@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import songsData from './data/songs.json';
 import bannersData from './data/banners.json';
-import { Song, Banner, PullState } from './lib/types';
+import { Song, Banner, PullState, UserFilter } from './lib/types';
 import { pull, pullTen } from './lib/gacha';
 import { getFilteredPool } from './lib/filters';
 import {
@@ -29,6 +29,9 @@ export const App: React.FC = () => {
     }
     return banners[0];
   });
+
+  // Bộ lọc người dùng chọn trước khi rút (M4)
+  const [userFilter, setUserFilter] = useState<UserFilter>({});
 
   const [pullState, setPullState] = useState<PullState>(() => loadPullState());
 
@@ -101,10 +104,10 @@ export const App: React.FC = () => {
     savePullState(pullState);
   }, [pullState]);
 
-  // Pool bài hát khả dụng
+  // Pool bài hát khả dụng sau khi áp dụng filter của banner và filter người dùng (M4)
   const currentPool = useMemo(() => {
-    return getFilteredPool(allSongs, selectedBanner);
-  }, [selectedBanner]);
+    return getFilteredPool(allSongs, selectedBanner, userFilter);
+  }, [selectedBanner, userFilter]);
 
   const handlePullOne = () => {
     try {
@@ -177,6 +180,8 @@ export const App: React.FC = () => {
           poolCount={currentPool.length}
           onPullOne={handlePullOne}
           onPullTen={handlePullTen}
+          userFilter={userFilter}
+          onChangeFilter={setUserFilter}
         />
       )}
     </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Song } from '../lib/types';
+import { getSearchKaraokeUrl } from '../lib/filters';
 
 interface SongCardProps {
   song: Song;
@@ -80,13 +81,13 @@ export const SongCard: React.FC<SongCardProps> = ({
         </div>
 
         {/* =========================================
-            MẶT TRƯỚC (Nội dung thẻ: Đỉnh vòm tròn, 4 mục duy nhất)
+            MẶT TRƯỚC (Nội dung thẻ: Đỉnh vòm tròn)
             ========================================= */}
         <div className={`card-side card-front-face rarity-${song.rarity}-bg`}>
           {/* Shimmer vàng quét qua cho 5★ */}
           {song.rarity === 5 && <div className="card-5star-shimmer" />}
 
-          {/* Vùng an toàn (Safe Zone): cách đỉnh 20%, cách 2 bên 8% */}
+          {/* Vùng an toàn (Safe Zone): cách đỉnh 18%, cách 2 bên 7% */}
           <div className="card-safe-content">
             {/* 1. SỐ SAO (Hiển thị rõ ràng ở trên) */}
             <div className={`card-stars-zone star-rarity-${song.rarity}`}>
@@ -123,9 +124,23 @@ export const SongCard: React.FC<SongCardProps> = ({
                 {song.artist}
               </p>
             </div>
+
+            {/* 5. NÚT TÌM KARAOKE (M4) */}
+            <a
+              href={getSearchKaraokeUrl(song.title, song.artist)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card-karaoke-btn"
+              title={`Tìm bài hát "${song.title} - ${song.artist}" trên YouTube Karaoke`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="card-karaoke-icon">🎤</span>
+              <span className="card-karaoke-text">Tìm karaoke</span>
+            </a>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
