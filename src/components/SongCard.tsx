@@ -46,11 +46,23 @@ export const SongCard: React.FC<SongCardProps> = ({
         <div className={`card-top-beam beam-${song.rarity}star`}>
           <div className="beam-vertical-ray" />
           <div className="beam-glow-spread" />
+          {song.rarity === 5 && (
+            <>
+              <div className="beam-diagonal-ray diagonal-left" />
+              <div className="beam-diagonal-ray diagonal-right" />
+            </>
+          )}
           {song.rarity >= 4 && (
             <div className="beam-particles">
               <span className="p1">✦</span>
               <span className="p2">✦</span>
-              {song.rarity === 5 && <span className="p3">✦</span>}
+              <span className="p3">✦</span>
+              {song.rarity === 5 && (
+                <>
+                  <span className="p4">✦</span>
+                  <span className="p5">✦</span>
+                </>
+              )}
             </div>
           )}
         </div>

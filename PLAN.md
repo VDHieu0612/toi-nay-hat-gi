@@ -357,12 +357,63 @@ Tổng thời lượng (không tính Skip): khoảng **4-6 giây** cho rút 10 t
 - Giữ 60fps trên điện thoại tầm trung; nếu tụt FPS thì tự giảm số hạt.
 - Không thêm thư viện ngoài danh sách ở mục 2.
 
+#### 3.5. Chỉnh sửa bắt buộc sau bản chạy thử v3
+
+> Bản v3 đã đúng cấu trúc 5 nhịp, thẻ đã gọn, 10 thẻ đã vừa một hàng, không còn bị cắt chữ: **giữ nguyên các phần đó**. Phần dưới đây là các thông số **cụ thể** để tăng "lực" cho hiệu ứng. Đây là chỉnh sửa trên code hiện có, **không viết lại từ đầu**. (Đơn vị `px` là CSS px ở desktop 1920px, scale theo `vmin` cho màn hình khác.)
+
+**A. Sao băng (nhịp 1): quá nhỏ và mảnh, chìm trong nền tối**
+- Đầu sao băng bán kính **≥ 14px** (≈ `0.9vmin`), vẽ **3 lớp** (lõi trắng, quầng màu, quầng ngoài mờ) với `globalCompositeOperation = "lighter"` để có bloom.
+- Đuôi dài **≥ 25% chiều rộng viewport**, gradient thon dần về 0, độ dày giảm theo chiều dài.
+- Đường bay là **đường cong (bezier)**, không phải đường thẳng chéo.
+- Thêm **tia lóe 4 cánh (flare)** ở đầu và một quầng sáng nền (radial-gradient, opacity ~0.25) di chuyển theo sao băng.
+- Giữ nguyên hiệu ứng đổi màu xanh → tím đã có (đang tốt), màu cuối luôn đúng độ hiếm.
+
+**B. Va chạm (nhịp 2): hiện là một khung chớp gần trắng toàn màn hình, rồi màn hình trống**
+- **Hitstop:** đóng băng toàn bộ chuyển động **60-80 ms** ngay lúc va chạm, trước khi chớp.
+- Chớp sáng theo **màu độ hiếm**, đỉnh opacity **≤ 0.75** (không cháy trắng), lên 120 ms, xuống 350 ms.
+- **Ngay sau chớp, không có khoảng trống**, chạy đồng thời: 2-3 **vòng sóng xung kích** (stroke, scale từ 0 đến ~1.6 viewport, mờ dần, lệch nhau 80 ms); **tia sáng xoay** (conic-gradient ≥ 12 tia, fade trong ~0.9 giây); **nổ hạt** (120 hạt desktop / 60 hạt điện thoại, vận tốc giảm dần, trọng lực nhẹ); **rung màn hình** biên độ ~6px, 250 ms, giảm dần (damped).
+- Quy tắc: **không được có khoảng > 150 ms mà màn hình không có chuyển động nào.**
+
+**C. Thẻ vào hàng (nhịp 3): hiện chỉ mờ dần xuất hiện từ phía trái**
+- Cả 10 thẻ xuất phát **từ tâm va chạm** (scale 0.15, opacity 0), bay **theo đường cong** vào đúng ô của mình, scale lên 1 có **overshoot** (kiểu `back.out(1.4)`), xoay nhẹ ±8° rồi về 0.
+- Stagger **60 ms, từ giữa ra hai bên** (`from: "center"`), có vệt sáng ngắn bám theo thẻ.
+- **Chồng nhịp:** tia sáng và sóng xung kích của nhịp 2 vẫn còn đang chạy khi thẻ bay ra (overlap ≥ 0.3 giây).
+
+**D. Lật thẻ (nhịp 4): hiện lật liên tục, thẻ 4★ không có khoảnh khắc riêng**
+- **3★:** stagger 0.12 giây, lật 0.35 giây, một xung sáng xanh nhỏ, chùm sáng mọc từ dưới lên.
+- **4★:** **dừng 0.35 giây** trước khi lật (thẻ rung nhẹ, viền sáng dần), khi lật: nổ vòng tím + tia, chùm sáng cao hơn 3★, nền màn hình **pulse tím 0.4 giây**; giữ 0.3 giây sau khi lật rồi mới sang thẻ kế. **Các thẻ 4★ lật tuần tự từng thẻ, không lật chung.**
+- **5★:** như mục 3.3 (làm tối các thẻ khác, phóng to ra giữa, đếm sao).
+- Tổng thời lượng lật phản ánh nội dung: chỉ toàn 3★ khoảng 1.8 giây; mỗi thẻ 4★ cộng thêm khoảng 0.7 giây; có 5★ cộng thêm khoảng 2 giây.
+
+**E. Chùm sáng phải phân biệt được độ hiếm (hiện 3★ và 4★ nhìn gần giống nhau)**
+
+| Độ hiếm | Chiều cao chùm | Độ dày | Thêm |
+|---|---|---|---|
+| 3★ | 18% chiều cao thẻ | 2px | Một lớp, không hạt |
+| 4★ | 35% | 4px | Hạt lấp lánh bay lên liên tục |
+| 5★ | 60% | 8px | Quầng sáng + tia chéo + hạt dày |
+
+**F. Thẻ: nội dung đang nhỏ so với diện tích, giữa thẻ nhiều khoảng trống**
+- Tên bài: `font-size: clamp(14px, calc(var(--card-w) * 0.11), 22px)`, đậm; ca sĩ khoảng 0.8× tên bài.
+- Hình minh họa phóng to khoảng 1.4×, đặt quanh 40% chiều cao thẻ; số sao to hơn.
+- Hình dạng chữ nhật bo góc hiện tại **được chấp nhận**. Đỉnh vòm bằng `border-radius` là tùy chọn, **không** dùng `clip-path` lên container nội dung.
+
+**G. Độ sáng tổng thể:** cảnh đang quá tối nên hiệu ứng bị chìm. Tăng độ sáng và số lượng sao nền, thêm vignette nhẹ, hạt phải nổi rõ trên nền.
+
+**H. Âm thanh:** bản quay video **không có tiếng** (có thể do mặc định tắt). Phải có tối thiểu 3 âm tự tổng hợp bằng Web Audio: **whoosh** sao băng, **impact** va chạm, **chime lật thẻ** (cao độ tăng theo độ hiếm). Mặc định vẫn tắt, nhưng ở lượt rút đầu tiên hiện một gợi ý nhỏ "Bật âm thanh để trải nghiệm tốt hơn" (có nút bật, nhớ lựa chọn). Kiểm tra bật/tắt hoạt động.
+
+**I. Công cụ tinh chỉnh (bắt buộc, để chỉnh nhanh mà không phải rút ngẫu nhiên):**
+- Gom mọi thông số thời gian, số hạt, cường độ vào **một file `animationConfig.ts`**.
+- Chế độ debug khi có `?debug=1` trên URL: hiện bảng nhỏ với các nút **"Giả lập: toàn 3★ / có 4★ / có 5★"** (ép kết quả, **không** ảnh hưởng pity thật), nút **Replay**, và thanh trượt hệ số tốc độ (0.25× đến 2×) để xem chậm từng nhịp. Chế độ này **không** hiển thị với người dùng thường.
+- Lý do: bản chạy thử hiện chỉ mới thấy kịch bản có 4★, **chưa ai thấy nhịp 5★ takeover chạy**.
+
 **Tiêu chí hoàn thành**
 - **Thẻ:** chỉ có sao, hình minh họa nhỏ, tên bài và ca sĩ. Không có chữ hay icon nào bị cắt. Không dùng `clip-path` lên container nội dung.
 - **Kích thước:** desktop 1280-1920px, cả 10 thẻ vừa một hàng, không cuộn; tên bài đọc rõ. Điện thoại landscape: cuộn ngang mượt, thẻ đọc rõ.
 - **Animation:** có đủ 5 nhịp; màu sao băng báo đúng độ hiếm cao nhất; có va chạm (chớp, sóng, tia, rung); 10 thẻ rơi vào một hàng; lật theo thứ tự thấp đến cao; 5★ lật cuối với hiệu ứng riêng.
 - **Skip** hoạt động ở mọi thời điểm. Tắt hiệu ứng (`prefers-reduced-motion`) vẫn dùng được.
 - 60fps trên điện thoại tầm trung, không giật rõ rệt.
+- Mục 3.5: sao băng có bloom và đuôi dài; va chạm có hitstop, sóng, tia, hạt, rung và **không có khoảng trống > 150 ms**; thẻ bay ra từ tâm va chạm; 4★ có khoảnh khắc riêng; chùm sáng 3★/4★/5★ phân biệt rõ; có `animationConfig.ts` và chế độ `?debug=1` ép được cả ba kịch bản (toàn 3★, có 4★, có 5★).
 - Không có tài sản của game khác trong repo; có `CREDITS.md` nếu dùng âm thanh bên ngoài.
 
 ### M4: Bộ lọc + nút "Tìm karaoke"
