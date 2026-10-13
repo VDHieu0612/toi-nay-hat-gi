@@ -183,54 +183,54 @@
     "id": "son-tung-m-tp",
     "name": "Sơn Tùng M-TP",
     "kind": "singer",
-    "theme": "#f43f5e"
+    "theme": "#0ea5e9"
   },
   {
     "id": "den",
     "name": "Đen",
-    "kind": "rapper",
-    "theme": "#06b6d4"
+    "kind": "singer",
+    "theme": "#0ea5e9"
   },
   {
     "id": "soobin-hoang-son",
     "name": "Soobin Hoàng Sơn",
     "kind": "singer",
-    "theme": "#d97706"
+    "theme": "#0ea5e9"
   },
   {
     "id": "jack-j97",
     "name": "Jack - J97",
     "kind": "singer",
-    "theme": "#a855f7"
+    "theme": "#0ea5e9"
   },
   {
     "id": "quang-hung-masterd",
     "name": "Quang Hùng MasterD",
     "kind": "singer",
-    "theme": "#14b8a6"
+    "theme": "#0ea5e9"
   },
   {
     "id": "hieuthuhai",
     "name": "HIEUTHUHAI",
-    "kind": "rapper",
-    "theme": "#3b82f6"
+    "kind": "singer",
+    "theme": "#0ea5e9"
   },
   {
     "id": "tang-duy-tan",
     "name": "Tăng Duy Tân",
     "kind": "singer",
-    "theme": "#6366f1"
+    "theme": "#0ea5e9"
   },
   {
     "id": "hoang-dung",
     "name": "Hoàng Dũng",
     "kind": "singer",
-    "theme": "#ec4899"
+    "theme": "#0ea5e9"
   },
   {
     "id": "ngot",
     "name": "Ngọt",
-    "kind": "group",
-    "theme": "#8b5cf6"
+    "kind": "singer",
+    "theme": "#0ea5e9"
   }
 ]

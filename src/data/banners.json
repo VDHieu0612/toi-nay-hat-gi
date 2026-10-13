@@ -19,7 +19,7 @@
       "con-mua-ngang-qua-son-tung-m-tp",
       "lac-troi-son-tung-m-tp"
     ],
-    "theme": "#f43f5e"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-den",
@@ -32,7 +32,7 @@
       "cho-toi-lang-thang-den",
       "mot-trieu-like-den"
     ],
-    "theme": "#06b6d4"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-soobin-hoang-son",
@@ -42,9 +42,10 @@
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Soobin Hoàng Sơn sẵn sàng cho đêm karaoke bùng cháy!",
     "featured": [
       "phia-sau-mot-co-gai-soobin-hoang-son",
-      "di-de-tro-ve-soobin-hoang-son"
+      "di-de-tro-ve-soobin-hoang-son",
+      "thang-nam-soobin-hoang-son"
     ],
-    "theme": "#d97706"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-jack-j97",
@@ -57,7 +58,7 @@
       "bac-phan-jack-j97",
       "hoa-hai-duong-jack-j97"
     ],
-    "theme": "#a855f7"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-quang-hung-masterd",
@@ -70,7 +71,7 @@
       "mua-da-quang-hung-masterd",
       "hoa-bat-tu-quang-hung-masterd"
     ],
-    "theme": "#14b8a6"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-hieuthuhai",
@@ -83,7 +84,7 @@
       "khong-the-say-hieuthuhai",
       "nghe-nhu-tinh-yeu-hieuthuhai"
     ],
-    "theme": "#3b82f6"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-tang-duy-tan",
@@ -93,9 +94,10 @@
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Tăng Duy Tân sẵn sàng cho đêm karaoke bùng cháy!",
     "featured": [
       "cat-doi-noi-sau-tang-duy-tan",
-      "da-vu-tang-duy-tan"
+      "da-vu-tang-duy-tan",
+      "tinh-dau-tang-duy-tan"
     ],
-    "theme": "#6366f1"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-hoang-dung",
@@ -105,9 +107,10 @@
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Hoàng Dũng sẵn sàng cho đêm karaoke bùng cháy!",
     "featured": [
       "nang-tho-hoang-dung",
-      "cuoi-tuan-hoang-dung"
+      "cuoi-tuan-hoang-dung",
+      "nep-vao-anh-va-nghe-anh-hat-hoang-dung"
     ],
-    "theme": "#ec4899"
+    "theme": "#0ea5e9"
   },
   {
     "id": "spotlight-ngot",
@@ -117,8 +120,9 @@
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Ngọt sẵn sàng cho đêm karaoke bùng cháy!",
     "featured": [
       "em-dao-nay-ngot",
-      "cho-toi-di-theo-ngot"
+      "cho-toi-di-theo-ngot",
+      "lan-cuoi-di-ben-em-xot-xa-nguoi-oi-ngot"
     ],
-    "theme": "#8b5cf6"
+    "theme": "#0ea5e9"
   }
 ]
