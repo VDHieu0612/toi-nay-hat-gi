@@ -406,8 +406,9 @@ function run(): void {
 }
 
 if (
-  process.argv.some((arg) => arg.includes('validate-songs')) ||
-  !process.argv.some((arg) => arg.includes('vitest') || arg.includes('test'))
+  process.env.npm_lifecycle_event === 'validate' ||
+  process.env.npm_lifecycle_event === 'prebuild' ||
+  process.argv.some((arg) => arg.includes('validate-songs'))
 ) {
   run();
 }

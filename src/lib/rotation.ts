@@ -94,3 +94,26 @@ export function isArtistBannerActive(
   if (!info) return false;
   return info.activeBannerId === bannerId;
 }
+
+/**
+ * Lấy danh sách tối đa N ca sĩ (mặc định 10 ca sĩ) xuất hiện trong banner xoay tua sau mỗi 2 ngày.
+ * Nếu số lượng ca sĩ lớn hơn 10, danh sách sẽ tự động chuyển sang 10 ca sĩ tiếp theo sau 2 ngày.
+ */
+export function getRotatedArtistBanners(
+  banners: Banner[],
+  now: number = Date.now(),
+  limit: number = 10
+): Banner[] {
+  const artistBanners = banners.filter((b) => b.type === 'artist');
+  if (artistBanners.length <= limit) {
+    return artistBanners;
+  }
+  const elapsed = Math.max(0, now - ROTATION_ANCHOR_TIMESTAMP);
+  const cycleNumber = Math.floor(elapsed / ROTATION_PERIOD_MS);
+  const offset = (cycleNumber * limit) % artistBanners.length;
+  const result: Banner[] = [];
+  for (let i = 0; i < limit; i++) {
+    result.push(artistBanners[(offset + i) % artistBanners.length]);
+  }
+  return result;
+}

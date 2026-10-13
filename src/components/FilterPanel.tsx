@@ -8,6 +8,10 @@ import {
   filterByUser,
   matchVoice,
 } from '../lib/filters';
+import { Button } from './ui/Button';
+import { Chip } from './ui/Chip';
+import { Notice } from './ui/Notice';
+import { Icon } from './ui/Icon';
 
 interface FilterPanelProps {
   isOpen: boolean;
@@ -131,81 +135,78 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               </span>
             )}
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
             className="filter-close-btn"
             onClick={onClose}
+            aria-label="Đóng bảng lọc"
             title="Đóng bảng lọc"
           >
-            ✕
-          </button>
+            <Icon name="close" size={16} />
+          </Button>
         </div>
 
         {/* Nội dung các trường lọc (M4: chỉ giọng & thể loại) */}
         <div className="filter-modal-body">
           {/* 1. GIỌNG HÁT */}
           <section className="filter-group">
-            <h4 className="filter-group-title">
-              <span className="filter-group-icon">🎙️</span> Giọng Hát
-            </h4>
+            <h4 className="filter-group-title">Giọng hát</h4>
             <div className="filter-pills-row">
-              <button
-                type="button"
-                className={`filter-pill ${currentVoice === 'tat-ca' ? 'is-active' : ''}`}
+              <Chip
+                label="Tất cả"
+                count={voiceCounts['tat-ca']}
+                selected={currentVoice === 'tat-ca'}
                 onClick={() => handleVoiceChange('tat-ca')}
                 disabled={voiceCounts['tat-ca'] === 0}
-              >
-                Tất cả ({voiceCounts['tat-ca']})
-              </button>
-              <button
-                type="button"
-                className={`filter-pill ${currentVoice === 'nam' ? 'is-active' : ''}`}
+              />
+              <Chip
+                label="Nam"
+                count={voiceCounts.nam}
+                selected={currentVoice === 'nam'}
                 onClick={() => handleVoiceChange('nam')}
                 disabled={voiceCounts.nam === 0}
-              >
-                Nam 👨 ({voiceCounts.nam})
-              </button>
-              <button
-                type="button"
-                className={`filter-pill ${currentVoice === 'nu' ? 'is-active' : ''}`}
+              />
+              <Chip
+                label="Nữ"
+                count={voiceCounts.nu}
+                selected={currentVoice === 'nu'}
                 onClick={() => handleVoiceChange('nu')}
                 disabled={voiceCounts.nu === 0}
-              >
-                Nữ 👩 ({voiceCounts.nu})
-              </button>
-              <button
-                type="button"
-                className={`filter-pill ${currentVoice === 'song-ca' ? 'is-active' : ''}`}
+              />
+              <Chip
+                label="Song ca"
+                count={voiceCounts['song-ca']}
+                selected={currentVoice === 'song-ca'}
                 onClick={() => handleVoiceChange('song-ca')}
                 disabled={voiceCounts['song-ca'] === 0}
-              >
-                Song ca 👥 ({voiceCounts['song-ca']})
-              </button>
+              />
             </div>
           </section>
 
           {/* 2. THỂ LOẠI (CHỌN NHIỀU TRONG 5 NHÓM: BALLAD, POP, RAP, BOLERO, ROCK) */}
           <section className="filter-group">
             <div className="filter-group-header-with-action">
-              <h4 className="filter-group-title">
-                <span className="filter-group-icon">🎵</span> Thể Loại (Chọn nhiều)
-              </h4>
+              <h4 className="filter-group-title">Thể loại (Chọn nhiều)</h4>
               <div className="filter-group-actions">
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="filter-small-text-btn"
                   onClick={handleSelectAllGenres}
                 >
                   Chọn tất cả
-                </button>
-                <span className="filter-action-sep">•</span>
-                <button
-                  type="button"
+                </Button>
+                <span className="filter-action-sep">·</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="filter-small-text-btn"
                   onClick={handleClearGenres}
                 >
                   Bỏ chọn
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -216,17 +217,15 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
                 const isDisabled = count === 0;
 
                 return (
-                  <button
+                  <Chip
                     key={g}
-                    type="button"
-                    className={`filter-tag-pill ${isSelected ? 'is-active' : ''}`}
-                    onClick={() => handleToggleGenre(g)}
+                    label={GENRE_LABELS[g]}
+                    count={count}
+                    selected={isSelected}
                     disabled={isDisabled}
+                    onClick={() => handleToggleGenre(g)}
                     title={isDisabled ? `Không có bài ${GENRE_LABELS[g]} nào` : undefined}
-                  >
-                    {isSelected ? '✓ ' : ''}
-                    {GENRE_LABELS[g]} ({count})
-                  </button>
+                  />
                 );
               })}
             </div>
@@ -241,42 +240,40 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
 
             {/* Cảnh báo < 10 bài */}
             {poolCount > 0 && poolCount < 10 && (
-              <div className="filter-alert filter-alert-warning">
-                ⚠️ Kho bài còn dưới 10 bài ({poolCount} bài). Vẫn cho phép rút nhưng có thể xuất hiện bài trùng khi rút 10.
-              </div>
+              <Notice level="warning" className="filter-alert filter-alert-warning">
+                Kho bài còn dưới 10 bài ({poolCount} bài). Vẫn cho phép rút nhưng có thể xuất hiện bài trùng khi rút 10.
+              </Notice>
             )}
 
             {/* Cảnh báo = 0 bài */}
             {poolCount === 0 && (
-              <div className="filter-alert filter-alert-danger">
-                ⛔ Không có bài hát nào thỏa mãn bộ lọc hiện tại. Vui lòng nới lỏng hoặc đặt lại bộ lọc để rút thẻ.
-              </div>
+              <Notice level="danger" className="filter-alert filter-alert-danger">
+                Không có bài hát nào thỏa mãn bộ lọc hiện tại. Vui lòng nới lỏng hoặc đặt lại bộ lọc để rút thẻ.
+              </Notice>
             )}
           </div>
         </div>
 
         {/* Footer modal */}
         <div className="filter-modal-footer">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="md"
             className="genshin-sub-btn filter-reset-btn"
             onClick={handleResetAll}
             disabled={activeCount === 0}
           >
             Đặt lại bộ lọc
-          </button>
+          </Button>
 
-          <button
-            type="button"
-            className="genshin-wish-btn wish-btn-ten filter-apply-btn"
+          <Button
+            variant="primary"
+            size="md"
+            className="filter-apply-btn"
             onClick={onClose}
           >
-            <div className="wish-btn-content">
-              <span className="wish-btn-main">
-                {poolCount === 0 ? 'Đóng bộ lọc' : `Áp dụng (${poolCount} bài)`}
-              </span>
-            </div>
-          </button>
+            {poolCount === 0 ? 'Đóng bộ lọc' : `Áp dụng (${poolCount} bài)`}
+          </Button>
         </div>
       </div>
     </div>

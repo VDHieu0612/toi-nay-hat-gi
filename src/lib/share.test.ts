@@ -112,8 +112,8 @@ describe('M5: share.ts (Group distribution & Text formatting)', () => {
       });
 
       expect(text).toContain('CHẾ ĐỘ NHÓM');
-      expect(text).toContain('👤 [1] An (2 bài):');
-      expect(text).toContain('👤 [2] Bình (2 bài):');
+      expect(text).toContain('[1] An (2 bài):');
+      expect(text).toContain('[2] Bình (2 bài):');
       expect(text).toContain('Bài 1 - Ca sĩ 1');
     });
   });

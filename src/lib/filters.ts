@@ -128,6 +128,10 @@ export function getFilteredPool(
   userFilter?: UserFilter
 ): Song[] {
   const bannerPool = filterByBanner(songs, banner);
+  // Banner ca sĩ: không áp dụng bộ lọc người dùng (giữ trọn vẹn danh sách bài hát của ca sĩ)
+  if (banner.type === 'artist') {
+    return bannerPool;
+  }
   return filterByUser(bannerPool, userFilter);
 }
 

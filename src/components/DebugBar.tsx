@@ -1,4 +1,6 @@
 import React from 'react';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
 
 interface DebugBarProps {
   onSimulateAll3: () => void;
@@ -26,42 +28,47 @@ export const DebugBar: React.FC<DebugBarProps> = ({
       </div>
 
       <div className="debug-bar-actions">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           className="debug-btn debug-btn-3star"
           onClick={onSimulateAll3}
           title="Giả lập rút 10 toàn thẻ 3★ (không ảnh hưởng pity thật)"
         >
           Toàn 3★
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           className="debug-btn debug-btn-4star"
           onClick={onSimulateWith4}
           title="Giả lập rút 10 có ít nhất một thẻ 4★ (không ảnh hưởng pity thật)"
         >
           Có 4★
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           className="debug-btn debug-btn-5star"
           onClick={onSimulateWith5}
           title="Giả lập rút 10 có thẻ 5★ hoàng kim (không ảnh hưởng pity thật)"
         >
           Có 5★
-        </button>
+        </Button>
 
         {isInResult && onReplay && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className="debug-btn debug-btn-replay"
             onClick={onReplay}
             title="Chạy lại chuỗi 5 nhịp hiệu ứng với kết quả hiện tại"
           >
-            Replay ↻
-          </button>
+            <Icon name="reset" size={12} />
+            <span>Replay</span>
+          </Button>
         )}
       </div>
 

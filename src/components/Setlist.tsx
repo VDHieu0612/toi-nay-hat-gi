@@ -9,6 +9,8 @@ import {
 } from '../lib/share';
 import { GroupMode, loadSavedPlayers } from './GroupMode';
 import { getSearchKaraokeUrl } from '../lib/filters';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
 
 interface SetlistProps {
   isOpen: boolean;
@@ -79,67 +81,74 @@ export const Setlist: React.FC<SetlistProps> = ({
         {/* Header modal */}
         <div className="filter-modal-header setlist-header">
           <div className="filter-modal-title-wrap">
-            <h3 id="setlist-modal-title">📋 Setlist Buổi Hát ({songs.length} bài)</h3>
+            <h3 id="setlist-modal-title">Setlist Buổi Hát ({songs.length} bài)</h3>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
             className="filter-close-btn"
             onClick={onClose}
             title="Đóng bảng Setlist"
           >
-            ✕
-          </button>
+            <Icon name="close" size={16} />
+          </Button>
         </div>
 
         {/* Thanh công cụ và chọn chế độ xem */}
         <div className="setlist-toolbar">
           <div className="setlist-tabs">
-            <button
-              type="button"
+            <Button
+              variant={activeTab === 'group' ? 'secondary' : 'ghost'}
+              size="sm"
               className={`setlist-tab-btn ${activeTab === 'group' ? 'is-active' : ''}`}
               onClick={() => setActiveTab('group')}
             >
-              👥 Chia theo người ({players.length})
-            </button>
-            <button
-              type="button"
+              <Icon name="users" size={14} />
+              <span>Chia theo người ({players.length})</span>
+            </Button>
+            <Button
+              variant={activeTab === 'all' ? 'secondary' : 'ghost'}
+              size="sm"
               className={`setlist-tab-btn ${activeTab === 'all' ? 'is-active' : ''}`}
               onClick={() => setActiveTab('all')}
             >
-              📜 Toàn bộ danh sách
-            </button>
+              <span>Toàn bộ danh sách</span>
+            </Button>
           </div>
 
           <div className="setlist-action-btns">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               className="genshin-sub-btn setlist-tool-btn"
               onClick={() => setIsGroupModeOpen(true)}
               title="Đổi thành viên hoặc cách chia"
             >
-              ⚙️ Đổi nhóm
-            </button>
-            <button
-              type="button"
+              <Icon name="settings" size={14} />
+              <span>Đổi nhóm</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               className={`genshin-sub-btn setlist-tool-btn ${copyFeedback ? 'copied-btn' : ''}`}
               onClick={handleCopyText}
               title="Copy văn bản để dán vào Zalo/Messenger"
             >
-              {copyFeedback ? '✓ Đã copy!' : '📋 Copy text'}
-            </button>
-            <button
-              type="button"
-              className="genshin-wish-btn wish-btn-single setlist-download-btn"
+              <Icon name={copyFeedback ? 'check' : 'copy'} size={14} />
+              <span>{copyFeedback ? 'Đã copy!' : 'Copy text'}</span>
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              className="setlist-download-btn"
               onClick={handleDownloadPng}
               disabled={isDownloading}
               title="Tải ảnh PNG setlist để gửi vào chat"
             >
-              <div className="wish-btn-content">
-                <span className="wish-btn-main">
-                  {isDownloading ? 'Đang tạo...' : '📸 Tải ảnh'}
-                </span>
-              </div>
-            </button>
+              <Icon name="download" size={14} />
+              <span>{isDownloading ? 'Đang tạo...' : 'Tải ảnh'}</span>
+            </Button>
           </div>
         </div>
 
@@ -148,7 +157,7 @@ export const Setlist: React.FC<SetlistProps> = ({
           <div ref={captureCardRef} className="setlist-poster-card">
             {/* Header Poster */}
             <div className="setlist-poster-header">
-              <div className="setlist-poster-logo">✦ GACHA KARAOKE ✦</div>
+              <div className="setlist-poster-logo">· TỐI NAY HÁT GÌ ·</div>
               <h2 className="setlist-poster-title">SETLIST PHÒNG HÁT</h2>
               <div className="setlist-poster-meta">
                 <span>Banner: <strong>{bannerName}</strong></span>
@@ -164,7 +173,7 @@ export const Setlist: React.FC<SetlistProps> = ({
                   <div key={pIdx} className="setlist-player-card">
                     <div className="setlist-player-header">
                       <div className="setlist-player-name-wrap">
-                        <span className="player-avatar-icon">👤</span>
+                        <span className="player-avatar-icon"><Icon name="user" size={14} /></span>
                         <strong className="player-display-name">{assignment.name}</strong>
                       </div>
                       <span className="player-song-count-badge">
@@ -191,7 +200,7 @@ export const Setlist: React.FC<SetlistProps> = ({
                             title={`Tìm karaoke bài ${song.title}`}
                             onClick={(e) => e.stopPropagation()}
                           >
-                            🎤
+                            <Icon name="music" size={13} />
                           </a>
                         </div>
                       ))}
@@ -222,7 +231,7 @@ export const Setlist: React.FC<SetlistProps> = ({
                       title={`Tìm karaoke bài ${song.title}`}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      🎤
+                      <Icon name="music" size={13} />
                     </a>
                   </div>
                 ))}
@@ -231,7 +240,7 @@ export const Setlist: React.FC<SetlistProps> = ({
 
             {/* Footer Poster */}
             <div className="setlist-poster-footer">
-              <span>Chúc cả phòng quẩy hết mình • Gacha Karaoke</span>
+              <span>Chúc cả phòng quẩy hết mình • Tối Nay Hát Gì</span>
             </div>
           </div>
         </div>
@@ -239,15 +248,16 @@ export const Setlist: React.FC<SetlistProps> = ({
         {/* Footer modal */}
         <div className="filter-modal-footer setlist-modal-footer">
           <div className="setlist-footer-tip">
-            💡 <em>Mẹo: Bấm nút "📸 Tải ảnh" hoặc "📋 Copy text" để chia sẻ vào nhóm Zalo/Messenger!</em>
+            <em>Mẹo: Bấm nút "Tải ảnh" hoặc "Copy text" để chia sẻ vào nhóm Zalo/Messenger!</em>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="md"
             className="genshin-sub-btn"
             onClick={onClose}
           >
             Đóng Setlist
-          </button>
+          </Button>
         </div>
       </div>
 

@@ -1,0 +1,311 @@
+:root {
+  /* Nền */
+  --bg: #0a0f1f;
+  --surface: #121a2e;
+  --surface-2: #1a243d;
+
+  /* Viền */
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.20);
+
+  /* Chữ */
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+
+  /* Hành động */
+  --primary: linear-gradient(135deg, #fde68a, #f5b800);
+  --primary-bg: linear-gradient(135deg, #fde68a, #f5b800);
+  --primary-text: #3b2a00;
+  --primary-hover: linear-gradient(135deg, #fef08a, #eab308);
+
+  --secondary: #f1f5f9;
+  --secondary-bg: #f1f5f9;
+  --secondary-text: #0a0f1f;
+  --secondary-hover: #ffffff;
+
+  --ghost: transparent;
+  --ghost-bg: transparent;
+  --ghost-text: #f1f5f9;
+  --ghost-hover: rgba(255, 255, 255, 0.08);
+
+  /* Nhấn */
+  --accent: #7c5cff;
+  --accent-hover: #906ffa;
+
+  /* Trạng thái */
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+  --danger-border: rgba(239, 68, 68, 0.4);
+  --danger-text: #fca5a5;
+
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.12);
+  --warning-border: rgba(245, 158, 11, 0.4);
+  --warning-text: #fde68a;
+
+  --info: #38bdf8;
+  --info-bg: rgba(56, 189, 248, 0.12);
+  --info-border: rgba(56, 189, 248, 0.4);
+  --info-text: #bae6fd;
+
+  --success: #22c55e;
+  --success-bg: rgba(34, 197, 94, 0.12);
+  --success-border: rgba(34, 197, 94, 0.4);
+  --success-text: #86efac;
+
+  /* Độ hiếm */
+  --rarity-3: #38bdf8;
+  --rarity-4: #a855f7;
+  --rarity-5: #facc15;
+
+  /* Bo góc */
+  --radius-pill: 999px;
+  --radius-card: 20px;
+  --radius-modal: 24px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+
+  /* Đổ bóng */
+  --shadow-1: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 20px 50px rgba(0, 0, 0, 0.6);
+
+  /* Thang khoảng cách chuẩn: 4, 8, 12, 16, 24, 32 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Cỡ chữ chuẩn: 12, 14, 16, 20, 28, 40 */
+  --font-xs: 12px;
+  --font-sm: 14px;
+  --font-md: 16px;
+  --font-lg: 20px;
+  --font-xl: 28px;
+  --font-2xl: 40px;
+}
+
+/* =========================================
+   UI BASE COMPONENTS (Mục 10.2 - 10.4)
+   ========================================= */
+
+/* Button */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.ui-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.ui-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ui-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+}
+
+/* Button Sizes */
+.ui-btn-sm {
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-xs);
+}
+
+.ui-btn-md {
+  height: 44px;
+  padding: 0 var(--space-5);
+  font-size: var(--font-sm);
+}
+
+.ui-btn-lg {
+  height: 56px;
+  padding: 0 var(--space-6);
+  font-size: var(--font-md);
+}
+
+.ui-btn-icon-only.ui-btn-sm {
+  width: 36px;
+  padding: 0;
+}
+
+.ui-btn-icon-only.ui-btn-md {
+  width: 44px;
+  padding: 0;
+}
+
+.ui-btn-icon-only.ui-btn-lg {
+  width: 56px;
+  padding: 0;
+}
+
+.ui-btn-full-width {
+  width: 100%;
+}
+
+/* Button Variants */
+.ui-btn-primary {
+  background: var(--primary-bg);
+  color: var(--primary-text);
+  box-shadow: 0 4px 16px rgba(245, 184, 0, 0.35);
+  border: 1px solid #fde68a;
+}
+
+.ui-btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  box-shadow: 0 6px 20px rgba(245, 184, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.ui-btn-secondary {
+  background: var(--secondary-bg);
+  color: var(--secondary-text);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.ui-btn-secondary:hover:not(:disabled) {
+  background: var(--secondary-hover);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.ui-btn-ghost {
+  background: var(--ghost-bg);
+  color: var(--ghost-text);
+  border: 1px solid var(--border);
+}
+
+.ui-btn-ghost:hover:not(:disabled) {
+  background: var(--ghost-hover);
+  border-color: var(--border-strong);
+  color: #ffffff;
+}
+
+.ui-btn-danger {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
+}
+
+.ui-btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.25);
+  color: #ffffff;
+}
+
+.ui-btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: uiSpin 0.7s linear infinite;
+}
+
+@keyframes uiSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Chip */
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  user-select: none;
+}
+
+.ui-chip:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ui-chip-selected {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(124, 92, 255, 0.4);
+}
+
+.ui-chip-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ui-chip-count {
+  font-size: 11px;
+  opacity: 0.8;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Notice */
+.ui-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-xs);
+  line-height: 1.4;
+}
+
+.ui-notice-icon-wrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ui-notice-info {
+  background: var(--info-bg);
+  border: 1px solid var(--info-border);
+  color: var(--info-text);
+}
+
+.ui-notice-warning {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+}
+
+.ui-notice-danger {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  color: var(--danger-text);
+}
+
+.ui-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+

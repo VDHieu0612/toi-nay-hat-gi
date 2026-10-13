@@ -1,0 +1,87 @@
+name: Sync Google Sheet & Deploy
+
+on:
+  schedule:
+    # 01:00 UTC = 08:00 AM giờ Việt Nam (UTC+7) mỗi ngày
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Bỏ qua chốt chặn xóa nhầm (cho phép giảm >20% số bài)'
+        type: boolean
+        default: false
+        required: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: sync-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  sync-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Cài đặt Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Cài đặt dependencies
+        run: npm ci
+
+      - name: Đồng bộ dữ liệu từ Google Sheet (M6 & M8)
+        env:
+          MASTER_CSV_URL: ${{ vars.MASTER_CSV_URL }}
+          ARTISTS_CSV_URL: ${{ vars.ARTISTS_CSV_URL }}
+          FORCE: ${{ inputs.force || 'false' }}
+        run: npx vite-node scripts/sync-sheet.ts
+
+      - name: Commit và push dữ liệu mới lên main
+        id: git-commit
+        run: |
+          if [ -n "$(git status --porcelain src/data/ data/)" ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add src/data/ data/
+            git commit -m "chore(data): auto-sync songs and artists from Google Sheet [skip ci]"
+            git push origin main
+            echo "✅ Đã commit và push dữ liệu mới lên nhánh main."
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "ℹ️ Không có thay đổi dữ liệu nào từ Google Sheet."
+          fi
+
+      - name: Chạy kiểm thử tự động
+        run: npm run test
+
+      - name: Kiểm tra quy chuẩn giao diện (Mục 10)
+        run: npm run lint:ui
+
+      - name: Đóng gói ứng dụng (Build)
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+        run: npm run build
+
+      - name: Tải lên artifact cho GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Triển khai lên GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

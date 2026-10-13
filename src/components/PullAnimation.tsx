@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Song, Rarity } from '../lib/types';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
 
 interface PullAnimationProps {
   isOpen: boolean;
@@ -91,24 +93,27 @@ export const PullAnimation: React.FC<PullAnimationProps> = ({
   return (
     <div className={`genshin-pull-overlay phase-${phase} max-rarity-${maxRarity}`}>
       {/* Nút Skip luôn hiển thị ở góc trên */}
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         className="pull-skip-top-btn"
         onClick={handleSkip}
         title="Bỏ qua hiệu ứng và xem ngay kết quả"
       >
-        Skip ⏭
-      </button>
+        Skip
+      </Button>
 
       {/* Nút bật/tắt âm thanh */}
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         className="pull-sound-toggle-btn"
         onClick={() => setSoundEnabled((prev) => !prev)}
         title={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
       >
-        {soundEnabled ? '🔊 Bật' : '🔇 Tắt'}
-      </button>
+        <Icon name={soundEnabled ? 'soundOn' : 'soundOff'} size={14} />
+        <span>{soundEnabled ? 'Bật' : 'Tắt'}</span>
+      </Button>
 
       {/* Giai đoạn 1: Sao băng / Quả cầu sáng bay vào trung tâm */}
       {phase === 'meteor' && (
@@ -119,7 +124,7 @@ export const PullAnimation: React.FC<PullAnimationProps> = ({
             <div className="meteor-halo" />
           </div>
           <div className="meteor-title-preview">
-            {maxRarity === 5 ? '✦ HUYỀN THOẠI 5★ ✦' : maxRarity === 4 ? '✦ CAO TRÀO 4★ ✦' : '✦ BÀI HÁT PHỔ BIẾN ✦'}
+            {maxRarity === 5 ? '· HUYỀN THOẠI 5★ ·' : maxRarity === 4 ? '· CAO TRÀO 4★ ·' : '· BÀI HÁT PHỔ BIẾN ·'}
           </div>
         </div>
       )}

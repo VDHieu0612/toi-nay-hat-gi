@@ -4,6 +4,8 @@ import { SongCard } from './SongCard';
 import { GachaCanvas } from './GachaCanvas';
 import { addSongsToCollection } from '../lib/storage';
 import { ANIMATION_CONFIG } from '../lib/animationConfig';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
 
 interface ResultScreenProps {
   songs: Song[];
@@ -487,37 +489,43 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
       {showAudioPrompt && (
         <aside className="audio-first-pull-hint" aria-label="Gợi ý bật âm thanh">
           <div className="audio-hint-text">
-            <span>🎵 Bật âm thanh để nghe tiếng sao băng & lật thẻ!</span>
+            <span>Bật âm thanh để nghe tiếng sao băng & lật thẻ!</span>
           </div>
           <div className="audio-hint-actions">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="sm"
               className="audio-hint-enable-btn"
               onClick={handleEnableAudioFromHint}
             >
-              Bật âm thanh 🔊
-            </button>
-            <button
-              type="button"
+              <span>Bật âm thanh</span>
+              <Icon name="soundOn" size={14} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              iconOnly
               className="audio-hint-dismiss-btn"
               onClick={handleDismissAudioHint}
               title="Đóng thông báo"
             >
-              ✕
-            </button>
+              <Icon name="close" size={14} />
+            </Button>
           </div>
         </aside>
       )}
 
       {/* Nút bật/tắt âm thanh */}
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
+        iconOnly
         className="genshin-sound-btn"
         onClick={toggleSound}
         title={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
       >
-        {soundEnabled ? '🔊' : '🔇'}
-      </button>
+        <Icon name={soundEnabled ? 'soundOn' : 'soundOff'} size={18} />
+      </Button>
 
       {/* Thanh trên cùng khi ở Nhịp 3, 4, 5 */}
       {phase >= 3 && (
@@ -604,43 +612,41 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         <footer className="result-footer-bar">
           <div className="result-footer-left">
             <span className="result-footer-note">
-              ✦ Danh sách đã xếp theo độ hiếm giảm dần (5★ → 3★)
+              · Danh sách đã xếp theo độ hiếm giảm dần (5★ → 3★)
             </span>
           </div>
 
           <div className="result-footer-right">
-            <button
-              type="button"
-              className="genshin-wish-btn wish-btn-ten"
+            <Button
+              variant="ghost"
+              size="lg"
+              className="genshin-wish-btn"
               onClick={onBack}
             >
-              <div className="wish-btn-content">
-                <span className="wish-btn-main">Trở về</span>
-              </div>
-            </button>
+              Trở về
+            </Button>
 
             {onOpenSetlist && (
-              <button
-                type="button"
-                className="genshin-wish-btn wish-btn-single"
+              <Button
+                variant="secondary"
+                size="lg"
+                className="genshin-wish-btn"
                 onClick={onOpenSetlist}
                 title="Xem Setlist tổng hợp, chia bài theo nhóm & tải ảnh"
               >
-                <div className="wish-btn-content">
-                  <span className="wish-btn-main">📋 Xem Setlist</span>
-                </div>
-              </button>
+                <Icon name="music" size={16} />
+                <span>Xem Setlist</span>
+              </Button>
             )}
 
-            <button
-              type="button"
-              className="genshin-wish-btn wish-btn-ten"
+            <Button
+              variant="primary"
+              size="lg"
+              className="genshin-wish-btn"
               onClick={() => onPullAgain(lastPullType)}
             >
-              <div className="wish-btn-content">
-                <span className="wish-btn-main">Rút tiếp ×{lastPullType}</span>
-              </div>
-            </button>
+              Rút tiếp ×{lastPullType}
+            </Button>
           </div>
         </footer>
       )}

@@ -3,6 +3,8 @@ import { Banner, Song, PullState, UserFilter } from '../lib/types';
 import { BannerSidebar } from './BannerSidebar';
 import { BannerDetail } from './BannerDetail';
 import { FilterPanel } from './FilterPanel';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
 import { CONFIG } from '../lib/gacha';
 import { countActiveFilters } from '../lib/filters';
 import { loadDismissOrientationHint, saveDismissOrientationHint } from '../lib/storage';
@@ -57,24 +59,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {!hintDismissed && (
         <aside className="orientation-hint-banner" aria-label="Gợi ý xoay ngang">
           <span className="orientation-hint-text">
-            📱 <strong>Gợi ý:</strong> Xoay ngang điện thoại để có trải nghiệm Wish trọn vẹn nhất!
+            <strong>Gợi ý:</strong> Xoay ngang điện thoại để có trải nghiệm Wish trọn vẹn nhất!
           </span>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
             className="orientation-hint-close"
             onClick={handleDismissHint}
-            title="Đóng gợi ý"
+            aria-label="Đóng gợi ý"
           >
-            ✕
-          </button>
+            <Icon name="close" size={14} />
+          </Button>
         </aside>
       )}
 
       {/* Thanh trên cùng (Top Bar) */}
       <header className="genshin-top-bar">
         <div className="top-bar-left">
-          <span className="genshin-star-icon">✦</span>
-          <h1 className="genshin-app-title">GACHA KARAOKE</h1>
+          <span className="genshin-star-icon">
+            <Icon name="star" size={18} />
+          </span>
+          <h1 className="genshin-app-title">TỐI NAY HÁT GÌ</h1>
           <span className="genshin-tagline-badge">Phòng Hát Chiêm Tinh</span>
         </div>
 
@@ -88,23 +94,44 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </span>
           </div>
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className="top-bar-icon-btn"
             onClick={handleConfirmResetPity}
             title="Đặt lại Pity"
           >
-            ↺ Đặt lại
-          </button>
+            Đặt lại
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
             className="top-bar-icon-btn"
             onClick={() => setSoundEnabled((prev) => !prev)}
+            aria-label={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
             title={soundEnabled ? 'Tắt âm thanh' : 'Bật âm thanh'}
           >
-            {soundEnabled ? '🔊' : '🔇'}
-          </button>
+            <Icon name={soundEnabled ? 'soundOn' : 'soundOff'} size={18} />
+          </Button>
+
+          {/* Nút liên kết Google Form / Google Sheet đóng góp bài hát */}
+          {(import.meta.env.VITE_SONG_REQUEST_FORM_URL || import.meta.env.VITE_SONGS_SHEET_VIEW_URL) && (
+            <a
+              href={import.meta.env.VITE_SONG_REQUEST_FORM_URL || import.meta.env.VITE_SONGS_SHEET_VIEW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="top-bar-link-btn"
+              title={
+                import.meta.env.VITE_SONG_REQUEST_FORM_URL
+                  ? 'Đề xuất thêm bài hát qua Google Form'
+                  : 'Xem bảng bài hát Master trên Google Sheets'
+              }
+            >
+              <span>{import.meta.env.VITE_SONG_REQUEST_FORM_URL ? 'Đề xuất bài' : 'Kho bài hát'}</span>
+            </a>
+          )}
         </div>
       </header>
 

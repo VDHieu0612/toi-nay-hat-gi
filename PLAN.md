@@ -16,7 +16,7 @@
 
 ### Nguyên tắc sản phẩm
 - Mobile-first (người dùng mở link từ Zalo/Messenger trên điện thoại). Trải nghiệm kết quả rút 10 tối ưu khi **xoay ngang điện thoại (landscape)**, vẫn dùng được ở portrait.
-- Không đăng ký, không đăng nhập, không backend, không tiền tệ ảo. Lượt rút là vô hạn.
+- Không đăng ký, không đăng nhập, không backend, không tiền tệ ảo. Lượt rút là vô hạn. **Host trên GitHub Pages**; web chỉ có gacha và nút đề xuất (mở Google Form). Không có trang quản trị: dữ liệu cập nhật bằng GitHub Actions (M8).
 - Vào là dùng được trong vài giây.
 - Ngôn ngữ giao diện: **tiếng Việt**.
 
@@ -34,9 +34,9 @@
 | Xuất ảnh | `html-to-image` |
 | Lưu trữ | `localStorage` (qua `lib/storage.ts`) |
 | Test logic | Vitest (chỉ cho `lib/gacha.ts`) |
-| Deploy | Vercel (hoặc GitHub Pages, khi đó đặt `base` trong `vite.config.ts`) |
+| Deploy | **GitHub Pages**, triển khai bằng GitHub Actions (M8); `base` của Vite lấy từ biến môi trường `VITE_BASE` |
 
-**Không dùng:** backend, database, thư viện state phức tạp (Redux...), thư viện UI nặng.
+**Không dùng:** backend, database, trang quản trị, Google Apps Script, thư viện state phức tạp (Redux...), thư viện UI nặng.
 
 ---
 
@@ -60,6 +60,7 @@
       share.ts            # xuất ảnh, copy text
       filters.ts          # lọc pool theo bộ lọc
       types.ts            # kiểu dữ liệu dùng chung
+      validate.ts         # chuẩn hóa + kiểm tra dữ liệu, dùng cho validate-songs và import-csv
     components/
       HomeScreen.tsx        # bố cục 3/7 + top bar
       BannerSidebar.tsx     # cột trái: danh sách banner
@@ -72,6 +73,13 @@
       History.tsx
       GroupMode.tsx
       Setlist.tsx
+    components/ui/
+      Button.tsx            # nút DUY NHẤT của app (mục 10.2)
+      Chip.tsx              # bộ lọc, nhãn chọn được
+      Notice.tsx            # khối thông báo info/warning/danger
+      Icon.tsx              # icon SVG tự viết, KHÔNG emoji (mục 10.4)
+    styles/
+      tokens.css            # NGUỒN DUY NHẤT của màu, bo góc, khoảng cách, chữ (mục 10.1)
     App.tsx
     main.tsx
   scripts/
@@ -79,7 +87,13 @@
     validate-songs.ts     # kiểm tra tính hợp lệ của songs.json
     import-csv.ts         # CSV (từ Google Sheet) -> songs.json + artists.json
     assign-rarity.ts      # gán độ hiếm theo mục 4.3, ghi src/data/rarity.json
-    sync-sheet.ts         # tải CSV từ Google Sheet đã publish, rồi chạy 3 script trên
+    sync-sheet.ts         # tải 2 CSV đã publish (Master, Artists), chạy import-csv -> assign-rarity -> validate-songs, ghi tóm tắt thay đổi
+    check-ui.ts           # lint:ui, chặn emoji, màu viết tay, <button> tự viết (mục 10.6)
+  .github/workflows/
+    sync.yml              # đồng bộ Google Sheet -> repo, rồi build + deploy (M8)
+    deploy.yml            # build + deploy lên GitHub Pages (M8)
+  docs/
+    SHEET_SETUP.md        # hướng dẫn thiết lập Sheet, publish CSV, bật Pages (M8)
 ```
 
 ### Quy tắc kiến trúc bắt buộc
@@ -103,7 +117,8 @@ export interface Artist {
   id: string;            // kebab-case, ví dụ "ten-ca-si"
   name: string;
   kind: "singer" | "rapper" | "group";
-  theme?: string;        // màu chủ đạo cho banner của ca sĩ (không dùng ảnh ca sĩ)
+  defaultGenres: Genre[]; // 1-2 nhóm, thể loại mặc định của mọi bài thuộc ca sĩ này (mục 4.4)
+  theme?: string;        // màu chủ đạo cho banner của ca sĩ (poster mặc định tự vẽ, xem mục 2.3)
 }
 
 export interface Song {
@@ -112,7 +127,7 @@ export interface Song {
   artist: string;
   year?: number;         // KHÔNG bắt buộc, không hiển thị, không dùng để xếp hạng hay lọc
   artistId: string;      // trỏ tới artists.json
-  genre: Genre[];        // chỉ dùng 5 nhóm dưới đây. KHÔNG đưa "song-ca" vào genre (song ca là `voice`)
+  genre?: Genre[];       // TÙY CHỌN, tối đa 2 nhóm; nếu trống thì kế thừa `Artist.defaultGenres` (mục 4.4). KHÔNG đưa "song-ca" vào genre (song ca là `voice`)
   voice: Voice;
   rarity: Rarity;        // KHÔNG nhập tay. Do `assign-rarity` sinh ra (mục 4.3) và đọc từ `rarity.json`; không phản ánh bài hay hay dở
   difficulty?: number;   // DEPRECATED: không dùng trong UI, giữ để không vỡ code cũ
@@ -135,6 +150,7 @@ export interface Banner {
   };
   featured: string[];    // id các bài rate-up (có thể rỗng)
   theme: string;         // mã màu chủ đạo của banner, ví dụ "#7c3aed"
+  posterFocus?: string;  // CSS object-position của poster, ví dụ "50% 20%", để giữ khuôn mặt trong khung
 }
 
 export interface PullState {
@@ -150,7 +166,7 @@ export interface PullResult {
 
 ### 4.2. Quy ước nội dung dữ liệu (quan trọng về bản quyền)
 - **Chỉ lưu metadata** (tên bài, ca sĩ, năm, thể loại). **Tuyệt đối không lưu lời bài hát.**
-- **Không dùng ảnh bìa album** hay ảnh/hình ảnh của ca sĩ (kể cả ở banner theo ca sĩ). Thẻ bài và banner được vẽ bằng CSS/SVG, ca sĩ chỉ xuất hiện bằng **tên** (thông tin sự kiện) và màu `theme`.
+- **Không dùng ảnh bìa album.** **Poster mặc định của banner là hình tự vẽ bằng CSS/SVG** (màu `theme`, họa tiết đĩa than/sóng âm, tên ca sĩ cỡ lớn). **Không đưa ảnh thật của ca sĩ vào repo hoặc bản deploy** (ảnh có bản quyền của người chụp và quyền hình ảnh của người trong ảnh). Người dùng được phép **tự chọn ảnh poster của riêng họ** (nút "Đổi ảnh poster"), ảnh đó **chỉ lưu trong trình duyệt của họ** (mục 2.3.1) và không bao giờ được tải lên đâu.
 - **Phạm vi nội dung: chỉ bài khá nổi, ca sĩ/rapper nổi trội của thị trường Việt Nam.** Không cần phủ rộng mọi thể loại và mọi thập niên. Tiêu chí vào danh sách: nhiều người biết, có bản karaoke phổ biến trên YouTube.
 - **Không lưu link karaoke.** Nút "Tìm karaoke" tự sinh URL tìm kiếm YouTube từ `title + artist + "karaoke"`.
 
@@ -173,6 +189,16 @@ export interface PullResult {
 **Hiển thị:**
 - Không đặt nhãn mang tính đánh giá cho từng bậc sao (không dùng các từ như "siêu hit", "bài ngon"). Chỉ hiển thị số sao.
 - Có chú giải ngắn ở trang "Chi tiết" và dưới màn kết quả: *"Số sao chỉ là độ hiếm khi rút, được xáo lại mỗi phiên bản. Đây không phải đánh giá bài hay hay dở, hay ca sĩ này hơn ca sĩ khác."*
+
+### 4.4. Thể loại: nhiều nhãn, kế thừa từ ca sĩ, do chủ dự án gán trong Sheet
+
+- Một bài có thể thuộc nhiều thể loại (ví dụ pop pha rap). Hệ thống dùng **nhiều nhãn, tối đa 2**, không ép chọn một.
+- **Người dùng cộng đồng không điền thể loại.** Form chỉ hỏi tên bài, ca sĩ, giọng hát phù hợp. Thể loại do **chủ dự án gán trong Sheet khi duyệt**.
+- **Kế thừa:** `Artist.defaultGenres` (1-2 nhóm) là thể loại mặc định của mọi bài thuộc ca sĩ đó; `Song.genre` (tùy chọn) **ghi đè** cho bài khác biệt. **Thể loại hiệu dụng = `song.genre` nếu có, ngược lại `artist.defaultGenres`.** Chủ dự án chỉ gán thể loại một lần cho mỗi ca sĩ (tab `Artists`), chỉ sửa riêng bài nào lệch.
+- **Quy tắc gán nhãn cho trường hợp lập lờ:** gán theo cách một người nghe bình thường sẽ gọi bài đó; nhãn đầu là cảm giác chủ đạo, nhãn thứ hai là màu sắc phụ; **không gán nhãn thứ hai nếu không chắc** (nhiều nhãn làm bài xuất hiện ở mọi bộ lọc và bộ lọc mất ý nghĩa).
+- **Bộ lọc dùng phép HOẶC:** bài khớp nếu có ít nhất một thể loại hiệu dụng nằm trong các nhóm đang chọn. Số bài trên mỗi nút tính theo thể loại hiệu dụng (một bài có thể được đếm ở hai nút).
+- Thể loại **không hiển thị trên thẻ bài**, chỉ dùng cho bộ lọc.
+- Định nghĩa 5 nhóm: `ballad` (chậm, trữ tình), `pop` (nhạc trẻ, gồm R&B), `rap`, `bolero`, `rock` (gồm indie, pop-rock).
 
 ---
 
@@ -249,19 +275,38 @@ pullTen(pool: Song[], banner: Banner, state: PullState, rng?: () => number): Pul
 
 #### 2.3. Cột phải (70%): nội dung banner + nút gacha
 
-Một "tranh banner" lớn, nền và màu theo `theme` của banner đang chọn. Bố cục bên trong:
+Một "tranh banner" lớn. **Poster phủ kín toàn bộ khung** (full-bleed, xem mục 2.3.1), chữ và nút nằm **chồng lên poster**. Bố cục bên trong:
 
 - **Trái trên:** nhãn loại banner (ví dụ "Banner thường" / "Banner Rate-Up") và **tên banner lớn** (kiểu tiêu đề hai dòng, từ nhấn màu theo theme).
 - **Khối thông tin** (cạnh vạch dọc, như ảnh tham chiếu):
   - Mô tả ngắn banner (`description`).
   - Dòng cơ chế: "Mỗi 10 lượt rút bảo đảm có ít nhất một bài 4★ trở lên."
   - Nếu có `featured`: dòng "Xác suất tăng cho bài rate-up".
-- **Vùng trung tâm/phải của tranh banner:** hiển thị **bài hát rate-up** (`featured`) dưới dạng thẻ dọc xem trước (dùng lại `SongCard` mặt trước, kích thước vừa phải) kèm nhãn "UP!" và số sao. Nếu banner không có `featured`, hiển thị hình minh họa SVG lớn của banner (đĩa than/micro) thay thế.
+- **Bài tâm điểm (`featured`):** hiển thị dạng **một dải chip nhỏ** phía trên cụm nút (nhãn "UP!", tên bài, ca sĩ, số sao), **không dùng thẻ lớn** để không che poster. Nếu banner không có `featured` thì bỏ dải này.
 - **Góc dưới phải:** hai nút gacha cạnh nhau:
   - **Rút ×1** ("1 bài hát").
   - **Rút ×10** ("Đảm bảo ≥ 4★ · Setlist"), nút chính, nổi bật hơn.
 - **Góc dưới trái:** nút phụ "Chi tiết" (mở modal danh sách bài trong banner và tỉ lệ) và "Lịch sử" (mở danh sách lượt rút gần nhất, hoàn thiện ở M5; ở M2 có thể là nút ẩn hoặc vô hiệu hóa).
 - Nút Rút bị vô hiệu hóa (kèm thông báo) khi pool của banner rỗng.
+
+#### 2.3.1. Poster phủ kín khung banner
+
+- Khung cột phải có `position: relative; overflow: hidden` và bo góc. **Poster là lớp nền `position: absolute; inset: 0`**, phủ 100% chiều rộng và cao của khung, **không có khung ảnh con bên trong, không để lộ khoảng trống quanh ảnh**.
+- **Poster ngang (tỉ lệ khung hình từ 1.4 trở lên):** `object-fit: cover`, `object-position` lấy từ `posterFocus` của banner (mặc định `"50% 25%"` để giữ mặt).
+- **Poster dọc hoặc gần vuông (dưới 1.4, ví dụ ảnh chân dung):** dùng cách "neo phải, mờ dần":
+  - Lớp dưới: cùng ảnh phóng `cover` toàn khung, làm mờ (`blur(28px)`) và tối đi, để lấp đầy nền.
+  - Lớp trên: ảnh sắc nét **cao 100% khung, neo sát cạnh phải**, mép trái làm mờ dần bằng `mask-image: linear-gradient(90deg, transparent 0%, #000 28%)`.
+  - Nhờ vậy ảnh dọc vẫn nhìn như phủ kín khung mà không bị cắt nát khuôn mặt.
+- **Lớp phủ gradient để chữ đọc được** (tính theo màu nền tối của app): một gradient ngang từ trái (đậm, opacity khoảng 0.9) sang phải (trong suốt, tại khoảng 65% chiều rộng), cộng một gradient dọc từ đáy (đậm, cao khoảng 35% khung) để cụm nút nổi rõ. Chữ có `text-shadow` nhẹ.
+- **Bố cục cho chủ thể:** vùng chữ chiếm khoảng 45% bên trái; chủ thể của poster nên nằm ở nửa phải. Khuyến nghị poster ngang **16:9 hoặc 2:1, từ 1600×900 trở lên**, chủ thể ở 40% bên phải, 50% bên trái là nền tối hoặc đơn giản.
+- **Cụm nút:** kiểu "kính" (`background: rgba(...)`, `backdrop-filter: blur(8px)`), nút Rút ×10 vẫn nổi bật nhất.
+- **Nút "Đổi ảnh poster":** thu nhỏ thành icon ở góc trên phải, chỉ hiện khi rê chuột hoặc chạm vào khung; không chiếm chỗ khi không dùng.
+- **Chuyển banner:** poster mới chuyển bằng crossfade (250-350 ms); tải trước poster của banner kế tiếp để không nhấp nháy.
+- **Poster mặc định tự vẽ** (khi không có ảnh người dùng chọn): nền gradient màu `theme`, họa tiết đĩa than và vòng sóng âm lớn, **tên ca sĩ cỡ rất lớn mờ (watermark) ở nền**, vẫn dùng chung lớp phủ gradient và bố cục trên.
+- **Ảnh do người dùng chọn:** đọc bằng `FileReader`, **thu nhỏ bằng canvas xuống tối đa 1920px chiều rộng, nén webp/jpeg chất lượng khoảng 0.85** trước khi lưu. Lưu bằng **IndexedDB** (API của trình duyệt, không thêm thư viện; ảnh lớn không vừa `localStorage`), khóa theo `banner.id`. Có nút "Dùng lại ảnh mặc định" để xóa. Ảnh **không** được gửi đi đâu và **không** ghi vào repo.
+- Trên điện thoại portrait: poster phủ kín phần tranh banner phía trên cụm nút (cùng cách xử lý như trên); chữ đặt ở nửa dưới có gradient đậm hơn.
+
+**Tiêu chí hoàn thành mục 2.3.1:** poster phủ kín khung ở mọi kích thước (desktop 1280-1920px, điện thoại landscape và portrait), không còn khoảng trống hay khung ảnh con; mặt người trong poster không bị cắt với ảnh mẫu cả ngang lẫn dọc; chữ và nút đọc rõ trên ảnh sáng lẫn tối; đổi banner không giật hay nháy; ảnh người dùng chọn còn nguyên sau khi tải lại trang và chỉ tồn tại trong trình duyệt đó.
 
 #### 2.4. Màn hình kết quả (placeholder ở M2)
 
@@ -469,6 +514,7 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 **Việc cần làm**
 - `FilterPanel` đặt trước khi rút, **chỉ còn hai nhóm lọc**: **giọng** (tất cả / nam / nữ / song ca) và **thể loại** (chọn nhiều trong 5 nhóm: ballad, pop, rap, bolero, rock). **Bỏ lọc thập niên và lọc độ khó** (độ khó trùng với độ hiếm và dùng cùng biểu tượng sao nên gây nhầm lẫn; kho bài nhỏ nên thêm nhiều chiều lọc chỉ làm pool cạn).
 - Mỗi nút lọc hiển thị **số bài còn lại** nếu chọn nó (ví dụ "Rap (14)"); nút nào cho kết quả **0 bài** thì làm mờ và vô hiệu hóa, để người dùng không rơi vào ngõ cụt.
+- Lọc theo **thể loại hiệu dụng** với phép HOẶC (mục 4.4). Nhóm thể loại có **0 bài trong toàn kho** (ví dụ bolero khi chưa có bài nào) thì **ẩn hẳn** nút, không chỉ làm mờ.
 - Cập nhật `songs.json` hiện có cho khớp 5 nhóm thể loại mới (gộp RnB vào pop, **bỏ "song-ca" khỏi `genre`**: song ca chỉ là `voice`). Thêm `artistId` theo schema mới (dữ liệu giả cũng phải hợp lệ; `year` giờ là tùy chọn; `rarity` của dữ liệu giả được gán sẵn nên chưa cần `assign-rarity`).
 - Bộ lọc áp dụng lên pool của banner trước khi rút (`filters.ts`).
 - Nếu pool sau lọc **dưới 10 bài**: hiện cảnh báo nhẹ, vẫn cho rút, cho phép trùng bài. Nếu **bằng 0**: chặn nút rút và hiện thông báo gợi ý nới bộ lọc.
@@ -505,16 +551,19 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
   |---|---|---|
   | `title` | Có | Tên bài |
   | `artist` | Có | Tên ca sĩ/rapper (script tự tạo `artists.json` và `artistId` từ cột này, bỏ dấu tiếng Việt, `đ` thành `d`, kebab-case) |
-  | `genre` | Có | Một hoặc nhiều giá trị trong 5 nhóm, ngăn cách bằng `\|` (ví dụ `pop\|rap`) |
-  | `voice` | Có | `nam`, `nu`, `song-ca` hoặc `tat-ca` |
+  | `genre` | Không | Ghi đè thể loại của bài, 1-2 giá trị trong 5 nhóm, ngăn cách bằng `\|` (ví dụ `pop\|rap`). Trống thì kế thừa `defaultGenres` của ca sĩ (mục 4.4) |
+  | `voice` | Có | `nam`, `nu`, `song-ca` hoặc `tat-ca`. Khi nhập từ Form chấp nhận thêm chữ của Form: `Giọng nam`, `Giọng nữ`, `Song ca`, giá trị khác thành `tat-ca` |
+  | `hidden` | Không | `TRUE` thì bỏ qua bài này khi xuất bản (ẩn thay vì xóa) |
   | cột khác (ví dụ `note`, `year`, `rarity`, `views`, `mvUrl`, `check`) | Không | **Bỏ qua mọi cột không có trong bảng này.** Chủ dự án dùng cột `note` riêng trong Sheet để ghi chú (ví dụ ft. ai); script không đọc |
 
+  **Google Sheet có 3 tab, không đổi tên:** `Master` (bảng trên), `Artists` (cột `artist`, `kind`, `defaultGenres` ngăn cách bằng `\|`, `theme` là mã màu), `Form_Responses` (do Google Form tạo, thêm cột `Trạng thái duyệt` và `Ghi chú`). Script đọc theo **tên tiêu đề cột**, không theo vị trí. `import-csv` nhận cả CSV của `Master` và của `Artists`; ca sĩ có trong `Master` mà thiếu trong `Artists` thì báo lỗi.
+
   `id` bài hát tự sinh từ `title` + `artist`; báo lỗi rõ theo số dòng nếu thiếu cột bắt buộc, sai `genre`/`voice`, hoặc trùng id. Chạy theo thứ tự: `import-csv` → `assign-rarity` → `validate-songs`.
-- **Đồng bộ từ Google Sheet** (`scripts/sync-sheet.ts`): đọc biến môi trường `SHEET_CSV_URL` (đường dẫn CSV của tab "Master" sau khi dùng *Publish to web*), tải về `data/songs.csv`, rồi chạy `import-csv` → `assign-rarity` (chỉ gán bài mới, không đổi bài cũ, theo mục 4.3 bước 5) → `validate-songs`. Dữ liệu chỉ được vào web qua bước build có validate, **không tải trực tiếp từ Sheet lúc người dùng mở web** (tránh dữ liệu chưa duyệt lên thẳng web, và tránh lỗi khi Google không phản hồi).
+- **Đồng bộ từ Google Sheet** (`scripts/sync-sheet.ts`): đọc biến môi trường `MASTER_CSV_URL` và `ARTISTS_CSV_URL` (đường dẫn CSV của hai tab sau khi dùng *Publish to web*), tải về `data/songs.csv` và `data/artists.csv`, rồi chạy `import-csv` → `assign-rarity` (chỉ gán bài mới, không đổi bài cũ, theo mục 4.3 bước 5) → `validate-songs`. Dữ liệu chỉ vào web qua bước build có validate, **không tải trực tiếp từ Sheet lúc người dùng mở web**. **Chỉ publish tab `Master` và `Artists`, tuyệt đối không publish `Form_Responses`** (có tên người đề xuất). Quy trình chạy tự động xem M8.
 - Thay `songs.json` bằng **120-200 bài thật, chỉ bài khá nổi** (tiêu chí ở mục 4.2) (do chủ dự án cung cấp, agent **không tự bịa** dữ liệu bài hát thật nếu không được cung cấp). Agent chỉ viết công cụ nhập/kiểm tra.
 - `scripts/validate-songs.ts`, chạy trước `build`, kiểm tra:
   - id không trùng, đúng kebab-case.
-  - Đủ các trường bắt buộc (`title`, `artistId`, `genre`, `voice`), `genre` chỉ thuộc 5 nhóm cho phép, `voice` hợp lệ.
+  - Đủ các trường bắt buộc (`title`, `artistId`, `voice`); **thể loại hiệu dụng** (`genre` của bài hoặc `defaultGenres` của ca sĩ) không rỗng, **tối đa 2 nhóm**, chỉ thuộc 5 nhóm cho phép; `voice` hợp lệ.
   - Mọi bài đều có độ hiếm trong `rarity.json`, thuộc {3,4,5}. **Mỗi ca sĩ từ 4 bài trở lên có ít nhất 1 bài 5★**; số bài mỗi bậc không lệch quá 1 so với tỉ lệ 15/30/55 của ca sĩ đó (trừ khi vừa thêm bài giữa phiên bản, khi đó chỉ cảnh báo). Mọi bài `featured` đều là 5★.
   - Mọi `artistId` trong `songs.json` tồn tại trong `artists.json`.
   - Mỗi độ hiếm có tối thiểu số bài (ví dụ ≥ 10 bài 3★, ≥ 5 bài 4★, ≥ 2 bài 5★).
@@ -524,7 +573,7 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 - Chân trang web có hai liên kết: **"Đề xuất bài / ca sĩ"** (mở Form) và **"Xem kho bài hiện có"** (Sheet Master ở chế độ chỉ xem, để người dùng kiểm tra trước khi đề xuất, giảm đề xuất trùng).
 - Thêm chân trang: dòng mô tả "Dự án fan, không liên kết với hãng đĩa/ca sĩ nào".
 - Meta tag Open Graph (title, description, ảnh preview) để link share đẹp trên Zalo/Messenger.
-- Deploy Vercel, kiểm tra tải nhanh trên mạng di động.
+- Deploy lên **GitHub Pages** theo M8, kiểm tra tải nhanh trên mạng di động.
 
 **Tiêu chí hoàn thành**
 - `npm run build` chạy `validate-songs` và chỉ thành công khi dữ liệu hợp lệ.
@@ -538,7 +587,7 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 **Việc cần làm**
 - Tạo `artists.json` và thêm banner `type: "artist"` cho **3-5 ca sĩ/rapper có đủ bài** (đủ điều kiện ở M6). Chọn theo gu nhóm bạn của chủ dự án, không tự chọn thay.
 - **Pool** của banner ca sĩ = mọi bài có `artistId` đó (cộng `extraSongIds` nếu có). `featured` = 2-3 bài đại diện nhất của ca sĩ (rate-up 50% như banner thường).
-- **Giao diện:** tên ca sĩ lớn trên tranh banner, màu theo `theme`, thẻ preview bài rate-up. **Không dùng ảnh ca sĩ**, chỉ dùng hình SVG minh họa chung (micro, đĩa than) và màu chủ đạo. Banner nhóm trong sidebar theo mục "Ca sĩ" (M2).
+- **Giao diện:** tên ca sĩ lớn trên tranh banner, màu theo `theme`, thẻ preview bài rate-up. Poster theo mục 2.3.1 (mặc định tự vẽ; ảnh do người dùng chọn chỉ lưu cục bộ). Banner nhóm trong sidebar theo mục "Ca sĩ" (M2).
 - Pity 5★ **dùng chung toàn bộ banner** (đơn giản hơn, tránh người dùng phải theo dõi nhiều bộ đếm).
 - Nếu pool nhỏ (dưới 10 bài): vẫn cho rút, cảnh báo có thể trùng bài như M4; quy tắc fallback độ hiếm ở mục 5 vẫn áp dụng.
 - Chân trang giữ nguyên tuyên bố: dự án fan, không liên kết hay được bảo trợ bởi ca sĩ nào.
@@ -547,6 +596,50 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 - Mỗi banner ca sĩ chỉ rút ra bài của ca sĩ đó (và `extraSongIds`); `featured` ra khoảng 50% khi trúng 4★/5★.
 - Thêm ca sĩ mới chỉ cần sửa `artists.json`, `songs.json`, `banners.json`, không sửa code.
 - `validate-songs` bắt được banner ca sĩ thiếu bài theo điều kiện ở M6.
+
+### M8: Đồng bộ dữ liệu và triển khai bằng GitHub Actions (thay cho trang admin)
+
+> Quyết định của chủ dự án: **không có trang quản trị, không Apps Script, không mật khẩu.** Web chỉ có gacha và nút đề xuất (mở Google Form). Quản trị = chỉnh Google Sheet rồi bấm một nút trên GitHub. Làm sau M6.
+
+**Luồng làm việc**
+1. Người dùng gửi đề xuất qua Google Form, dữ liệu vào tab `Form_Responses` (nên bật email thông báo khi có phản hồi mới).
+2. Chủ dự án duyệt: chép các dòng được chọn sang `Master` (và thêm ca sĩ mới vào `Artists`), cập nhật `Trạng thái duyệt` ở `Form_Responses`.
+3. Vào GitHub, tab Actions, chọn "Sync dữ liệu", bấm *Run workflow* (hoặc chờ lịch hằng ngày).
+4. Workflow tải CSV, kiểm tra, cập nhật dữ liệu, build và deploy lên GitHub Pages.
+
+**Nguồn sự thật và quy tắc**
+- **Google Sheet là nguồn dữ liệu duy nhất.** `src/data/songs.json`, `artists.json`, `rarity.json` là **file sinh ra, không sửa tay** (sửa tay sẽ bị ghi đè ở lần đồng bộ sau). Muốn đổi dữ liệu thì sửa trong Sheet.
+- Chỉ publish hai tab `Master` và `Artists` dưới dạng CSV. **Không publish `Form_Responses`.** Hai đường dẫn lưu thành *repository variables* `MASTER_CSV_URL`, `ARTISTS_CSV_URL` (không phải bí mật vì dữ liệu bài hát vốn công khai).
+- Không cần token riêng ngoài `GITHUB_TOKEN`.
+
+**Workflow `.github/workflows/sync.yml`**
+- **Kích hoạt:** `workflow_dispatch` (nút Run workflow, có input `force` mặc định `false`) và `schedule` mỗi ngày một lần (gợi ý `0 1 * * *`, tương đương 8 giờ sáng giờ Việt Nam).
+- **Các bước:** checkout → setup Node → `npm ci` → `npm run sync` → nếu `src/data/*.json` có thay đổi thì commit và push lên `main` bằng bot → build và deploy.
+- **Lưu ý kỹ thuật bắt buộc:** commit do `GITHUB_TOKEN` tạo ra **không kích hoạt** workflow khác (cơ chế chống lặp của GitHub). Vì vậy bước build và deploy phải nằm **trong cùng workflow** (hoặc gọi `deploy.yml` qua `workflow_call`), **không** dựa vào trigger `push` để deploy sau khi bot commit.
+- `concurrency` một nhóm duy nhất để không chạy song song. `permissions`: `contents: write`, `pages: write`, `id-token: write`.
+- **Dữ liệu lỗi:** nếu `validate-songs` lỗi thì workflow thất bại với log đọc được (chỉ rõ dòng nào của Sheet sai và vì sao), **không commit, web không đổi**. Đây là chốt chặn thay cho bảng kiểm tra của trang admin.
+- **Chốt chặn xóa nhầm:** nếu số bài sau đồng bộ ít hơn 80% số bài đang có trên web thì thất bại, trừ khi chạy với `force = true` (phòng khi lỡ xóa Sheet hoặc đường dẫn CSV hỏng).
+- **Bản tóm tắt thay đổi:** ghi vào `$GITHUB_STEP_SUMMARY`: "+N bài mới, -M bài, K bài sửa", ca sĩ mới, cảnh báo (ví dụ banner ca sĩ chưa đủ 8 bài, ca sĩ thiếu `defaultGenres`).
+- Mỗi lần đồng bộ là một commit trong lịch sử Git, hoàn tác được bằng `git revert`.
+- Lưu ý: GitHub có thể tự tắt workflow theo lịch khi repo không có hoạt động trong 60 ngày, và lịch có thể chạy trễ. **Nút Run workflow là đường chính**, lịch hằng ngày chỉ là phụ.
+
+**Workflow `.github/workflows/deploy.yml`**
+- **Kích hoạt:** `push` lên `main` (khi chủ dự án sửa code), `workflow_call`, `workflow_dispatch`.
+- **Các bước:** `npm ci` → `npm run build` (đã gồm `lint:ui` và `validate-songs`) → `actions/upload-pages-artifact` → `actions/deploy-pages`. Cài đặt repo: Pages, Source = **GitHub Actions**.
+- `vite.config.ts`: `base` lấy từ biến môi trường `VITE_BASE` (đặt `/<tên-repo>/` nếu là project page, `/` nếu là `<user>.github.io`). Web chỉ có một trang, trạng thái giữ bằng state, không dùng router đường dẫn con và không cần `404.html`.
+- Meta Open Graph dùng URL tuyệt đối của GitHub Pages.
+
+**Tài liệu:** agent viết `docs/SHEET_SETUP.md` hướng dẫn từng bước: tạo 3 tab và tiêu đề cột, publish hai tab, đặt repository variables, bật Pages với Source = GitHub Actions, chạy workflow lần đầu, đọc log lỗi.
+
+**Tiện ích trong Sheet (chỉ cần hướng dẫn trong `docs/SHEET_SETUP.md`, không cần code):** dropdown (data validation) cho cột `voice` trong `Master`; cột trợ giúp trong `Form_Responses` đánh dấu "Đã có" hoặc "Mới" bằng công thức so khớp với `Master`; bật email thông báo khi Form có phản hồi mới.
+
+**Tiêu chí hoàn thành**
+- Bấm Run workflow: nếu Sheet hợp lệ thì web cập nhật đúng theo Sheet sau vài phút; không có thay đổi dữ liệu thì không tạo commit mới.
+- Sheet có lỗi (thiếu giọng, thể loại sai...): workflow thất bại, log chỉ rõ dòng lỗi, web giữ nguyên.
+- Xóa nhầm phần lớn Sheet: workflow chặn (trừ khi `force`).
+- `Form_Responses` không bao giờ xuất hiện trong repo, log hay bản deploy.
+- Bản tóm tắt thay đổi hiển thị ở trang tóm tắt của lần chạy.
+- Có `docs/SHEET_SETUP.md` đủ để làm lại từ đầu mà không cần hỏi thêm.
 
 ---
 
@@ -561,13 +654,14 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 7. Cuối mỗi mốc, báo cáo ngắn: đã làm gì, tiêu chí nào đã đạt (kèm cách kiểm chứng), điều gì còn tồn đọng.
 8. Khi gặp điểm mơ hồ trong plan này, chọn phương án đơn giản nhất, ghi chú giả định vào cuối báo cáo, đừng dừng lại hỏi quá nhiều.
 9. Commit message rõ ràng theo mốc, ví dụ `feat(m1): gacha logic and simulation`.
+10. **Mọi giao diện phải tuân theo mục 10** (hệ thiết kế): chỉ dùng `Button`, `Chip`, `Notice`, `Icon` và biến trong `tokens.css`; **không emoji**; không viết mã màu hay `<button>` trực tiếp. `npm run lint:ui` phải chạy sạch trước khi báo hoàn thành mốc.
 
 ---
 
 ## 8. Ngoài phạm vi MVP (KHÔNG làm trừ khi được yêu cầu)
 
 - Banner sự kiện theo mùa.
-- Vote "bài này sai độ khó" và bất kỳ tính năng cần backend.
+- Vote "bài này sai độ khó", trang quản trị, Google Apps Script và bất kỳ tính năng cần backend.
 - Điểm danh, mini game dân gian để nhận lượt.
 - Tài khoản, bảng xếp hạng toàn cầu.
 - Tích hợp phát nhạc/karaoke trực tiếp trong web.
@@ -582,11 +676,92 @@ Bản chạy thử trước vẽ hạt bằng vòng tròn tô màu và đuôi b�
 - [ ] Pity và đảm bảo 4★ khi rút 10 hoạt động.
 - [ ] Thẻ gọn (chỉ sao, tên bài, ca sĩ) và chuỗi hiệu ứng 5 nhịp (tích năng lượng, beat drop, lật thẻ), có Skip.
 - [ ] Rút 10 hiển thị một hàng ngang (cuộn ngang + snap trên điện thoại, khuyến nghị landscape).
-- [ ] Bộ lọc giọng/thể loại/thập niên/độ khó.
 - [ ] Nút Tìm karaoke đúng từ khóa.
 - [ ] Chế độ nhóm + setlist + tải ảnh + copy text.
 - [ ] Lịch sử và bộ sưu tập lưu localStorage.
 - [ ] Dữ liệu thật (chỉ bài nổi) đã qua `validate-songs`, độ hiếm do `assign-rarity` sinh ra và có chú giải trung lập (số sao không phải đánh giá).
 - [ ] Bộ lọc gọn (giọng + thể loại), nút 0 bài bị vô hiệu hóa.
+- [ ] Đồng bộ Sheet qua GitHub Actions hoạt động: dữ liệu lỗi thì chặn, web giữ nguyên; có `docs/SHEET_SETUP.md` (M8).
+- [ ] Giao diện đồng nhất theo mục 10: mọi nút là pill và đến từ `Button`, mỗi màn hình một nút primary, không emoji, không màu viết tay, `lint:ui` sạch.
 - [ ] Deploy xong, preview link đẹp, dùng tốt trên điện thoại.
 - [ ] Chân trang có tuyên bố dự án fan, không lưu lời bài hát hay ảnh bìa.
+
+---
+
+## 10. Hệ thiết kế giao diện (UI): áp dụng cho MỌI mốc
+
+> Mục tiêu: nút bấm, chip, thẻ, modal, thông báo trông **đồng nhất**, và **không có emoji** ở bất kỳ đâu trong giao diện. Phần này **không đổi** logic, dữ liệu, bố cục tổng thể, kích thước thẻ bài hay hiệu ứng gacha. Giá trị màu bên dưới là gợi ý theo giao diện hiện tại; nếu code đã có giá trị tương ứng thì tái sử dụng, nhưng gộp về **đúng một bộ** trong `tokens.css`.
+
+### 10.1. Design tokens (`src/styles/tokens.css`, nguồn duy nhất)
+
+Khai báo bằng CSS variables.
+
+| Nhóm | Biến | Giá trị gợi ý | Dùng cho |
+|---|---|---|---|
+| Nền | `--bg` | `#0a0f1f` | Nền app |
+| Nền | `--surface` | `#121a2e` | Panel, modal, thẻ |
+| Nền | `--surface-2` | `#1a243d` | Phần tử nằm trên surface |
+| Viền | `--border` | `rgba(255,255,255,0.10)` | Viền mặc định |
+| Chữ | `--text` | `#f1f5f9` | Chữ chính |
+| Chữ | `--text-muted` | `#94a3b8` | Chữ phụ, tiêu đề mục |
+| Hành động | `--primary` | gradient `#fde68a` đến `#f5b800`, chữ `#3b2a00` | Nút chính |
+| Hành động | `--secondary` | nền `#f1f5f9`, chữ `#0a0f1f` | Nút phụ nổi bật |
+| Hành động | `--ghost` | nền trong suốt hoặc `--surface-2`, viền `--border` | Nút phụ nhẹ |
+| Nhấn | `--accent` | `#7c5cff` | Trạng thái được chọn, focus |
+| Trạng thái | `--danger` / `--success` | `#ef4444` / `#22c55e` | Lỗi, thành công |
+| Độ hiếm | `--rarity-3` / `--rarity-4` / `--rarity-5` | `#38bdf8` / `#a855f7` / `#facc15` | **Chỉ** thẻ bài và số sao |
+| Bo góc | `--radius-pill` | `999px` | **Mọi** nút, chip, toggle, badge |
+| Bo góc | `--radius-card` / `--radius-modal` | `20px` / `24px` | Thẻ, panel / modal |
+| Đổ bóng | `--shadow-1` / `--shadow-2` | tự định nghĩa | Thẻ / modal |
+
+- Thang khoảng cách: **4, 8, 12, 16, 24, 32** (không dùng số lẻ ngoài thang).
+- **Một họ font** cho toàn app. Cỡ chữ: 12, 14, 16, 20, 28, 40. Độ đậm chữ nút: 600.
+- **Không viết mã màu (hex, rgb) trực tiếp** trong component hay CSS riêng lẻ, chỉ dùng biến từ `tokens.css`. Hai ngoại lệ: **hiệu ứng canvas** (mục 3.5) và **màu `theme` riêng của từng banner/ca sĩ** trong `banners.json`/`artists.json`.
+
+### 10.2. Component nút duy nhất (`components/ui/Button.tsx`)
+
+Dùng cho **tất cả** nút trong app; xóa mọi kiểu nút tự viết rải rác.
+- **Biến thể (`variant`):** `primary`, `secondary`, `ghost`, `danger`.
+- **Kích thước (`size`):** `sm` (cao 36px), `md` (cao 44px), `lg` (cao 56px). Vùng bấm trên điện thoại **tối thiểu 44px**.
+- **Hình dạng:** bo tròn dạng pill (`--radius-pill`) cho **mọi** biến thể và kích thước, không ngoại lệ.
+- **Trạng thái bắt buộc:** hover (sáng hơn nhẹ), active (thu nhỏ khoảng 0,98), `focus-visible` (vòng viền `--accent` rõ ràng, không bị cắt), disabled (giảm độ đậm, không bấm được, con trỏ `not-allowed`), loading (nếu cần).
+- **Phân cấp:** mỗi màn hình **chỉ có MỘT nút `primary`** (hành động chính). Ví dụ màn chính: "Rút ×10" là `primary`, "Rút ×1" là `secondary`, "Chi tiết", "Lịch sử", "Trở về" là `ghost`. Màn kết quả: "Rút tiếp" là `primary`, "Xem toàn bộ Setlist" là `secondary`.
+- **Nút chỉ chứa chữ.** Chỉ dùng icon khi nút **không có chữ** (đóng, bật/tắt âm thanh, đổi ảnh poster) và phải có `aria-label`.
+
+### 10.3. Chip và Notice
+
+- **`Chip.tsx`:** bộ lọc và nhãn chọn được, dạng pill, trạng thái được chọn dùng `--accent`. Nút lọc bị vô hiệu hóa (0 bài) làm mờ.
+- **`Notice.tsx`:** khối thông báo với 3 mức (`info`, `warning`, `danger`), có icon SVG ở mục 10.4, viền và nền lấy từ token. Dùng cho cảnh báo kho bài dưới 10 bài, banner rỗng, thông tin phiên bản...
+
+### 10.4. Icon và cấm emoji
+
+- **Tự viết `Icon.tsx` bằng SVG inline**: nét 1,75px, đầu nét bo tròn, kế thừa màu chữ qua `currentColor`. Chỉ gồm icon thật sự cần: đóng, quay lại, âm thanh bật, âm thanh tắt, cảnh báo, thông tin, đổi ảnh, đồng hồ, mũi tên. **Không cài thư viện icon.**
+- **Cấm tuyệt đối emoji và ký tự hình ảnh (pictograph)** trong: nút, chip, tiêu đề, nhãn, dashboard, modal, thông báo, trạng thái rỗng, tooltip, placeholder, thông báo lỗi. Ví dụ phải gỡ: biểu tượng mặt người cạnh "Nam/Nữ/Song ca", biểu tượng micro, đồng hồ cát, tia sét cạnh tiêu đề bộ lọc, biểu tượng pháo hoa cạnh "Xem toàn bộ Setlist", biểu tượng cảnh báo và đồng hồ trong khối thông báo, ký hiệu trang trí kiểu ✦ ❖ ✨.
+- **Chỉ được dùng các ký tự văn bản sau:** `★` (số sao), `×` (ví dụ "Rút ×10"), `←` và `→`, dấu chấm giữa `·`.
+- Cần tín hiệu trực quan cho thông báo thì dùng `Icon` SVG hoặc chỉ dùng màu viền và chữ.
+
+### 10.5. Panel, tiêu đề, nhãn
+
+- Panel, thẻ, modal dùng chung `--surface`, `--border`, `--radius-card` hoặc `--radius-modal`, và cùng bộ đổ bóng.
+- **Tiêu đề mục:** một kiểu duy nhất (cỡ 12, viết hoa, giãn chữ nhẹ, màu `--text-muted`). **Tiêu đề lớn:** một kiểu duy nhất.
+- Nhãn bằng tiếng Việt, viết hoa chữ cái đầu câu, không viết hoa toàn bộ trừ tiêu đề mục. Giữ nguyên các nhãn đã có ("Rút ×1", "Rút ×10", "Chi tiết", "Lịch sử").
+
+### 10.6. Kiểm tra tự động (`npm run lint:ui`)
+
+`scripts/check-ui.ts` quét `src/**/*.{ts,tsx,css}` và **thoát mã khác 0** nếu:
+- Có emoji hoặc ký tự Unicode `Extended_Pictographic`, trừ danh sách cho phép ở mục 10.4.
+- Có mã màu hex/rgb viết trực tiếp ngoài `tokens.css`, khu vực canvas hiệu ứng, và `banners.json`/`artists.json`.
+- Có thẻ `<button>` viết trực tiếp ngoài `Button.tsx`.
+
+Gắn `lint:ui` vào bước `build` (cùng với `validate-songs` ở M6).
+
+### 10.7. Lượt dọn dẹp một lần cho code hiện có
+
+Thứ tự: (1) tạo `tokens.css`; (2) tạo `Button`, `Chip`, `Notice`, `Icon`; (3) thay toàn bộ nút và chip hiện có; (4) gỡ emoji; (5) thêm `lint:ui`. **Không đổi** logic gacha, dữ liệu, bố cục, kích thước thẻ bài, hiệu ứng.
+
+**Tiêu chí hoàn thành**
+- Mọi nút trong app là pill và đến từ một component `Button`; mỗi màn hình có đúng một nút `primary`.
+- Tìm toàn dự án **không còn emoji** (ngoài danh sách cho phép); không còn mã màu rải rác ngoài các ngoại lệ ở mục 10.1.
+- `npm run lint:ui` chạy sạch.
+- Giao diện nhìn đồng nhất giữa màn chính, bộ lọc, màn kết quả và các modal.
+- Báo cáo cuối liệt kê: file đã sửa, số nút đã chuyển sang `Button`, các emoji đã gỡ (kèm vị trí), kết quả `lint:ui`.

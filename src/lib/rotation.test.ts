@@ -6,6 +6,7 @@ import {
   formatRemainingTime,
   formatCountdownClock,
   isArtistBannerActive,
+  getRotatedArtistBanners,
 } from './rotation';
 import { Banner } from './types';
 
@@ -105,5 +106,31 @@ describe('rotation.ts (Xoay tua banner ca sĩ mỗi 2 ngày)', () => {
     // 32 giờ 0 phút 0 giây
     const msOver24 = 32 * 3600 * 1000;
     expect(formatCountdownClock(msOver24)).toBe('32:00:00');
+  });
+
+  it('getRotatedArtistBanners chỉ trả về tối đa 10 ca sĩ và xoay tua sau 2 ngày', () => {
+    // Tạo giả lập 15 ca sĩ
+    const fifteenBanners: Banner[] = Array.from({ length: 15 }, (_, i) => ({
+      id: `artist-${i + 1}`,
+      type: 'artist',
+      name: `Ca Sĩ ${i + 1}`,
+      description: `Mô tả ${i + 1}`,
+      featured: [],
+      theme: '#6366f1',
+    }));
+
+    // Chu kỳ 0: trả về 10 ca sĩ đầu tiên
+    const cycle0 = getRotatedArtistBanners(fifteenBanners, ROTATION_ANCHOR_TIMESTAMP, 10);
+    expect(cycle0.length).toBe(10);
+    expect(cycle0[0].id).toBe('artist-1');
+    expect(cycle0[9].id).toBe('artist-10');
+
+    // Chu kỳ 1 (sau 2 ngày): trượt sang nhóm 10 ca sĩ tiếp theo
+    const after2Days = ROTATION_ANCHOR_TIMESTAMP + ROTATION_PERIOD_MS;
+    const cycle1 = getRotatedArtistBanners(fifteenBanners, after2Days, 10);
+    expect(cycle1.length).toBe(10);
+    expect(cycle1[0].id).toBe('artist-11');
+    expect(cycle1[4].id).toBe('artist-15');
+    expect(cycle1[5].id).toBe('artist-1'); // xoay vòng tròn
   });
 });

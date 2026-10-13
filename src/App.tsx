@@ -30,7 +30,7 @@ export const App: React.FC = () => {
       const found = banners.find((b) => b.id === savedId);
       if (found) return found;
     }
-    return banners[0];
+    return banners[0] || (bannersData as Banner[])[0];
   });
 
   // Bộ lọc người dùng chọn trước khi rút (M4)
@@ -108,6 +108,7 @@ export const App: React.FC = () => {
     setSelectedBanner(banner);
     saveSelectedBannerId(banner.id);
   };
+
 
   // Lưu pullState vào localStorage
   useEffect(() => {

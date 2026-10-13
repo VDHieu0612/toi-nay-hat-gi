@@ -2,7 +2,7 @@
   {
     "id": "tong-hop",
     "type": "general",
-    "name": "Tổng Hợp Quán Hát",
+    "name": "Tổng hợp",
     "tagline": "Bài Ca Muôn Màu",
     "description": "Kho bài hát phong phú đủ mọi thể loại, thập niên và giọng hát cho mọi thành viên trong phòng hát.",
     "featured": [],
@@ -17,7 +17,7 @@
     "featured": [
       "em-cua-ngay-hom-qua-son-tung-m-tp",
       "con-mua-ngang-qua-son-tung-m-tp",
-      "khong-phai-dang-vua-dau-son-tung-m-tp"
+      "lac-troi-son-tung-m-tp"
     ],
     "theme": "#f43f5e"
   },
@@ -30,7 +30,7 @@
     "featured": [
       "dua-nhau-di-tron-den",
       "cho-toi-lang-thang-den",
-      "bai-nay-chill-phet-den"
+      "mot-trieu-like-den"
     ],
     "theme": "#06b6d4"
   },
@@ -42,8 +42,7 @@
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Soobin Hoàng Sơn sẵn sàng cho đêm karaoke bùng cháy!",
     "featured": [
       "phia-sau-mot-co-gai-soobin-hoang-son",
-      "di-de-tro-ve-soobin-hoang-son",
-      "xin-dung-lang-im-soobin-hoang-son"
+      "di-de-tro-ve-soobin-hoang-son"
     ],
     "theme": "#d97706"
   },
@@ -56,7 +55,7 @@
     "featured": [
       "hong-nhan-jack-j97",
       "bac-phan-jack-j97",
-      "song-gio-jack-j97"
+      "hoa-hai-duong-jack-j97"
     ],
     "theme": "#a855f7"
   },
@@ -69,7 +68,7 @@
     "featured": [
       "thuy-trieu-quang-hung-masterd",
       "mua-da-quang-hung-masterd",
-      "de-den-de-di-quang-hung-masterd"
+      "hoa-bat-tu-quang-hung-masterd"
     ],
     "theme": "#14b8a6"
   },
@@ -82,7 +81,7 @@
     "featured": [
       "exit-sign-hieuthuhai",
       "khong-the-say-hieuthuhai",
-      "ngu-mot-minh-hieuthuhai"
+      "nghe-nhu-tinh-yeu-hieuthuhai"
     ],
     "theme": "#3b82f6"
   },
@@ -106,8 +105,7 @@
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Hoàng Dũng sẵn sàng cho đêm karaoke bùng cháy!",
     "featured": [
       "nang-tho-hoang-dung",
-      "cuoi-tuan-hoang-dung",
-      "la-ban-hoang-dung"
+      "cuoi-tuan-hoang-dung"
     ],
     "theme": "#ec4899"
   },
@@ -119,8 +117,7 @@
     "description": "Tiêu điểm nghệ sĩ xoay tua 2 ngày: Toàn bộ tuyển tập bản hit của Ngọt sẵn sàng cho đêm karaoke bùng cháy!",
     "featured": [
       "em-dao-nay-ngot",
-      "cho-toi-di-theo-ngot",
-      "ca-hoi-ngot"
+      "cho-toi-di-theo-ngot"
     ],
     "theme": "#8b5cf6"
   }

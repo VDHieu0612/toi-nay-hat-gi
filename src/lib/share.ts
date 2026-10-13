@@ -62,14 +62,14 @@ export function formatSetlistText(options: {
   const lines: string[] = [];
 
   if (assignments && assignments.length > 0 && assignments.some((a) => a.songs.length > 0)) {
-    lines.push('🎤 SETLIST KARAOKE - CHẾ ĐỘ NHÓM 🎤');
-    if (bannerName) lines.push(`✦ Banner: ${bannerName}`);
-    lines.push(`✦ Thời gian: ${timeStr}`);
-    lines.push(`✦ Tổng số người: ${assignments.length} • Tổng số bài: ${songs.length || assignments.reduce((acc, a) => acc + a.songs.length, 0)}`);
+    lines.push('[SETLIST KARAOKE · CHẾ ĐỘ NHÓM]');
+    if (bannerName) lines.push(`Banner: ${bannerName}`);
+    lines.push(`Thời gian: ${timeStr}`);
+    lines.push(`Tổng số người: ${assignments.length} · Tổng số bài: ${songs.length || assignments.reduce((acc, a) => acc + a.songs.length, 0)}`);
     lines.push('────────────────────────');
 
     assignments.forEach((assignment, index) => {
-      lines.push(`\n👤 [${index + 1}] ${assignment.name} (${assignment.songs.length} bài):`);
+      lines.push(`\n[${index + 1}] ${assignment.name} (${assignment.songs.length} bài):`);
       if (assignment.songs.length === 0) {
         lines.push('  (Chưa có bài nào)');
       } else {
@@ -81,10 +81,10 @@ export function formatSetlistText(options: {
       }
     });
   } else {
-    lines.push('🎤 SETLIST KARAOKE 🎤');
-    if (bannerName) lines.push(`✦ Banner: ${bannerName}`);
-    lines.push(`✦ Thời gian: ${timeStr}`);
-    lines.push(`✦ Tổng số bài: ${songs.length}`);
+    lines.push('[SETLIST KARAOKE]');
+    if (bannerName) lines.push(`Banner: ${bannerName}`);
+    lines.push(`Thời gian: ${timeStr}`);
+    lines.push(`Tổng số bài: ${songs.length}`);
     lines.push('────────────────────────');
 
     songs.forEach((song, sIdx) => {
@@ -95,8 +95,8 @@ export function formatSetlistText(options: {
   }
 
   lines.push('\n────────────────────────');
-  lines.push('✨ Chúc phòng hát bùng nổ sân khấu! ✨');
-  lines.push('👉 Gacha Karaoke: Phòng Hát Chiêm Tinh');
+  lines.push('Chúc phòng hát bùng nổ sân khấu!');
+  lines.push('Tối Nay Hát Gì · Phòng Hát Chiêm Tinh');
 
   return lines.join('\n');
 }

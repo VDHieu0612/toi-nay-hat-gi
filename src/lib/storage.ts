@@ -1,4 +1,4 @@
-import { PullState, Song } from './types';
+import { Banner, PullState, Song } from './types';
 
 export interface HistoryEntry {
   id: string;
@@ -14,6 +14,9 @@ const STORAGE_KEYS = {
   COLLECTION: 'karaoke_gacha_collection',
   SELECTED_BANNER: 'karaoke_gacha_selected_banner',
   DISMISS_ORIENTATION_HINT: 'karaoke_gacha_dismiss_orientation_hint',
+  CUSTOM_POSTERS: 'karaoke_gacha_custom_posters',
+  CUSTOM_SONGS: 'karaoke_gacha_custom_songs',
+  CUSTOM_BANNERS: 'karaoke_gacha_custom_banners',
 } as const;
 
 export const DEFAULT_PULL_STATE: PullState = {
@@ -210,4 +213,134 @@ export function saveDismissOrientationHint(dismissed: boolean): void {
     console.error('Failed to save orientation hint state:', err);
   }
 }
+
+/**
+ * Chuyển đổi link ảnh Google (đặc biệt là link Google Drive chia sẻ) sang link xem ảnh trực tiếp
+ * Ví dụ: https://drive.google.com/file/d/1AbC.../view?usp=sharing -> https://lh3.googleusercontent.com/d/1AbC...
+ */
+export function normalizeGoogleImageUrl(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+
+  // Nếu là tên file cục bộ (ví dụ: jack-j97.jpg hoặc /jack-j97.jpg)
+  if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://') && !trimmed.startsWith('data:')) {
+    return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  }
+
+  // Google Drive: dạng /file/d/ID/view...
+  const driveFileMatch = trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveFileMatch && driveFileMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${driveFileMatch[1]}`;
+  }
+
+  // Google Drive: dạng ?id=ID hoặc open?id=ID
+  const driveIdMatch = trimmed.match(/drive\.google\.com\/(?:open|uc)\?.*id=([a-zA-Z0-9_-]+)/);
+  if (driveIdMatch && driveIdMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${driveIdMatch[1]}`;
+  }
+
+  return trimmed;
+}
+
+/**
+ * Lấy danh sách link ảnh poster tùy chỉnh của các banner từ localStorage
+ */
+export function loadBannerCustomPosters(): Record<string, string> {
+  if (!isLocalStorageAvailable()) return {};
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEYS.CUSTOM_POSTERS);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Lưu link ảnh poster tùy chỉnh cho một banner
+ */
+export function saveBannerCustomPoster(bannerId: string, url: string): void {
+  if (!isLocalStorageAvailable()) return;
+  try {
+    const map = loadBannerCustomPosters();
+    if (!url.trim()) {
+      delete map[bannerId];
+    } else {
+      map[bannerId] = normalizeGoogleImageUrl(url);
+    }
+    window.localStorage.setItem(STORAGE_KEYS.CUSTOM_POSTERS, JSON.stringify(map));
+  } catch (err) {
+    console.error('Failed to save custom poster:', err);
+  }
+}
+
+/**
+ * Lấy danh sách bài hát từ localStorage hoặc dùng danh sách mặc định
+ */
+export function loadAllSongs(defaultSongs: Song[]): Song[] {
+  if (!isLocalStorageAvailable()) return defaultSongs;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEYS.CUSTOM_SONGS);
+    if (!raw) return defaultSongs;
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    return defaultSongs;
+  } catch {
+    return defaultSongs;
+  }
+}
+
+/**
+ * Lưu danh sách bài hát tùy chỉnh vào localStorage
+ */
+export function saveAllSongs(songs: Song[]): void {
+  if (!isLocalStorageAvailable()) return;
+  try {
+    window.localStorage.setItem(STORAGE_KEYS.CUSTOM_SONGS, JSON.stringify(songs));
+  } catch (err) {
+    console.error('Failed to save songs to localStorage:', err);
+  }
+}
+
+/**
+ * Lấy danh sách banner từ localStorage hoặc dùng danh sách mặc định
+ */
+export function loadAllBanners(defaultBanners: Banner[]): Banner[] {
+  if (!isLocalStorageAvailable()) return defaultBanners;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEYS.CUSTOM_BANNERS);
+    if (!raw) return defaultBanners;
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    return defaultBanners;
+  } catch {
+    return defaultBanners;
+  }
+}
+
+/**
+ * Lưu danh sách banner tùy chỉnh vào localStorage
+ */
+export function saveAllBanners(banners: Banner[]): void {
+  if (!isLocalStorageAvailable()) return;
+  try {
+    window.localStorage.setItem(STORAGE_KEYS.CUSTOM_BANNERS, JSON.stringify(banners));
+  } catch (err) {
+    console.error('Failed to save banners to localStorage:', err);
+  }
+}
+
+/**
+ * Đặt lại dữ liệu bài hát và banner về mặc định ban đầu
+ */
+export function resetCustomData(): void {
+  if (!isLocalStorageAvailable()) return;
+  try {
+    window.localStorage.removeItem(STORAGE_KEYS.CUSTOM_SONGS);
+    window.localStorage.removeItem(STORAGE_KEYS.CUSTOM_BANNERS);
+  } catch (err) {
+    console.error('Failed to reset custom data:', err);
+  }
+}
+
 

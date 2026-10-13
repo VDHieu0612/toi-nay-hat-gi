@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Banner } from '../lib/types';
-import { getArtistRotationInfo } from '../lib/rotation';
+import { getArtistRotationInfo, getRotatedArtistBanners } from '../lib/rotation';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
 
 interface BannerSidebarProps {
   banners: Banner[];
@@ -34,10 +36,11 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
     return getArtistRotationInfo(banners, currentTime);
   }, [banners, currentTime]);
 
-  // Phân nhóm banner: chỉ TỔNG HỢP (Tổng Hợp Quán Hát) và CA SĨ (bỏ Thể Loại theo yêu cầu)
+  // Phân nhóm banner: chỉ TỔNG HỢP và tối đa 10 CA SĨ xoay tua 2 ngày (bỏ Thể loại theo yêu cầu)
   const categories = useMemo<BannerCategory[]>(() => {
     const general = banners.filter((b) => b.type === 'general' && b.id === 'tong-hop');
-    const artist = banners.filter((b) => b.type === 'artist');
+    // Chỉ xuất hiện tối đa 10 ca sĩ trong banner xoay tua sau 2 ngày
+    const artist = getRotatedArtistBanners(banners, currentTime, 10);
 
     const result: BannerCategory[] = [];
 
@@ -50,14 +53,14 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
 
     if (artist.length > 0) {
       result.push({
-        title: 'Ca Sĩ · Xoay Tua 2 Ngày',
+        title: 'Ca Sĩ (10 Ca Sĩ · Xoay 2 Ngày)',
         badge: rotationInfo ? rotationInfo.countdownClock : undefined,
         banners: artist,
       });
     }
 
     return result;
-  }, [banners, rotationInfo]);
+  }, [banners, currentTime, rotationInfo]);
 
   // Danh sách phẳng tất cả banner theo thứ tự hiển thị để hỗ trợ phím mũi tên
   const flattenedBanners = useMemo(() => {
@@ -99,7 +102,10 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
                   className="banner-category-badge live-clock"
                   title="Đồng hồ đếm ngược đợt xoay tua 2 ngày (giờ : phút : giây)"
                 >
-                  <span className="live-clock-icon">⏱</span> {category.badge}
+                  <span className="live-clock-icon">
+                    <Icon name="clock" size={12} />
+                  </span>{' '}
+                  {category.badge}
                 </span>
               )}
             </div>
@@ -108,16 +114,12 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
               {category.banners.map((banner) => {
                 const isSelected = banner.id === selectedBanner.id;
                 const isArtist = banner.type === 'artist';
-                const isCurrentActiveArtist =
-                  isArtist && rotationInfo?.activeBannerId === banner.id;
 
                 return (
-                  <button
+                  <Button
                     key={banner.id}
-                    type="button"
-                    className={`banner-thumb-item ${isSelected ? 'active' : ''} ${
-                      isCurrentActiveArtist ? 'rotation-spotlight' : ''
-                    }`}
+                    variant="ghost"
+                    className={`banner-thumb-item ${isSelected ? 'active' : ''}`}
                     onClick={() => onSelectBanner(banner)}
                     style={
                       isSelected
@@ -129,13 +131,9 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
                       className="banner-thumb-preview"
                       style={{ backgroundColor: banner.theme }}
                     >
-                      {isCurrentActiveArtist ? (
-                        <span className="banner-thumb-badge live">✦ MỞ</span>
-                      ) : (
-                        <span className="banner-thumb-badge std">
-                          {isArtist ? '★' : 'STD'}
-                        </span>
-                      )}
+                      <span className="banner-thumb-badge std">
+                        {isArtist ? '★' : 'STD'}
+                      </span>
 
                       {/* Vinyl record icon SVG inside thumbnail */}
                       <svg
@@ -152,10 +150,9 @@ export const BannerSidebar: React.FC<BannerSidebarProps> = ({
                     </div>
 
                     <div className="banner-thumb-info banner-thumb-info-clean">
-                      {/* Về phần bên trái: chỉ hiển thị tên ca sĩ / tên banner, không cần thông tin gì khác */}
                       <span className="banner-thumb-name">{banner.name}</span>
                     </div>
-                  </button>
+                  </Button>
                 );
               })}
             </div>

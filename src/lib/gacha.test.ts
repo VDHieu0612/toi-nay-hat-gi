@@ -8,7 +8,6 @@ import bannersData from '../data/banners.json';
 const songs = songsData as Song[];
 const banners = bannersData as Banner[];
 const generalBanner = banners.find((b) => b.id === 'tong-hop') || banners[0];
-const rateUpBanner = banners.find((b) => b.featured && b.featured.length > 0) || banners[0];
 
 describe('Gacha Logic - Single Pull (pull)', () => {
   it('rút 1 trả về đúng 1 bài và state mới không mutate state cũ', () => {
@@ -167,8 +166,17 @@ describe('Pool Fallback & Error Handling', () => {
 
 describe('Rate-up cho Featured Banner', () => {
   it('tỉ lệ rơi vào featured đạt xấp xỉ 50% khi ra 4★/5★', () => {
-    // Banner "thu-rate-up" có featured: ["bai-thu-21", "bai-thu-28"]
-    // bai-thu-21 là 4★, bai-thu-28 là 5★
+    // Đảm bảo banner test có cả 4★ và 5★ featured để kiểm chứng rate-up 50% cho cả 2 bậc
+    const sample4Star = songs.find((s) => s.rarity === 4);
+    const sample5Star = songs.find((s) => s.rarity === 5);
+    const testRateUpBanner: Banner = {
+      id: 'test-rate-up',
+      name: 'Banner Test Rate-Up',
+      description: 'Kiểm thử rate-up',
+      theme: '#6366f1',
+      featured: [sample4Star?.id, sample5Star?.id].filter(Boolean) as string[],
+    };
+
     let featuredCount = 0;
     let totalHighRarity = 0;
     const NUM_TRIALS = 3000;
@@ -176,13 +184,13 @@ describe('Rate-up cho Featured Banner', () => {
     let state: PullState = { pullsSinceFiveStar: 0, pullsSinceFourStar: 0 };
 
     for (let i = 0; i < NUM_TRIALS; i++) {
-      const result = pull(songs, rateUpBanner, state);
+      const result = pull(songs, testRateUpBanner, state);
       state = result.state;
       const song = result.songs[0];
 
       if (song.rarity === 4 || song.rarity === 5) {
         totalHighRarity++;
-        if (rateUpBanner.featured.includes(song.id)) {
+        if (testRateUpBanner.featured.includes(song.id)) {
           featuredCount++;
         }
       }

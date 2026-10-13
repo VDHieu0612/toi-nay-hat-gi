@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
+import { Chip } from './ui/Chip';
 
 interface GroupModeProps {
   isOpen: boolean;
@@ -104,19 +107,21 @@ export const GroupMode: React.FC<GroupModeProps> = ({
       >
         <div className="filter-modal-header">
           <div className="filter-modal-title-wrap">
-            <h3 id="group-mode-title">👥 Cài Đặt Chế Độ Nhóm</h3>
+            <h3 id="group-mode-title">Cài Đặt Chế Độ Nhóm</h3>
             <span className="filter-active-count-badge">
               {localPlayers.length} / 8 người
             </span>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
             className="filter-close-btn"
             onClick={onClose}
             title="Đóng modal"
           >
-            ✕
-          </button>
+            <Icon name="close" size={16} />
+          </Button>
         </div>
 
         <div className="filter-modal-body">
@@ -128,30 +133,28 @@ export const GroupMode: React.FC<GroupModeProps> = ({
           {/* Cách thức chia bài */}
           <section className="filter-group">
             <h4 className="filter-group-title">
-              <span>🎲</span> Cách thức chia bài
+              Cách thức chia bài
             </h4>
             <div className="filter-pills-row">
-              <button
-                type="button"
-                className={`filter-pill ${distributionMethod === 'round-robin' ? 'is-active' : ''}`}
+              <Chip
+                active={distributionMethod === 'round-robin'}
                 onClick={() => onChangeMethod('round-robin')}
               >
-                🔄 Xoay vòng lần lượt
-              </button>
-              <button
-                type="button"
-                className={`filter-pill ${distributionMethod === 'random' ? 'is-active' : ''}`}
+                Xoay vòng lần lượt
+              </Chip>
+              <Chip
+                active={distributionMethod === 'random'}
                 onClick={() => onChangeMethod('random')}
               >
-                🔀 Ngẫu nhiên bốc thăm
-              </button>
+                Ngẫu nhiên bốc thăm
+              </Chip>
             </div>
           </section>
 
           {/* Danh sách thành viên */}
           <section className="filter-group">
             <h4 className="filter-group-title">
-              <span>🎤</span> Danh sách người chơi ({localPlayers.length})
+              Danh sách người chơi ({localPlayers.length})
             </h4>
 
             <div className="group-players-list">
@@ -166,15 +169,17 @@ export const GroupMode: React.FC<GroupModeProps> = ({
                     onChange={(e) => handleUpdateName(idx, e.target.value)}
                     placeholder={`Tên người chơi ${idx + 1}`}
                   />
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    iconOnly
                     className="player-delete-btn"
                     onClick={() => handleRemovePlayer(idx)}
                     title="Xóa người chơi"
                     disabled={localPlayers.length <= 2}
                   >
-                    🗑️
-                  </button>
+                    <Icon name="trash" size={14} />
+                  </Button>
                 </div>
               ))}
             </div>
@@ -191,35 +196,37 @@ export const GroupMode: React.FC<GroupModeProps> = ({
                   onKeyDown={(e) => e.key === 'Enter' && handleAddPlayer()}
                   placeholder="Nhập tên người chơi mới..."
                 />
-                <button
-                  type="button"
+                <Button
+                  variant="secondary"
+                  size="sm"
                   className="genshin-sub-btn add-player-btn"
                   onClick={handleAddPlayer}
                 >
-                  + Thêm người
-                </button>
+                  <Icon name="plus" size={14} />
+                  <span>Thêm người</span>
+                </Button>
               </div>
             )}
           </section>
         </div>
 
         <div className="filter-modal-footer">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="md"
             className="genshin-sub-btn"
             onClick={onClose}
           >
             Hủy
-          </button>
-          <button
-            type="button"
-            className="genshin-wish-btn wish-btn-ten"
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            className="genshin-wish-btn"
             onClick={handleSaveAndApply}
           >
-            <div className="wish-btn-content">
-              <span className="wish-btn-main">Xác nhận chia bài</span>
-            </div>
-          </button>
+            Xác nhận chia bài
+          </Button>
         </div>
       </div>
     </div>

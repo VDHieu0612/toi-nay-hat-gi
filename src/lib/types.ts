@@ -6,6 +6,7 @@ export interface Artist {
   id: string;            // kebab-case, ví dụ "ten-ca-si"
   name: string;
   kind: "singer" | "rapper" | "group";
+  defaultGenres?: Genre[]; // thể loại mặc định kế thừa cho các bài hát của ca sĩ
   theme?: string;        // màu chủ đạo cho banner của ca sĩ (không dùng ảnh ca sĩ)
 }
 

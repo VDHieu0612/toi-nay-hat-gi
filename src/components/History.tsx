@@ -8,6 +8,8 @@ import {
   HistoryEntry,
 } from '../lib/storage';
 import { getSearchKaraokeUrl } from '../lib/filters';
+import { Button } from './ui/Button';
+import { Icon } from './ui/Icon';
 
 interface HistoryProps {
   isOpen: boolean;
@@ -84,34 +86,38 @@ export const History: React.FC<HistoryProps> = ({
         {/* Header modal */}
         <div className="filter-modal-header">
           <div className="filter-modal-title-wrap">
-            <h3 id="history-modal-title">📖 Nhật Ký & Bộ Sưu Tập</h3>
+            <h3 id="history-modal-title">Nhật Ký & Bộ Sưu Tập</h3>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            iconOnly
             className="filter-close-btn"
             onClick={onClose}
             title="Đóng bảng lịch sử"
           >
-            ✕
-          </button>
+            <Icon name="close" size={16} />
+          </Button>
         </div>
 
         {/* Tab switch */}
         <div className="history-tab-bar">
-          <button
-            type="button"
+          <Button
+            variant={activeTab === 'history' ? 'secondary' : 'ghost'}
+            size="sm"
             className={`history-tab-btn ${activeTab === 'history' ? 'is-active' : ''}`}
             onClick={() => setActiveTab('history')}
           >
-            📜 Lịch Sử Rút ({historyList.length})
-          </button>
-          <button
-            type="button"
+            Lịch Sử Rút ({historyList.length})
+          </Button>
+          <Button
+            variant={activeTab === 'collection' ? 'secondary' : 'ghost'}
+            size="sm"
             className={`history-tab-btn ${activeTab === 'collection' ? 'is-active' : ''}`}
             onClick={() => setActiveTab('collection')}
           >
-            ✨ Bộ Sưu Tập ({collectedCount}/{totalSongsCount})
-          </button>
+            Bộ Sưu Tập ({collectedCount}/{totalSongsCount})
+          </Button>
         </div>
 
         {/* Modal body */}
@@ -121,7 +127,7 @@ export const History: React.FC<HistoryProps> = ({
             <div className="history-tab-content">
               {historyList.length === 0 ? (
                 <div className="history-empty-state">
-                  <span className="empty-icon">📭</span>
+                  <span className="empty-icon"><Icon name="info" size={24} /></span>
                   <p>Chưa có lượt rút nào được ghi nhận. Hãy thực hiện lượt rút thẻ đầu tiên!</p>
                 </div>
               ) : (
@@ -152,7 +158,7 @@ export const History: React.FC<HistoryProps> = ({
                               {entry.songs.length === 1 ? 'Rút ×1' : 'Rút ×10'}
                             </span>
                             <span className="history-expand-icon">
-                              {isExpanded ? '▲' : '▼'}
+                              <Icon name={isExpanded ? 'arrowUp' : 'arrowDown'} size={12} />
                             </span>
                           </div>
                         </div>
@@ -174,13 +180,15 @@ export const History: React.FC<HistoryProps> = ({
 
                             {onOpenSetlistForEntry && (
                               <div className="history-entry-actions">
-                                <button
-                                  type="button"
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
                                   className="genshin-sub-btn history-setlist-btn"
                                   onClick={() => onOpenSetlistForEntry(entry.songs, entry.bannerName)}
                                 >
-                                  📋 Mở xem Setlist & Chia nhóm
-                                </button>
+                                  <Icon name="music" size={14} />
+                                  <span>Mở xem Setlist & Chia nhóm</span>
+                                </Button>
                               </div>
                             )}
                           </div>
@@ -213,7 +221,7 @@ export const History: React.FC<HistoryProps> = ({
               {/* Nhóm 5★ */}
               <section className="collection-rarity-section">
                 <h4 className="collection-section-title star-5-title">
-                  ✦ Bài Hát 5★ Siêu Hit ({songs5.filter((s) => collectionIds.includes(s.id)).length}/{songs5.length})
+                  · Bài Hát 5★ Siêu Hit ({songs5.filter((s) => collectionIds.includes(s.id)).length}/{songs5.length})
                 </h4>
                 <div className="collection-cards-grid">
                   {songs5.map((song) => {
@@ -236,12 +244,13 @@ export const History: React.FC<HistoryProps> = ({
                               title="Tìm karaoke trên YouTube"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              🎤 Hát ngay
+                              <Icon name="music" size={12} />
+                              <span>Hát ngay</span>
                             </a>
                           </>
                         ) : (
                           <div className="collection-locked-content">
-                            <span className="locked-icon">🔒</span>
+                            <span className="locked-icon"><Icon name="lock" size={14} /></span>
                             <span className="locked-text">Chưa mở</span>
                           </div>
                         )}
@@ -254,7 +263,7 @@ export const History: React.FC<HistoryProps> = ({
               {/* Nhóm 4★ */}
               <section className="collection-rarity-section">
                 <h4 className="collection-section-title star-4-title">
-                  ✦ Bài Hát 4★ Cao Trào ({songs4.filter((s) => collectionIds.includes(s.id)).length}/{songs4.length})
+                  · Bài Hát 4★ Cao Trào ({songs4.filter((s) => collectionIds.includes(s.id)).length}/{songs4.length})
                 </h4>
                 <div className="collection-cards-grid">
                   {songs4.map((song) => {
@@ -277,12 +286,13 @@ export const History: React.FC<HistoryProps> = ({
                               title="Tìm karaoke trên YouTube"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              🎤 Hát ngay
+                              <Icon name="music" size={12} />
+                              <span>Hát ngay</span>
                             </a>
                           </>
                         ) : (
                           <div className="collection-locked-content">
-                            <span className="locked-icon">🔒</span>
+                            <span className="locked-icon"><Icon name="lock" size={14} /></span>
                             <span className="locked-text">Chưa mở</span>
                           </div>
                         )}
@@ -295,7 +305,7 @@ export const History: React.FC<HistoryProps> = ({
               {/* Nhóm 3★ */}
               <section className="collection-rarity-section">
                 <h4 className="collection-section-title star-3-title">
-                  ✦ Bài Hát 3★ Quen Thuộc ({songs3.filter((s) => collectionIds.includes(s.id)).length}/{songs3.length})
+                  · Bài Hát 3★ Quen Thuộc ({songs3.filter((s) => collectionIds.includes(s.id)).length}/{songs3.length})
                 </h4>
                 <div className="collection-cards-grid">
                   {songs3.map((song) => {
@@ -318,12 +328,13 @@ export const History: React.FC<HistoryProps> = ({
                               title="Tìm karaoke trên YouTube"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              🎤 Hát ngay
+                              <Icon name="music" size={12} />
+                              <span>Hát ngay</span>
                             </a>
                           </>
                         ) : (
                           <div className="collection-locked-content">
-                            <span className="locked-icon">🔒</span>
+                            <span className="locked-icon"><Icon name="lock" size={14} /></span>
                             <span className="locked-text">Chưa mở</span>
                           </div>
                         )}
@@ -339,32 +350,37 @@ export const History: React.FC<HistoryProps> = ({
         {/* Footer modal */}
         <div className="filter-modal-footer history-footer">
           {activeTab === 'history' ? (
-            <button
-              type="button"
-              className="genshin-sub-btn delete-data-btn"
+            <Button
+              variant="danger"
+              size="sm"
+              className="delete-data-btn"
               onClick={handleClearHistory}
               disabled={historyList.length === 0}
             >
-              🗑️ Xóa lịch sử
-            </button>
+              <Icon name="trash" size={14} />
+              <span>Xóa lịch sử</span>
+            </Button>
           ) : (
-            <button
-              type="button"
-              className="genshin-sub-btn delete-data-btn"
+            <Button
+              variant="danger"
+              size="sm"
+              className="delete-data-btn"
               onClick={handleClearCollection}
               disabled={collectedCount === 0}
             >
-              🗑️ Xóa bộ sưu tập
-            </button>
+              <Icon name="trash" size={14} />
+              <span>Xóa bộ sưu tập</span>
+            </Button>
           )}
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="md"
             className="genshin-sub-btn"
             onClick={onClose}
           >
             Đóng
-          </button>
+          </Button>
         </div>
       </div>
     </div>

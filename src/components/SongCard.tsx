@@ -1,6 +1,7 @@
 import React from 'react';
 import { Song } from '../lib/types';
 import { getSearchKaraokeUrl } from '../lib/filters';
+import { Icon } from './ui/Icon';
 
 interface SongCardProps {
   song: Song;
@@ -45,13 +46,13 @@ export const SongCard: React.FC<SongCardProps> = ({
           )}
           {song.rarity >= 4 && (
             <div className="beam-particles">
-              <span className="p1">✦</span>
-              <span className="p2">✦</span>
-              <span className="p3">✦</span>
+              <span className="p1">·</span>
+              <span className="p2">·</span>
+              <span className="p3">·</span>
               {song.rarity === 5 && (
                 <>
-                  <span className="p4">✦</span>
-                  <span className="p5">✦</span>
+                  <span className="p4">·</span>
+                  <span className="p5">·</span>
                 </>
               )}
             </div>
@@ -134,7 +135,9 @@ export const SongCard: React.FC<SongCardProps> = ({
               title={`Tìm bài hát "${song.title} - ${song.artist}" trên YouTube Karaoke`}
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="card-karaoke-icon">🎤</span>
+              <span className="card-karaoke-icon">
+                <Icon name="music" size={12} />
+              </span>
               <span className="card-karaoke-text">Tìm karaoke</span>
             </a>
           </div>
