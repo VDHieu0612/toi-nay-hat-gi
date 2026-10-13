@@ -94,9 +94,20 @@ export function parseCsvLine(line: string): string[] {
  */
 export function normalizeSourceUrl(source: string): string {
   const trimmed = source.trim();
+  // Nếu là URL Publish to Web (chứa /spreadsheets/d/e/ hoặc /pub) hoặc đã có output=csv/format=csv thì giữ nguyên vẹn
+  if (
+    trimmed.includes('/spreadsheets/d/e/') ||
+    trimmed.includes('/pub') ||
+    trimmed.includes('output=csv') ||
+    trimmed.includes('format=csv')
+  ) {
+    return trimmed;
+  }
+
+  // Nếu là link chia sẻ / xem trực tiếp dạng /spreadsheets/d/<SHEET_ID>/edit...
   if (trimmed.includes('docs.google.com/spreadsheets/d/')) {
     const idMatch = trimmed.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-    if (idMatch && idMatch[1]) {
+    if (idMatch && idMatch[1] && idMatch[1] !== 'e') {
       const sheetId = idMatch[1];
       const gidMatch = trimmed.match(/[?&#]gid=([0-9]+)/);
       const gidParam = gidMatch ? `&gid=${gidMatch[1]}` : '';

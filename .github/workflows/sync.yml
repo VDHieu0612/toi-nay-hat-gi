@@ -45,8 +45,8 @@ jobs:
 
       - name: Đồng bộ dữ liệu từ Google Sheet (M6 & M8)
         env:
-          MASTER_CSV_URL: ${{ vars.MASTER_CSV_URL }}
-          ARTISTS_CSV_URL: ${{ vars.ARTISTS_CSV_URL }}
+          MASTER_CSV_URL: ${{ vars.MASTER_CSV_URL || secrets.MASTER_CSV_URL }}
+          ARTISTS_CSV_URL: ${{ vars.ARTISTS_CSV_URL || secrets.ARTISTS_CSV_URL }}
           FORCE: ${{ inputs.force || 'false' }}
         run: npx vite-node scripts/sync-sheet.ts
 
