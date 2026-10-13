@@ -288,7 +288,9 @@ export const BannerDetail: React.FC<BannerDetailProps> = ({
 
               {/* Lưu ý số sao */}
               <div className="details-disclaimer-box">
-                <span className="details-disclaimer-icon">💡</span>
+                <span className="details-disclaimer-icon">
+                  <Icon name="info" size={16} />
+                </span>
                 <span className="details-disclaimer-text">
                   <strong>Lưu ý:</strong> Số sao (độ hiếm) chỉ mang tính tham khảo và tạo không khí vui vẻ cho phòng hát karaoke; hoàn toàn không mang tính đánh giá chủ quan hay xếp hạng gây tranh cãi giữa các fan và nghệ sĩ.
                 </span>
