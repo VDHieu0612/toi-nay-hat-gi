@@ -49,7 +49,7 @@ for (const filePath of sourceFiles) {
 
     // 1. Kiểm tra thẻ <button> trực tiếp ngoài Button.tsx
     if (!relPath.endsWith('src/components/ui/Button.tsx')) {
-      if (/<button[\s>]/i.test(line)) {
+      if (/<button[\s>]/g.test(line)) {
         violations.push({
           file: relPath,
           line: lineNum,

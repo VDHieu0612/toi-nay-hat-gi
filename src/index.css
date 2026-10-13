@@ -4548,6 +4548,523 @@ html, body {
   box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
 }
 
+/* ==============================================================================
+   TỐI ƯU HÓA RESPONSIVE IPAD & MOBILE (ƯU TIÊN LANDSCAPE)
+   ============================================================================== */
+
+/* Tối ưu hóa phản hồi cảm ứng trên iOS Safari & Android */
+button,
+a,
+.genshin-wish-btn,
+.genshin-sub-btn,
+.top-bar-icon-btn,
+.top-bar-link-btn,
+.banner-thumb-item {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* 1. HIỂN THỊ GỢI Ý XOAY NGANG TRÊN MÀN HÌNH DỌC */
+@media (orientation: portrait) and (max-width: 1024px) {
+  .orientation-hint-banner {
+    display: flex !important;
+  }
+}
+
+/* 2. ƯU TIÊN SỐ 1: MOBILE LANDSCAPE (Màn hình điện thoại xoay ngang - Chiều cao <= 520px) */
+@media (orientation: landscape) and (max-height: 520px), (max-height: 500px) {
+  :root {
+    --min-card-w: 78px;
+    --w-by-height: calc(52dvh / 2.5);
+    --gap: 6px;
+    --pad: 12px;
+  }
+
+  /* Top Bar siêu gọn */
+  .genshin-top-bar {
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 12px !important;
+  }
+
+  .genshin-app-title {
+    font-size: 0.875rem !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  .genshin-tagline-badge {
+    display: none !important;
+  }
+
+  .genshin-star-icon {
+    font-size: 1rem !important;
+  }
+
+  .top-bar-left {
+    gap: 6px !important;
+  }
+
+  .top-bar-right {
+    gap: 6px !important;
+  }
+
+  .genshin-pity-capsule {
+    padding: 3px 8px !important;
+    font-size: 0.7rem !important;
+    gap: 4px !important;
+  }
+
+  .top-bar-icon-btn {
+    padding: 3px 6px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .request-song-btn {
+    padding: 3px 8px !important;
+    font-size: 0.7rem !important;
+    gap: 3px !important;
+  }
+
+  /* Bố cục chính Grid */
+  .genshin-main-grid {
+    height: calc(100dvh - 40px) !important;
+    padding: 4px 8px 6px !important;
+    gap: 8px !important;
+    grid-template-columns: minmax(170px, 24%) 1fr !important;
+  }
+
+  /* Cột Sidebar danh sách banner */
+  .banner-sidebar {
+    padding-right: 2px !important;
+  }
+
+  .banner-sidebar-list {
+    gap: 6px !important;
+  }
+
+  .banner-category-group {
+    gap: 3px !important;
+  }
+
+  .banner-category-header {
+    padding: 0 2px 2px !important;
+  }
+
+  .banner-category-title {
+    font-size: 0.58rem !important;
+  }
+
+  .banner-category-badge {
+    font-size: 0.58rem !important;
+    padding: 1px 5px !important;
+  }
+
+  .banner-thumb-item {
+    padding: 4px 8px !important;
+    min-height: 36px !important;
+    border-radius: 8px !important;
+    gap: 6px !important;
+  }
+
+  .banner-thumb-icon-wrap {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .banner-thumb-icon-wrap svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .banner-thumb-name {
+    font-size: 0.72rem !important;
+  }
+
+  .banner-thumb-tagline {
+    font-size: 0.58rem !important;
+  }
+
+  .banner-thumb-badge {
+    font-size: 0.55rem !important;
+    padding: 1px 4px !important;
+  }
+
+  /* Cột Poster Banner */
+  .banner-poster-container {
+    padding: 8px 14px 8px !important;
+    border-radius: 12px !important;
+  }
+
+  .banner-poster-info {
+    gap: 2px !important;
+    max-width: 58% !important;
+  }
+
+  .banner-tag-pill {
+    font-size: 0.56rem !important;
+  }
+
+  .banner-main-title {
+    font-size: 1.15rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .banner-rules-box {
+    padding: 3px 8px !important;
+    gap: 2px !important;
+    margin-top: 1px !important;
+    border-radius: 4px !important;
+  }
+
+  .banner-guarantee-line,
+  .banner-rateup-line,
+  .banner-disclaimer-line {
+    font-size: 0.62rem !important;
+    line-height: 1.25 !important;
+    gap: 4px !important;
+  }
+
+  .banner-desc-text {
+    font-size: 0.64rem !important;
+    line-height: 1.25 !important;
+    margin-top: 1px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    max-width: 400px !important;
+  }
+
+  /* Thanh dưới cùng của poster */
+  .banner-poster-bottom-bar {
+    margin-top: auto !important;
+  }
+
+  .genshin-sub-btn {
+    padding: 4px 10px !important;
+    font-size: 0.68rem !important;
+    border-radius: 16px !important;
+  }
+
+  .banner-bottom-left-btns {
+    gap: 5px !important;
+  }
+
+  .banner-bottom-right-container {
+    gap: 4px !important;
+  }
+
+  .banner-bottom-right-btns {
+    gap: 8px !important;
+  }
+
+  .genshin-wish-btn {
+    min-width: 95px !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+  }
+
+  .wish-btn-main {
+    font-size: 0.82rem !important;
+  }
+
+  .wish-btn-sub {
+    font-size: 0.58rem !important;
+  }
+
+  /* Gacha Result Screen khi ở mobile landscape */
+  .result-stage-topbar {
+    height: 36px !important;
+    min-height: 36px !important;
+    padding: 0 12px !important;
+  }
+
+  .result-top-logo {
+    font-size: 0.72rem !important;
+  }
+
+  .result-skip-btn {
+    padding: 3px 8px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .result-stage-footer {
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 6px 12px !important;
+    gap: 8px !important;
+  }
+
+  .result-footer-btn {
+    padding: 5px 14px !important;
+    font-size: 0.78rem !important;
+    border-radius: 18px !important;
+  }
+
+  .result-cards-main-stage {
+    padding: 4px var(--pad) 6px !important;
+  }
+
+  .cards-horizontal-track.track-single-card .card-track-slot {
+    width: min(150px, 45vw) !important;
+    height: min(320px, 62dvh) !important;
+  }
+}
+
+/* 3. IPAD / TABLET LANDSCAPE (Màn hình 768px - 1200px, chiều cao >= 521px) */
+@media (min-width: 768px) and (max-width: 1200px) and (orientation: landscape) and (min-height: 521px) {
+  .genshin-top-bar {
+    padding: 0 16px;
+  }
+
+  .genshin-main-grid {
+    grid-template-columns: 260px 1fr !important;
+    padding: 10px 16px 14px !important;
+    gap: 14px !important;
+  }
+
+  .banner-main-title {
+    font-size: 1.5rem !important;
+  }
+
+  .banner-desc-text {
+    max-width: 440px !important;
+  }
+
+  .genshin-wish-btn {
+    min-width: 115px !important;
+    padding: 7px 16px !important;
+  }
+}
+
+/* 4. TABLET & MOBILE PORTRAIT (Khi người dùng dựng máy dọc) */
+@media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
+  .genshin-top-bar {
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 12px !important;
+  }
+
+  .genshin-app-title {
+    font-size: 0.95rem !important;
+  }
+
+  .genshin-tagline-badge {
+    display: none !important;
+  }
+
+  .genshin-pity-capsule {
+    padding: 3px 8px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .top-bar-icon-btn {
+    padding: 3px 6px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .request-song-btn {
+    padding: 4px 8px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .genshin-main-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    height: calc(100dvh - 48px) !important;
+    padding: 6px 10px 12px !important;
+    gap: 8px !important;
+    overflow: hidden !important;
+  }
+
+  /* Biến Sidebar thành dải cuộn ngang mượt mà phía trên */
+  .banner-sidebar {
+    height: auto !important;
+    max-height: 60px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 2px 0 6px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-shrink: 0 !important;
+    scrollbar-width: none !important;
+  }
+
+  .banner-sidebar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .banner-sidebar-list {
+    flex-direction: row !important;
+    gap: 8px !important;
+    align-items: center !important;
+    width: max-content !important;
+  }
+
+  .banner-category-group {
+    flex-direction: row !important;
+    gap: 6px !important;
+    align-items: center !important;
+  }
+
+  .banner-category-header {
+    display: none !important;
+  }
+
+  .banner-category-items {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 6px !important;
+  }
+
+  .banner-thumb-item {
+    width: auto !important;
+    min-width: 105px !important;
+    max-width: 160px !important;
+    padding: 6px 10px !important;
+    border-radius: 12px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .banner-thumb-name {
+    font-size: 0.75rem !important;
+  }
+
+  .banner-thumb-tagline {
+    display: none !important;
+  }
+
+  /* Chiếm toàn bộ phần còn lại cho Poster */
+  .banner-detail-panel {
+    flex: 1 !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .banner-poster-container {
+    padding: 14px 14px 12px !important;
+    border-radius: 14px !important;
+  }
+
+  .banner-poster-info {
+    max-width: 100% !important;
+    gap: 4px !important;
+  }
+
+  .banner-main-title {
+    font-size: 1.35rem !important;
+  }
+
+  .banner-rules-box {
+    padding: 5px 10px !important;
+    margin-top: 4px !important;
+  }
+
+  .banner-guarantee-line,
+  .banner-rateup-line,
+  .banner-disclaimer-line {
+    font-size: 0.68rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .banner-desc-text {
+    font-size: 0.7rem !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  /* Nút bấm phía dưới banner trên điện thoại dọc */
+  .banner-poster-bottom-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    margin-top: auto !important;
+  }
+
+  .banner-bottom-left-btns {
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .banner-bottom-right-container {
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+
+  .banner-bottom-right-btns {
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .banner-bottom-right-btns .genshin-wish-btn {
+    flex: 1 !important;
+    min-width: 0 !important;
+    padding: 8px 12px !important;
+  }
+}
+
+/* 5. TỐI ƯU CÁC MODAL TRÊN THIẾT BỊ DI ĐỘNG & TABLET */
+@media (max-width: 768px), (max-height: 540px) {
+  .details-modal-overlay,
+  .filter-modal-overlay {
+    padding: 8px !important;
+  }
+
+  .details-modal-content,
+  .filter-modal-content,
+  .setlist-modal-content,
+  .history-modal-content {
+    max-width: 96vw !important;
+    width: 96vw !important;
+    max-height: 94dvh !important;
+    border-radius: 12px !important;
+  }
+
+  .details-modal-header,
+  .filter-modal-header {
+    padding: 10px 14px !important;
+  }
+
+  .details-modal-body,
+  .filter-modal-body {
+    padding: 10px 14px !important;
+    gap: 10px !important;
+  }
+
+  .details-rates-overview {
+    gap: 6px !important;
+  }
+
+  .rate-capsule {
+    padding: 6px 8px !important;
+  }
+
+  .rate-pct {
+    font-size: 0.95rem !important;
+  }
+
+  .rate-desc {
+    font-size: 0.62rem !important;
+  }
+
+  .details-song-table th,
+  .details-song-table td {
+    padding: 6px 8px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .filter-modal-footer,
+  .setlist-modal-footer,
+  .history-footer {
+    padding: 8px 14px !important;
+  }
+}
+
+
 
 
 
