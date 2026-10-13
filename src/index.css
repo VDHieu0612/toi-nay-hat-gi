@@ -4840,38 +4840,61 @@ a,
 /* 4. TABLET & MOBILE PORTRAIT (Khi người dùng dựng máy dọc) */
 @media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
   .genshin-top-bar {
-    height: 48px !important;
-    min-height: 48px !important;
-    padding: 0 12px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 0 10px !important;
+  }
+
+  .top-bar-left {
+    gap: 5px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .genshin-star-icon {
+    font-size: 1rem !important;
   }
 
   .genshin-app-title {
-    font-size: 0.95rem !important;
+    font-size: 0.84rem !important;
+    white-space: nowrap !important;
+    letter-spacing: 0.02em !important;
   }
 
   .genshin-tagline-badge {
     display: none !important;
   }
 
+  .top-bar-right {
+    gap: 4px !important;
+  }
+
+  /* Ẩn chữ "Bảo hiểm 5★:", chỉ giữ icon ★ và số lượt để vừa 1 dòng */
+  .pity-label {
+    display: none !important;
+  }
+
   .genshin-pity-capsule {
-    padding: 3px 8px !important;
+    padding: 3px 6px !important;
     font-size: 0.72rem !important;
+    gap: 4px !important;
   }
 
   .top-bar-icon-btn {
     padding: 3px 6px !important;
-    font-size: 0.7rem !important;
+    font-size: 0.68rem !important;
   }
 
   .request-song-btn {
-    padding: 4px 8px !important;
-    font-size: 0.7rem !important;
+    padding: 3px 7px !important;
+    font-size: 0.68rem !important;
+    gap: 2px !important;
+    white-space: nowrap !important;
   }
 
   .genshin-main-grid {
     display: flex !important;
     flex-direction: column !important;
-    height: calc(100dvh - 48px) !important;
+    height: calc(100dvh - 46px) !important;
     padding: 6px 10px 12px !important;
     gap: 8px !important;
     overflow: hidden !important;
@@ -4943,22 +4966,28 @@ a,
   }
 
   .banner-poster-container {
-    padding: 14px 14px 12px !important;
-    border-radius: 14px !important;
+    padding: 16px 14px 14px !important;
+    border-radius: 16px !important;
   }
 
   .banner-poster-info {
     max-width: 100% !important;
-    gap: 4px !important;
+    gap: 5px !important;
+  }
+
+  .banner-tag-pill {
+    font-size: 0.65rem !important;
   }
 
   .banner-main-title {
-    font-size: 1.35rem !important;
+    font-size: 1.5rem !important;
+    line-height: 1.15 !important;
   }
 
   .banner-rules-box {
-    padding: 5px 10px !important;
+    padding: 6px 10px !important;
     margin-top: 4px !important;
+    border-radius: 6px !important;
   }
 
   .banner-guarantee-line,
@@ -4969,11 +4998,12 @@ a,
   }
 
   .banner-desc-text {
-    font-size: 0.7rem !important;
+    font-size: 0.72rem !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
+    line-height: 1.35 !important;
   }
 
   /* Nút bấm phía dưới banner trên điện thoại dọc */
@@ -4986,7 +5016,7 @@ a,
 
   .banner-bottom-left-btns {
     justify-content: flex-start !important;
-    gap: 6px !important;
+    gap: 8px !important;
     width: 100% !important;
   }
 
@@ -5007,7 +5037,114 @@ a,
   }
 }
 
-/* 5. TỐI ƯU CÁC MODAL TRÊN THIẾT BỊ DI ĐỘNG & TABLET */
+/* 5. GACHA RESULT SCREEN TRONG DẠNG DỌC (PORTRAIT) */
+@media (orientation: portrait), (max-width: 768px) {
+  .result-cards-main-stage {
+    padding: 0 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+  }
+
+  /* 10 THẺ XẾP THÀNH LƯỚI 2 DÒNG x 5 CỘT TRỰC QUAN NHÌN ĐƯỢC TOÀN BỘ KHÔNG CẦN CUỘN */
+  .cards-horizontal-track.track-ten-cards {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    grid-template-rows: repeat(2, 1fr) !important;
+    gap: 6px 5px !important;
+    width: 100% !important;
+    max-width: min(370px, 95vw) !important;
+    margin: 0 auto !important;
+    justify-content: center !important;
+  }
+
+  .cards-horizontal-track.track-ten-cards .card-track-slot {
+    width: 100% !important;
+    max-width: 68px !important;
+    height: auto !important;
+    aspect-ratio: 1 / 2.2 !important;
+    max-height: 19dvh !important;
+    margin: 0 auto !important;
+  }
+
+  .track-ten-cards .card-song-name {
+    font-size: clamp(8px, 2.2vw, 10.5px) !important;
+    -webkit-line-clamp: 2 !important;
+    line-height: 1.15 !important;
+  }
+
+  .track-ten-cards .card-artist-name {
+    font-size: clamp(7px, 1.8vw, 9px) !important;
+    -webkit-line-clamp: 1 !important;
+  }
+
+  .track-ten-cards .card-stars-row {
+    font-size: 0.6rem !important;
+    gap: 1px !important;
+  }
+
+  .track-ten-cards .card-icon-art {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .track-ten-cards .card-karaoke-link-btn {
+    padding: 2px 4px !important;
+    font-size: 0.52rem !important;
+    gap: 2px !important;
+  }
+
+  /* Thẻ đơn lẻ (Single pull) trong dạng dọc */
+  .cards-horizontal-track.track-single-card .card-track-slot {
+    width: min(220px, 64vw) !important;
+    height: min(460px, 54dvh) !important;
+    aspect-ratio: auto !important;
+  }
+
+  /* Footer thanh dưới cùng trong dạng dọc */
+  .result-footer-bar {
+    height: auto !important;
+    min-height: auto !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding: 8px 12px 14px !important;
+    align-items: stretch !important;
+    background: rgba(10, 13, 22, 0.96) !important;
+    flex-shrink: 0 !important;
+    z-index: 25 !important;
+  }
+
+  .result-footer-left {
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .result-footer-note {
+    font-size: 0.68rem !important;
+    color: #94a3b8 !important;
+    display: block !important;
+    white-space: normal !important;
+  }
+
+  .result-footer-right {
+    display: flex !important;
+    gap: 8px !important;
+    width: 100% !important;
+    justify-content: stretch !important;
+  }
+
+  .result-footer-right .genshin-wish-btn {
+    flex: 1 !important;
+    min-width: 0 !important;
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* 6. TỐI ƯU CÁC MODAL TRÊN THIẾT BỊ DI ĐỘNG & TABLET */
 @media (max-width: 768px), (max-height: 540px) {
   .details-modal-overlay,
   .filter-modal-overlay {
