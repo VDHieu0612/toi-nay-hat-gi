@@ -200,6 +200,21 @@ html, body {
   color: #ffffff;
 }
 
+.request-song-btn {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.18), rgba(249, 115, 22, 0.12));
+  border: 1px solid rgba(234, 179, 8, 0.5);
+  color: #fef08a;
+  box-shadow: 0 0 10px rgba(234, 179, 8, 0.15);
+}
+
+.request-song-btn:hover {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.3), rgba(249, 115, 22, 0.25));
+  border-color: #facc15;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(234, 179, 8, 0.35);
+  transform: translateY(-1px);
+}
+
 /* =========================================
    GENSHIN MAIN GRID (Landscape 30% / 70%)
    ========================================= */

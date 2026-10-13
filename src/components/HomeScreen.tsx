@@ -116,22 +116,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <Icon name={soundEnabled ? 'soundOn' : 'soundOff'} size={18} />
           </Button>
 
-          {/* Nút liên kết Google Form / Google Sheet đóng góp bài hát */}
-          {(import.meta.env.VITE_SONG_REQUEST_FORM_URL || import.meta.env.VITE_SONGS_SHEET_VIEW_URL) && (
-            <a
-              href={import.meta.env.VITE_SONG_REQUEST_FORM_URL || import.meta.env.VITE_SONGS_SHEET_VIEW_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="top-bar-link-btn"
-              title={
-                import.meta.env.VITE_SONG_REQUEST_FORM_URL
-                  ? 'Đề xuất thêm bài hát qua Google Form'
-                  : 'Xem bảng bài hát Master trên Google Sheets'
-              }
-            >
-              <span>{import.meta.env.VITE_SONG_REQUEST_FORM_URL ? 'Đề xuất bài' : 'Kho bài hát'}</span>
-            </a>
-          )}
+          {/* Nút đề xuất bài hát mới qua Google Form */}
+          <a
+            href={
+              import.meta.env.VITE_SONG_REQUEST_FORM_URL ||
+              'https://forms.gle/bssodcst7GSDzPdm7'
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="top-bar-link-btn request-song-btn"
+            title="Đề xuất thêm bài hát mới qua Google Form"
+          >
+            <Icon name="plus" size={14} />
+            <span>Đề xuất bài hát</span>
+          </a>
         </div>
       </header>
 

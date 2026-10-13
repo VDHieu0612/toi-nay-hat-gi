@@ -75,6 +75,7 @@ jobs:
       - name: Đóng gói ứng dụng (Build)
         env:
           VITE_BASE: /${{ github.event.repository.name }}/
+          VITE_SONG_REQUEST_FORM_URL: ${{ vars.VITE_SONG_REQUEST_FORM_URL || 'https://forms.gle/bssodcst7GSDzPdm7' }}
         run: npm run build
 
       - name: Tải lên artifact cho GitHub Pages
