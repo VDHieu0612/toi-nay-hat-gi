@@ -3,10 +3,26 @@ import { Song } from '../lib/types';
 import { getSearchKaraokeUrl } from '../lib/filters';
 import { Icon } from './ui/Icon';
 
+// Component ngôi sao lấp lánh dạng SVG 4 cánh thanh lịch
+const SparkleStar: React.FC<{ size?: number; className?: string }> = ({ size = 14, className = '' }) => (
+  <svg
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+    className={`sparkle-star ${className}`}
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path d="M12 0C12 6.627 17.373 12 24 12C17.373 12 12 17.373 12 24C12 17.373 6.627 12 0 12C6.627 12 12 6.627 12 0Z" />
+  </svg>
+);
+
 interface SongCardProps {
   song: Song;
   isFlipped?: boolean; // false = mặt sau (úp), true = mặt trước
-  showBeam?: boolean;  // Hiển thị chùm sáng vươn lên
+  showBeam?: boolean;  // Giữ lại để tương thích ngược, điều khiển hiển thị hiệu ứng sao lấp lánh
+  showSparkles?: boolean; // Hiển thị ngôi sao lấp lánh xung quanh thẻ bài
   isFocused5Star?: boolean; // Khi đang zoom lớn giữa màn hình ở nhịp 4
   starCountReveal?: number; // Đếm số sao dần dần (1..5) khi đang reveal 5★
   className?: string;
@@ -17,6 +33,7 @@ export const SongCard: React.FC<SongCardProps> = ({
   song,
   isFlipped = true,
   showBeam = true,
+  showSparkles,
   isFocused5Star = false,
   starCountReveal,
   className = '',
@@ -25,6 +42,7 @@ export const SongCard: React.FC<SongCardProps> = ({
   // Số sao hiển thị: nếu đang trong quá trình đếm sao (5★) thì hiển thị số sao tương ứng
   const totalStars = starCountReveal !== undefined ? starCountReveal : song.rarity;
   const starsString = '★'.repeat(Math.max(1, totalStars));
+  const shouldShowSparkles = isFlipped && (showSparkles !== undefined ? showSparkles : showBeam);
 
   return (
     <div
@@ -33,29 +51,55 @@ export const SongCard: React.FC<SongCardProps> = ({
       } ${className}`}
       style={style}
     >
-      {/* Chùm sáng (beam) bốc lên từ đỉnh vòm - phần tử riêng biệt không bị che */}
-      {isFlipped && showBeam && (
-        <div className={`card-top-beam beam-${song.rarity}star`}>
-          <div className="beam-vertical-ray" />
-          <div className="beam-glow-spread" />
-          {song.rarity === 5 && (
+      {/* Các ngôi sao lấp lánh xung quanh thẻ bài (thay thế thanh dọc) */}
+      {shouldShowSparkles && (
+        <div className={`card-sparkles-surround sparkles-${song.rarity}star`} aria-hidden="true">
+          <div className="sparkle-star-item s-top-center">
+            <SparkleStar size={song.rarity === 5 ? 18 : song.rarity === 4 ? 15 : 12} />
+          </div>
+          <div className="sparkle-star-item s-top-left">
+            <SparkleStar size={song.rarity === 5 ? 15 : 12} />
+          </div>
+          <div className="sparkle-star-item s-top-right">
+            <SparkleStar size={song.rarity === 5 ? 14 : 11} />
+          </div>
+          <div className="sparkle-star-item s-mid-left">
+            <SparkleStar size={song.rarity === 5 ? 13 : 10} />
+          </div>
+          <div className="sparkle-star-item s-mid-right">
+            <SparkleStar size={song.rarity === 5 ? 15 : 11} />
+          </div>
+          <div className="sparkle-star-item s-bottom-left">
+            <SparkleStar size={11} />
+          </div>
+          <div className="sparkle-star-item s-bottom-right">
+            <SparkleStar size={13} />
+          </div>
+          {song.rarity >= 4 && (
             <>
-              <div className="beam-diagonal-ray diagonal-left" />
-              <div className="beam-diagonal-ray diagonal-right" />
+              <div className="sparkle-star-item s-upper-right">
+                <SparkleStar size={10} />
+              </div>
+              <div className="sparkle-star-item s-lower-left">
+                <SparkleStar size={10} />
+              </div>
             </>
           )}
-          {song.rarity >= 4 && (
-            <div className="beam-particles">
-              <span className="p1">·</span>
-              <span className="p2">·</span>
-              <span className="p3">·</span>
-              {song.rarity === 5 && (
-                <>
-                  <span className="p4">·</span>
-                  <span className="p5">·</span>
-                </>
-              )}
-            </div>
+          {song.rarity === 5 && (
+            <>
+              <div className="sparkle-star-item s-upper-left">
+                <SparkleStar size={11} />
+              </div>
+              <div className="sparkle-star-item s-bottom-center">
+                <SparkleStar size={16} />
+              </div>
+              <div className="sparkle-star-item s-center-left-far">
+                <SparkleStar size={9} />
+              </div>
+              <div className="sparkle-star-item s-center-right-far">
+                <SparkleStar size={9} />
+              </div>
+            </>
           )}
         </div>
       )}

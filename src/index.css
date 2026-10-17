@@ -1298,7 +1298,7 @@ html, body {
   perspective: 1000px;
   cursor: default;
   user-select: none;
-  overflow: visible; /* Để chùm beam vươn lên không bị che */
+  overflow: visible; /* Để các ngôi sao lấp lánh xung quanh không bị che */
 }
 
 /* 3D Flipper */
@@ -1503,130 +1503,149 @@ html, body {
 }
 
 /* =========================================
-   CHÙM SÁNG (Top Beam - Điểm E)
-   3★: 18% chiều cao, 2px dày, 1 lớp, không hạt
-   4★: 35% chiều cao, 4px dày, hạt bay lên liên tục
-   5★: 60% chiều cao, 8px dày, quầng sáng + tia chéo + hạt dày
+   NGÔI SAO LẤP LÁNH XUNG QUANH THẺ BÀI (Sparkles Surround)
+   Thay thế thanh dọc cũ: chỉ giữ thẻ bài cùng các ngôi sao lấp lánh xung quanh
    ========================================= */
 .card-top-beam {
+  display: none !important;
+}
+
+.card-sparkles-surround {
   position: absolute;
-  bottom: calc(100% - 6px);
-  left: 50%;
-  transform: translateX(-50%);
+  inset: -14px;
   pointer-events: none;
   z-index: 25;
+  animation: sparklesFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes sparklesFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle-star-item {
+  position: absolute;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  animation: beamRiseUp 0.5s ease-out forwards;
+  justify-content: center;
 }
 
-@keyframes beamRiseUp {
-  from { opacity: 0; transform: translateX(-50%) scaleY(0.2); }
-  to { opacity: 1; transform: translateX(-50%) scaleY(1); }
+.sparkle-star-item .sparkle-star {
+  display: block;
+  animation: sparkleTwinklePulse 2.4s infinite ease-in-out;
+  transform-origin: center center;
 }
 
-.beam-vertical-ray {
-  height: 100%;
-  border-radius: 999px;
-  filter: blur(1px);
+/* Định vị các vị trí xung quanh chu vi thẻ */
+.s-top-center {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
-
-.beam-glow-spread {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  filter: blur(10px);
-  opacity: 0.85;
+.s-top-left {
+  top: 4px;
+  left: -8px;
 }
-
-/* 3★: 18% chiều cao thẻ, 2px dày, 1 lớp, không hạt */
-.beam-3star {
-  width: 24px;
-  height: calc(var(--card-w) * 2.5 * 0.18);
+.s-top-right {
+  top: 6px;
+  right: -8px;
 }
-.beam-3star .beam-vertical-ray {
-  width: 2px;
-  background: #e0f2fe;
-  box-shadow: 0 0 8px #38bdf8;
+.s-upper-left {
+  top: 22%;
+  left: -11px;
 }
-.beam-3star .beam-glow-spread {
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 70%);
+.s-upper-right {
+  top: 24%;
+  right: -11px;
 }
-
-/* 4★: 35% chiều cao thẻ, 4px dày, hạt bay lên liên tục */
-.beam-4star {
-  width: 32px;
-  height: calc(var(--card-w) * 2.5 * 0.35);
-}
-.beam-4star .beam-vertical-ray {
-  width: 4px;
-  background: #f3e8ff;
-  box-shadow: 0 0 14px #c084fc, 0 0 24px rgba(192, 132, 252, 0.6);
-}
-.beam-4star .beam-glow-spread {
-  background: radial-gradient(circle, rgba(192, 132, 252, 0.7) 0%, transparent 70%);
-}
-
-/* 5★: 60% chiều cao thẻ, 8px dày, quầng sáng + tia chéo + hạt dày */
-.beam-5star {
-  width: 46px;
-  height: calc(var(--card-w) * 2.5 * 0.60);
-}
-.beam-5star .beam-vertical-ray {
-  width: 8px;
-  background: #fffbeb;
-  box-shadow: 0 0 20px #fbbf24, 0 0 40px #f59e0b;
-}
-.beam-5star .beam-glow-spread {
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.9) 0%, transparent 75%);
-}
-
-/* Tia chéo cho 5★ */
-.beam-5star .beam-diagonal-ray {
-  position: absolute;
-  bottom: 0;
-  width: 3.5px;
-  height: 75%;
-  background: linear-gradient(to top, #fbbf24, transparent);
-  box-shadow: 0 0 10px #fbbf24;
-  border-radius: 999px;
-  filter: blur(0.5px);
-}
-.beam-5star .diagonal-left {
+.s-mid-left {
+  top: 48%;
   left: -10px;
-  transform: rotate(-24deg);
-  transform-origin: bottom center;
 }
-.beam-5star .diagonal-right {
+.s-mid-right {
+  top: 50%;
   right: -10px;
-  transform: rotate(24deg);
-  transform-origin: bottom center;
+}
+.s-center-left-far {
+  top: 66%;
+  left: -12px;
+}
+.s-center-right-far {
+  top: 68%;
+  right: -12px;
+}
+.s-lower-left {
+  bottom: 20%;
+  left: -9px;
+}
+.s-bottom-left {
+  bottom: -4px;
+  left: -6px;
+}
+.s-bottom-center {
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.s-bottom-right {
+  bottom: -4px;
+  right: -6px;
 }
 
-/* Hạt lấp lánh bốc lên liên tục cho 4★ và 5★ */
-.beam-particles .p1,
-.beam-particles .p2,
-.beam-particles .p3,
-.beam-particles .p4,
-.beam-particles .p5 {
-  position: absolute;
-  font-size: 0.65rem;
-  animation: floatSparkle 1.6s infinite ease-in-out;
+/* Stagger animation delay & duration cho cảm giác lấp lánh tự nhiên */
+.s-top-center .sparkle-star { animation-delay: 0s; animation-duration: 2.2s; }
+.s-top-left .sparkle-star { animation-delay: 0.35s; animation-duration: 2.5s; }
+.s-top-right .sparkle-star { animation-delay: 0.7s; animation-duration: 2.1s; }
+.s-upper-left .sparkle-star { animation-delay: 1.1s; animation-duration: 2.6s; }
+.s-upper-right .sparkle-star { animation-delay: 0.45s; animation-duration: 2.3s; }
+.s-mid-left .sparkle-star { animation-delay: 0.9s; animation-duration: 2.4s; }
+.s-mid-right .sparkle-star { animation-delay: 1.3s; animation-duration: 2.0s; }
+.s-center-left-far .sparkle-star { animation-delay: 0.25s; animation-duration: 2.7s; }
+.s-center-right-far .sparkle-star { animation-delay: 0.8s; animation-duration: 2.2s; }
+.s-lower-left .sparkle-star { animation-delay: 1.5s; animation-duration: 2.4s; }
+.s-bottom-left .sparkle-star { animation-delay: 0.55s; animation-duration: 2.3s; }
+.s-bottom-center .sparkle-star { animation-delay: 1.2s; animation-duration: 2.5s; }
+.s-bottom-right .sparkle-star { animation-delay: 0.15s; animation-duration: 2.1s; }
+
+@keyframes sparkleTwinklePulse {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.6) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(20deg);
+  }
 }
-.beam-4star .beam-particles { color: #d8b4fe; text-shadow: 0 0 6px #c084fc; }
-.beam-5star .beam-particles { color: #fef08a; text-shadow: 0 0 8px #f59e0b; }
 
-.p1 { top: 20%; left: -8px; animation-delay: 0.1s; }
-.p2 { top: 50%; right: -8px; animation-delay: 0.4s; }
-.p3 { top: 75%; left: -4px; animation-delay: 0.7s; }
-.p4 { top: 35%; right: -4px; animation-delay: 1.0s; }
-.p5 { top: 85%; right: -6px; animation-delay: 1.3s; }
+/* Màu sắc và hiệu ứng ánh sáng theo độ hiếm */
+.sparkles-3star {
+  color: #bae6fd;
+  filter: drop-shadow(0 0 3px #38bdf8) drop-shadow(0 0 6px rgba(56, 189, 248, 0.45));
+}
 
-@keyframes floatSparkle {
-  0% { transform: translateY(0) scale(0.6); opacity: 0.2; }
-  50% { transform: translateY(-12px) scale(1.1); opacity: 1; }
-  100% { transform: translateY(-24px) scale(0.5); opacity: 0; }
+.sparkles-4star {
+  color: #f3e8ff;
+  filter: drop-shadow(0 0 4px #c084fc) drop-shadow(0 0 10px rgba(192, 132, 252, 0.6));
+}
+
+.sparkles-5star {
+  color: #fffbeb;
+  filter: drop-shadow(0 0 5px #fbbf24) drop-shadow(0 0 12px rgba(245, 158, 11, 0.8));
+}
+
+/* Thẻ 5★ khi đang phóng to giữa màn hình (spotlight) */
+.is-focused-5star .card-sparkles-surround {
+  inset: -22px;
+}
+.is-focused-5star .sparkles-5star {
+  filter: drop-shadow(0 0 8px #fbbf24) drop-shadow(0 0 18px rgba(245, 158, 11, 0.9));
 }
 
 /* =========================================
